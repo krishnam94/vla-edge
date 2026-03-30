@@ -58,16 +58,22 @@ class CPUBackend(HardwareBackend):
             ) from e
 
     def infer(self, model: Any, observation: dict[str, Any]) -> InferenceResult:
-        """Run inference on CPU."""
+        """Run inference on CPU.
+
+        Memory: uses RSS delta (not tracemalloc, which misses PyTorch tensor allocations).
+        RSS is noisy but captures actual memory. Numbers are labeled as approximate.
+        """
         import torch
 
         image = observation.get("image")
-        if image is not None and isinstance(image, np.ndarray):
+        if image is None:
+            raise ValueError("Observation must contain 'image' key with a numpy array")
+        if isinstance(image, np.ndarray):
             image = torch.from_numpy(image).float()
             if image.ndim == 3:
                 image = image.permute(2, 0, 1).unsqueeze(0)  # HWC -> BCHW
 
-        mem_before = psutil.Process().memory_info().rss / (1024 * 1024)
+        mem_before = psutil.Process().memory_info().rss
         t0 = time.perf_counter()
 
         with torch.no_grad():
@@ -79,7 +85,8 @@ class CPUBackend(HardwareBackend):
                 raise ValueError("Model has no predict_action() or forward() method")
 
         latency_ms = (time.perf_counter() - t0) * 1000
-        mem_after = psutil.Process().memory_info().rss / (1024 * 1024)
+        mem_after = psutil.Process().memory_info().rss
+        mem_delta_mb = max(0, (mem_after - mem_before)) / (1024 * 1024)
 
         if isinstance(actions, torch.Tensor):
             actions = actions.cpu().numpy()
@@ -87,6 +94,6 @@ class CPUBackend(HardwareBackend):
         return InferenceResult(
             actions=actions,
             latency_ms=round(latency_ms, 2),
-            memory_peak_mb=round(max(0, mem_after - mem_before), 1),
-            metadata={"device": "cpu", "dtype": "fp32"},
+            memory_peak_mb=round(mem_delta_mb, 1),
+            metadata={"device": "cpu", "dtype": "fp32", "memory_method": "rss_delta_approx"},
         )

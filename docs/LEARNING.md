@@ -373,6 +373,47 @@ is acceptable for Phase 1 profiling-only use.
 
 ---
 
+### Why tracemalloc doesn't work for PyTorch memory measurement
+**Manning Chapter: 9 (Jetson constraints)**
+
+We initially switched from RSS (Resident Set Size) to `tracemalloc` for CPU
+memory measurement, thinking it would be more accurate. The critic caught a
+critical flaw: tracemalloc only tracks Python heap allocations. PyTorch allocates
+tensors through its own C++ memory allocator (via libc or CUDA), bypassing the
+Python heap entirely. So tracemalloc reports near-zero for any real model inference.
+
+RSS delta is noisy (includes GC, shared libs, other processes) but at least
+captures the actual memory. On GPU, `torch.cuda.max_memory_allocated()` is
+accurate because PyTorch's CUDA allocator tracks everything. On CPU, there's
+no equivalent - RSS is the best available option.
+
+**For vla-edge**: CPU memory numbers are labeled "rss_delta_approx" in metadata
+to set expectations. The real deployment target (Jetson GPU) uses the accurate
+CUDA tracking. CPU numbers are for relative comparison only.
+
+**Key lesson**: tracemalloc is for pure-Python programs. ML workloads with
+C++ tensor allocators need different measurement strategies per platform.
+
+---
+
+### GC jitter in latency profiling
+**Manning Chapter: 10 (Optimization)**
+
+Python's garbage collector can add 10-50ms of jitter during benchmarking.
+If GC runs during one of your 100 profiling iterations, that iteration's
+latency spikes and pollutes your p95/p99 numbers.
+
+Fix: `gc.disable()` during the timed loop, re-enable in a `finally` block.
+Also report stddev and coefficient of variation (CV) so users can judge
+measurement stability. CV > 15% triggers a warning suggesting more
+iterations or checking for thermal throttling.
+
+This is the same approach used by PyTorch's `torch.utils.benchmark` and
+Python's `timeit` module. The key: disable GC, report variance, let the
+user decide if the numbers are trustworthy.
+
+---
+
 ## Concepts Queue (to learn and document next)
 
 - [ ] TensorRT engine building - how it works, why vision encoder but not LLM
