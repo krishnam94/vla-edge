@@ -377,10 +377,19 @@ Track /critic and /review-panel effectiveness over time.
 
 ## Self-Improvement Rules
 
+### Proactive Process Improvement
+After every /critic, /review-panel, or Phase completion, ask:
+- "Is there a **hook** that could have prevented this automatically?"
+- "Is there a **skill** that would make this workflow reusable?"
+- "Is there an **instinct** that captures a new design rule?"
+- "Should an existing hook/skill/instinct be **updated** based on what we learned?"
+
+Bring up candidates for discussion. Don't auto-create - discuss first.
+
 ### Instinct Creation
 - Critical finding NOT caught by existing instinct -> candidate for new instinct
 - Pattern appearing in 2+ reviews -> MUST become instinct
-- Do NOT inflate beyond current 6 unless a clear pattern emerges
+- Do NOT inflate beyond current count unless a clear pattern emerges
 
 ### Skill Evolution
 - After each use of /critic or /review-panel, check: did the prompt miss something?
