@@ -34,15 +34,13 @@ def test_smolvla_get_class():
 
 
 def test_smolvla_info_without_loading():
-    """ModelInfo should be accessible without loading the full model."""
+    """ModelInfo should be accessible via static method without loading."""
     try:
         from vla_edge.models.smolvla import SmolVLAAdapter
     except ImportError:
         pytest.skip("lerobot not installed")
 
-    # Create adapter (lazy - doesn't load model yet)
-    adapter = SmolVLAAdapter.__new__(SmolVLAAdapter)
-    info = adapter.info
+    info = SmolVLAAdapter.model_info()
 
     assert isinstance(info, ModelInfo)
     assert info.name == "smolvla"
@@ -61,8 +59,7 @@ def test_smolvla_image_size_is_512():
     except ImportError:
         pytest.skip("lerobot not installed")
 
-    adapter = SmolVLAAdapter.__new__(SmolVLAAdapter)
-    assert adapter.info.required_image_size == (512, 512)
+    assert SmolVLAAdapter.model_info().required_image_size == (512, 512)
 
 
 def test_vla_model_context_manager():

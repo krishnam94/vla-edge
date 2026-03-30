@@ -113,8 +113,10 @@ class SmolVLAAdapter(VLAModel):
 
         # Image: convert to tensor, add batch dim
         if isinstance(image, np.ndarray):
-            # LeRobot expects (B, C, H, W) float tensor in [0, 1]
-            img_tensor = torch.from_numpy(image).float() / 255.0
+            img_tensor = torch.from_numpy(image).float()
+            # Normalize to [0, 1] only if uint8 input
+            if image.dtype == np.uint8:
+                img_tensor = img_tensor / 255.0
             if img_tensor.ndim == 3:
                 img_tensor = img_tensor.permute(2, 0, 1).unsqueeze(0)  # HWC -> BCHW
             observation["observation.image"] = img_tensor.to(self._device)
@@ -143,6 +145,11 @@ class SmolVLAAdapter(VLAModel):
 
     @property
     def info(self) -> ModelInfo:
+        return SmolVLAAdapter.model_info()
+
+    @staticmethod
+    def model_info() -> ModelInfo:
+        """Static access to model info without needing an instance."""
         return ModelInfo(
             name="smolvla",
             param_count=450_000_000,

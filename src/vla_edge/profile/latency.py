@@ -56,8 +56,11 @@ def run_profile(
         from vla_edge.registry import get_model
 
         model_cls = get_model(model_name)
-        model_instance = model_cls.__new__(model_cls)
-        model_info = model_instance.info
+        # Use static model_info() if available, else fallback to info property
+        if hasattr(model_cls, "model_info") and callable(model_cls.model_info):
+            model_info = model_cls.model_info()
+        else:
+            model_info = model_cls.__new__(model_cls).info
         actual_image_size = model_info.required_image_size
         if actual_image_size != image_size and image_size == (224, 224):
             logger.info(
@@ -65,15 +68,24 @@ def run_profile(
                 actual_image_size,
             )
     except (KeyError, AttributeError, Exception):
-        # Model not in registry or no info - use provided image_size
         pass
 
     # Create a seeded dummy observation for reproducibility
     dummy_obs = _create_dummy_observation(image_size=actual_image_size, seed=42)
 
-    # Load model
+    # Load model: prefer VLAModel adapter from registry, fall back to backend
     load_start = time.perf_counter()
-    model = backend.load_model(model_name, trust_remote_code=trust_remote_code)
+    try:
+        from vla_edge.registry import get_model
+
+        model_cls = get_model(model_name)
+        device = "cuda" if backend_name in ("cuda", "jetson") else "cpu"
+        model = model_cls(device=device)
+        logger.info("Loaded %s via model registry (VLAModel adapter)", model_name)
+    except (KeyError, TypeError):
+        # Not in registry or adapter failed - use backend's generic loader
+        model = backend.load_model(model_name, trust_remote_code=trust_remote_code)
+        logger.info("Loaded %s via backend.load_model()", model_name)
     load_time_s = time.perf_counter() - load_start
 
     # Warmup (GC enabled)
