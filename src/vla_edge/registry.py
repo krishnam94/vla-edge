@@ -135,4 +135,7 @@ def _ensure_models_loaded() -> None:
     import contextlib
 
     with contextlib.suppress(ImportError):
-        import vla_edge.models.smolvla  # noqa: F401
+        import vla_edge.models.smolvla
+
+    with contextlib.suppress(ImportError):
+        import vla_edge.models.openvla  # noqa: F401
