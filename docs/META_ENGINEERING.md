@@ -108,6 +108,24 @@ TRT-LLM for Orin Nano, revisit.
 **Rationale**: Typer gives type-hinted CLI args, auto-generated help, Rich integration.
 Click is more mature but Typer's DX is better for this use case.
 
+### ADR-005: Phase 2 Order - Profiler First, Then Model Adapter (2026-03-30)
+**Context**: Review panel (3 personas) ran at end of Phase 1.
+**Decision**: Fix profiler methodology BEFORE building SmolVLA adapter.
+**Rationale**: All 3 personas agreed SmolVLA adapter is #1 priority, but the
+Production Engineer argued: fix measurement first, so you don't re-run everything.
+Profiler fixes (GC disable, stddev, cuda.Event) take 2 hours. SmolVLA adapter
+takes 4-6 hours. Do the 2-hour fix first.
+**Phase 2 order**: (1) profiler methodology, (2) SmolVLA adapter with correct
+AutoClass, (3) wire safety into profile output, (4) end-to-end integration test,
+(5) README rewrite with real numbers, (6) remaining issues #4-#10.
+
+### ADR-006: Leaderboard as Growth Strategy (2026-03-30)
+**Context**: Open Source Strategist persona called this "the one thing that would
+10x adoption." Auto-updated model x hardware x FPS leaderboard.
+**Decision**: Seed leaderboard in v0.1 with 3-5 entries. Build submission flow in v0.2.
+**Rationale**: Open LLM Leaderboard turned HuggingFace into the default comparison
+tool. Same opportunity for VLA edge deployment. But need real numbers first.
+
 ### ADR-004: Action-Centric Safety over Generic Bounds (2026-03-30)
 **Context**: Need to validate VLA actions before execution on real robots.
 **Decision**: SafetyConfig with per-joint bounds, velocity limits, acceleration limits,
