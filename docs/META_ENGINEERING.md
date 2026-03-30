@@ -174,6 +174,19 @@ severity levels (warning vs critical).
 
 ## Lessons Learned
 
+### Lesson 005: Review panel catches what critic misses (2026-03-31)
+**What happened**: End-of-day review panel found 14 issues across 3 personas.
+Critical: profiling reported 674 FPS (should be 52s cold start), workspace_bounds
+assumes Cartesian but VLAs output joint-space, GGUF/ONNX marketed as features
+but are stubs, README led with generic tagline instead of safety hook.
+**Root cause**: /critic runs on individual commits (narrow scope). /review-panel
+runs on the full project state (broad scope). We ran critics on each feature
+but never panel-reviewed the overall picture.
+**Fix applied**: Fixed all 6 unanimous/majority findings. Added verification critic.
+**Prevention rule**: Run /review-panel at phase boundaries, not just /critic on
+individual features. The panel catches systemic issues (misleading README framing,
+stub features marketed as done) that per-commit critics miss.
+
 ### Lesson 004: Critic must run BEFORE push, not after (2026-03-31)
 **What happened**: Pushed MPS backend, ONNX export, and OpenVLA adapter across 3
 commits without running critic. Batch critic afterwards found 7 issues including
