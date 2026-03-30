@@ -65,6 +65,16 @@ def test_smolvla_image_size_is_512():
     assert adapter.info.required_image_size == (512, 512)
 
 
+def test_vla_model_context_manager():
+    """VLAModel supports context manager protocol."""
+    from vla_edge.models.base import VLAModel
+
+    # VLAModel has __enter__ and __exit__
+    assert hasattr(VLAModel, "__enter__")
+    assert hasattr(VLAModel, "__exit__")
+    assert hasattr(VLAModel, "cleanup")
+
+
 def test_smolvla_import_error_message():
     """If lerobot not installed, error message should be helpful."""
     from vla_edge.models.smolvla import _check_lerobot

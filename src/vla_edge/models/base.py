@@ -55,6 +55,20 @@ class VLAModel(ABC):
     def info(self) -> ModelInfo:
         """Return metadata about this model."""
 
+    def cleanup(self) -> None:  # noqa: B027
+        """Release model resources (GPU memory, file handles).
+
+        Override in subclasses for proper cleanup. Called by profiler
+        after profiling is complete, and can be called manually.
+        Not abstract - default is no-op (some models need no cleanup).
+        """
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *args):
+        self.cleanup()
+
     def preprocess_image(self, image: np.ndarray) -> Any:
         """Preprocess image for this model. Override for custom preprocessing.
 

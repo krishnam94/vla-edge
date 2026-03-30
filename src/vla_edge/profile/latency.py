@@ -50,8 +50,26 @@ def run_profile(
     backend = get_backend(backend_name)
     caps = backend.get_capabilities()
 
+    # Try to get model's required image size from registry
+    actual_image_size = image_size
+    try:
+        from vla_edge.registry import get_model
+
+        model_cls = get_model(model_name)
+        model_instance = model_cls.__new__(model_cls)
+        model_info = model_instance.info
+        actual_image_size = model_info.required_image_size
+        if actual_image_size != image_size and image_size == (224, 224):
+            logger.info(
+                "Using model's required image size %s instead of default 224x224",
+                actual_image_size,
+            )
+    except (KeyError, AttributeError, Exception):
+        # Model not in registry or no info - use provided image_size
+        pass
+
     # Create a seeded dummy observation for reproducibility
-    dummy_obs = _create_dummy_observation(image_size=image_size, seed=42)
+    dummy_obs = _create_dummy_observation(image_size=actual_image_size, seed=42)
 
     # Load model
     load_start = time.perf_counter()
@@ -88,7 +106,7 @@ def run_profile(
         "backend": caps.name,
         "iterations": iterations,
         "warmup": warmup,
-        "image_size": list(image_size),
+        "image_size": list(actual_image_size),
         "load_time_s": round(load_time_s, 2),
         "avg_ms": round(avg, 2),
         "stddev_ms": round(stddev, 2),
@@ -102,6 +120,10 @@ def run_profile(
         "peak_memory_mb": round(peak_memory, 1),
         "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
     }
+
+    # Cleanup model resources (addresses #4)
+    if hasattr(model, "cleanup"):
+        model.cleanup()
 
     if cv > 15:
         profile_result["warning"] = (
