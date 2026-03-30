@@ -1,0 +1,15 @@
+name: post-push-check
+description: Quick checklist after every git push
+trigger: after running git push
+rule: |
+  After every push, spend 2 minutes checking:
+  1. Did CI pass? Run: gh run list --repo krishnam94/vla-edge --limit 1
+  2. Did I update LEARNING.md? (if new concept was implemented)
+  3. Did I close relevant GitHub issues in the commit message? (closes #N)
+  4. Any lesson learned worth adding to META_ENGINEERING.md?
+
+  After a PHASE or MILESTONE completes (bigger items shipped):
+  5. Run /critic or /review-panel
+  6. Update META_ENGINEERING.md paper status table
+  7. Update milestones on GitHub
+  8. Close milestone if all issues resolved
