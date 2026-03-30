@@ -60,29 +60,34 @@ class CPUBackend(HardwareBackend):
     def infer(self, model: Any, observation: dict[str, Any]) -> InferenceResult:
         """Run inference on CPU.
 
-        Memory: uses RSS delta (not tracemalloc, which misses PyTorch tensor allocations).
-        RSS is noisy but captures actual memory. Numbers are labeled as approximate.
+        Supports both VLAModel adapters (predict(image, instruction, state))
+        and raw PyTorch models (predict_action(image) or forward(image)).
+        Memory: RSS delta (approximate). See LEARNING.md for why not tracemalloc.
         """
         import torch
 
         image = observation.get("image")
         if image is None:
             raise ValueError("Observation must contain 'image' key with a numpy array")
-        if isinstance(image, np.ndarray):
-            image = torch.from_numpy(image).float()
-            if image.ndim == 3:
-                image = image.permute(2, 0, 1).unsqueeze(0)  # HWC -> BCHW
 
         mem_before = psutil.Process().memory_info().rss
         t0 = time.perf_counter()
 
         with torch.no_grad():
-            if hasattr(model, "predict_action"):
-                actions = model.predict_action(image)
+            if hasattr(model, "predict") and callable(model.predict):
+                # VLAModel adapter: pass full observation
+                instruction = observation.get("instruction", "")
+                state = observation.get("state")
+                actions = model.predict(image, instruction, state)
+            elif hasattr(model, "predict_action"):
+                # Legacy autoregressive model
+                image_t = self._to_tensor(image)
+                actions = model.predict_action(image_t)
             elif hasattr(model, "forward"):
-                actions = model(image)
+                image_t = self._to_tensor(image)
+                actions = model(image_t)
             else:
-                raise ValueError("Model has no predict_action() or forward() method")
+                raise ValueError("Model has no predict(), predict_action(), or forward()")
 
         latency_ms = (time.perf_counter() - t0) * 1000
         mem_after = psutil.Process().memory_info().rss
@@ -97,3 +102,15 @@ class CPUBackend(HardwareBackend):
             memory_peak_mb=round(mem_delta_mb, 1),
             metadata={"device": "cpu", "dtype": "fp32", "memory_method": "rss_delta_approx"},
         )
+
+    @staticmethod
+    def _to_tensor(image: Any) -> Any:
+        """Convert numpy image to torch tensor (BCHW)."""
+        import torch
+
+        if isinstance(image, np.ndarray):
+            t = torch.from_numpy(image).float()
+            if t.ndim == 3:
+                t = t.permute(2, 0, 1).unsqueeze(0)
+            return t
+        return image

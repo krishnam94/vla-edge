@@ -54,8 +54,12 @@ jetson = [
 cuda = [
     "vla-edge[pytorch]",
 ]
+smolvla = [
+    "vla-edge[pytorch]",
+    "lerobot>=0.2.0",
+]
 all = [
-    "vla-edge[pytorch,gguf,safety,tensorrt]",
+    "vla-edge[pytorch,gguf,safety,tensorrt,smolvla]",
 ]
 dev = [
     "vla-edge[pytorch]",
