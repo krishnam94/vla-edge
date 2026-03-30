@@ -76,12 +76,19 @@ def profile(
 
     table.add_row("Backend", result.get("backend", "unknown"))
     table.add_row("Image size", str(result.get("image_size", "unknown")))
-    table.add_row("Avg latency", f"{result['avg_ms']:.1f} ms")
+    cold = result.get("cold_start_ms", 0)
+    if cold > 1000:
+        table.add_row("[bold]Cold start[/bold]", f"[red]{cold/1000:.1f} s[/red]")
+    else:
+        table.add_row("Cold start", f"{cold:.1f} ms")
+    table.add_row("Cached avg", f"{result['avg_ms']:.1f} ms")
     table.add_row("Stddev", f"{result.get('stddev_ms', 0):.1f} ms")
-    table.add_row("P95 latency", f"{result['p95_ms']:.1f} ms")
-    table.add_row("P99 latency", f"{result['p99_ms']:.1f} ms")
-    table.add_row("FPS", f"{result['fps']:.1f}")
+    table.add_row("P95", f"{result['p95_ms']:.1f} ms")
+    table.add_row("P99", f"{result['p99_ms']:.1f} ms")
+    table.add_row("FPS (cached)", f"{result.get('fps_cached', 0):.1f}")
     table.add_row("Peak memory", f"{result['peak_memory_mb']:.1f} MB")
+    if result.get("uses_action_chunking"):
+        table.add_row("[yellow]Note[/yellow]", result.get("chunking_note", "Uses action chunking"))
     if result.get("warning"):
         table.add_row("[yellow]Warning[/yellow]", result["warning"])
     table.add_row("Safety", "[yellow]Run 'vla-edge validate' for safety analysis[/yellow]")

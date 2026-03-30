@@ -98,12 +98,18 @@ class MPSBackend(HardwareBackend):
         if isinstance(actions, torch.Tensor):
             actions = actions.cpu().numpy()
 
-        # MPS doesn't expose memory stats like CUDA
+        # MPS memory tracking (available since PyTorch 2.1)
+        try:
+            mem_bytes = torch.mps.current_allocated_memory()
+            mem_mb = mem_bytes / (1024 * 1024)
+        except (AttributeError, RuntimeError):
+            mem_mb = 0.0
+
         return InferenceResult(
             actions=actions,
             latency_ms=round(latency_ms, 2),
-            memory_peak_mb=0.0,  # MPS has no memory tracking API
-            metadata={"device": "mps", "dtype": "fp16", "memory_method": "unavailable"},
+            memory_peak_mb=round(mem_mb, 1),
+            metadata={"device": "mps", "dtype": "fp16", "memory_method": "mps_allocated"},
         )
 
     @staticmethod

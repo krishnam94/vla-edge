@@ -37,7 +37,7 @@ _violation_log: list[dict[str, Any]] = []
 def safety_contract(
     action_range: tuple[float, float] | list[float] | None = None,
     joint_velocity_max: float | None = None,
-    workspace_bounds: list[list[float]] | None = None,
+    workspace_bounds: list[list[float]] | None = None,  # Clips first 3 dims. Use FK for true workspace check.
     on_violation: str = "clip",  # "clip", "warn", "raise"
 ) -> Callable:
     """Decorator that enforces safety constraints on predict() output.
@@ -45,7 +45,10 @@ def safety_contract(
     Args:
         action_range: Symmetric bounds for all action dimensions [min, max].
         joint_velocity_max: Maximum change between consecutive actions (rad/s or m/s).
-        workspace_bounds: End-effector bounds [[x_min, x_max], [y_min, y_max], [z_min, z_max]].
+        workspace_bounds: Clips first 3 action dims to [[min, max], ...].
+            WARNING: Most VLAs output joint-space, not Cartesian. These bounds
+            clip joint values, not end-effector positions. For true workspace
+            checking, use forward kinematics externally and pass Cartesian actions.
         max_force_n: Maximum force in Newtons (checked if action includes force dims).
         on_violation: What to do on violation:
             - "clip": silently clip to safe values (default, safest for real robots)

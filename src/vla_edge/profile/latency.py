@@ -88,11 +88,18 @@ def run_profile(
         logger.info("Loaded %s via backend.load_model()", model_name)
     load_time_s = time.perf_counter() - load_start
 
-    # Warmup (GC enabled)
+    # First inference (cold start) - includes model initialization, VLM forward, etc.
+    # Use a UNIQUE observation to prevent caching
+    cold_obs = _create_dummy_observation(image_size=actual_image_size, seed=1)
+    cold_start = time.perf_counter()
+    backend.infer(model, cold_obs)  # Result unused - we only need timing
+    cold_ms = (time.perf_counter() - cold_start) * 1000
+
+    # Warmup with same observation (lets caches populate)
     for _ in range(warmup):
         backend.infer(model, dummy_obs)
 
-    # Disable GC during timed iterations to prevent jitter
+    # Timed iterations (these measure CACHED/amortized performance)
     gc_was_enabled = gc.isenabled()
     gc.disable()
 
@@ -113,6 +120,16 @@ def run_profile(
     stddev = float(timings_arr.std())
     cv = (stddev / avg * 100) if avg > 0 else 0
 
+    # Detect if model uses action chunking (cold >> cached = chunking)
+    uses_chunking = cold_ms > avg * 10
+    chunk_note = ""
+    if uses_chunking:
+        chunk_note = (
+            f"Model uses action chunking. Cold start ({cold_ms:.0f}ms) includes full "
+            f"VLM forward. Cached ({avg:.1f}ms) returns pre-computed actions. "
+            f"Real throughput depends on chunk size and re-inference frequency."
+        )
+
     profile_result = {
         "model": model_name,
         "backend": caps.name,
@@ -120,6 +137,7 @@ def run_profile(
         "warmup": warmup,
         "image_size": list(actual_image_size),
         "load_time_s": round(load_time_s, 2),
+        "cold_start_ms": round(cold_ms, 2),
         "avg_ms": round(avg, 2),
         "stddev_ms": round(stddev, 2),
         "cv_percent": round(cv, 1),
@@ -128,10 +146,14 @@ def run_profile(
         "p99_ms": round(float(np.percentile(timings_arr, 99)), 2),
         "min_ms": round(float(timings_arr.min()), 2),
         "max_ms": round(float(timings_arr.max()), 2),
-        "fps": round(1000 / avg, 1) if avg > 0 else 0,
+        "fps_cached": round(1000 / avg, 1) if avg > 0 else 0,
         "peak_memory_mb": round(peak_memory, 1),
+        "uses_action_chunking": uses_chunking,
         "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
     }
+
+    if chunk_note:
+        profile_result["chunking_note"] = chunk_note
 
     # Cleanup model resources (addresses #4)
     if hasattr(model, "cleanup"):

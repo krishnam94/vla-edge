@@ -1,10 +1,10 @@
 # vla-edge
 
-**Profile, optimize, validate, and deploy VLA models to edge hardware.**
+**VLA models can output actions that break your $5,000 robot arm. This toolkit prevents that.**
 
-VLA (Vision-Language-Action) models power the next generation of robots - but deploying them to edge devices like Jetson Orin Nano is painful. OpenVLA has [15+ open issues](https://github.com/openvla/openvla/issues) about deployment failures. LeRobot [closed Jetson support as "Not Planned"](https://github.com/huggingface/lerobot/issues/819). Nobody provides tooling for the transition from cloud training to edge deployment.
+Every VLA deployment framework sends raw neural network output directly to the robot. [OpenVLA's deploy.py has zero safety checks.](https://github.com/openvla/openvla/blob/main/experiments/robot/libero/run_libero_eval.py) LeRobot [closed Jetson support as "Not Planned"](https://github.com/huggingface/lerobot/issues/819). Nobody validates that VLA actions are safe before execution.
 
-vla-edge fills that gap: one toolkit to profile latency, validate safety, and prepare VLA models for real hardware.
+vla-edge adds safety contracts, latency profiling, and deployment readiness checks for VLA models on edge hardware.
 
 ## Quick Start
 
@@ -43,7 +43,7 @@ SmolVLA (450M) on Mac Air M3:
 - **Profile** - Measure latency (avg/p50/p95/p99), memory, FPS with statistical rigor (GC-disabled, stddev, CV warning)
 - **Validate** - Check action safety (bounds, velocity, acceleration, workspace) before deploying to a real robot
 - **Safety contracts** - `@safety_contract` decorator enforces physical limits on ANY predict() method at runtime
-- **Optimize** - GGUF quantization recommendations, ONNX per-component export
+- **Optimize** - Quantization size estimation, hardware-aware recommendations (GGUF conversion coming v0.2)
 - **Deploy** - Tested recipes for specific model + hardware combos
 
 ## Why This Exists
