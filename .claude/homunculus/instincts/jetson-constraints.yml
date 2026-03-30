@@ -1,0 +1,14 @@
+name: jetson-constraints
+description: Critical Jetson Orin Nano hardware constraints that must be respected
+trigger: when writing code that touches Jetson, TensorRT, CUDA, or model loading
+rule: |
+  Jetson Orin Nano Super (8GB) has strict constraints:
+  - TensorRT-LLM is BROKEN on Orin Nano. Causes kernel panics. NEVER use it.
+  - Use llama.cpp + GGUF Q4_K_M for LLM backbone inference.
+  - Torch-TensorRT works for vision encoders (ViT) only.
+  - Max model: ~3-4B params FP16, ~7B params Q4.
+  - PyTorch MUST be installed from NVIDIA JPL wheels, not pip.
+  - pip install torch URL: https://pypi.jetson-ai-lab.dev/jp6/cu126
+  - JetPack 6.2 = Ubuntu 22.04, CUDA 12.6, TensorRT 10.3, Python 3.10.
+  - 8GB is UNIFIED memory (shared CPU/GPU). Budget carefully.
+  - FP16 can cause overflow in some attention layers (Gemma). Test before deploying.

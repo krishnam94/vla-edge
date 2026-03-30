@@ -1,0 +1,16 @@
+name: extensible-arch
+description: Keep the architecture extensible - new backend or model = one file
+trigger: when editing registry.py, backends/, or models/
+rule: |
+  The extensibility promise: adding a new hardware backend or VLA model
+  requires exactly ONE new file and ZERO changes to core code.
+
+  New backend: backends/hailo.py with @register_backend("hailo")
+  New model: models/openvla.py with @register_model("openvla")
+
+  If you find yourself editing registry.py, base.py, or cli.py to add
+  a specific backend or model, you are breaking the architecture.
+
+  The HardwareBackend ABC has 4 methods. The VLAModel ABC has 2 methods
+  + 1 property. Keep these thin. If a backend needs extra methods,
+  add them to the subclass, not the ABC.

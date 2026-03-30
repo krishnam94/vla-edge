@@ -1,0 +1,10 @@
+name: no-hardcoded-keys
+description: Never hardcode API keys, tokens, or credentials
+trigger: when writing Python files
+rule: |
+  API keys and tokens must ALWAYS come from environment variables.
+  - HuggingFace: HF_TOKEN env var
+  - Modal: MODAL_TOKEN_ID / MODAL_TOKEN_SECRET env vars
+  - Never put tokens in code, YAML configs, or test fixtures.
+  - Tests should mock API calls, not use real tokens.
+  - CI secrets go in GitHub Actions secrets.

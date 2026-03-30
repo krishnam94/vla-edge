@@ -1,0 +1,25 @@
+# Recipe: SmolVLA on Jetson Orin Nano Super
+# Status: UNTESTED - baseline recipe, needs hardware validation
+
+name: smolvla-jetson-orin-nano
+model: smolvla
+hardware: jetson-orin-nano-super
+
+optimization:
+  dtype: fp16
+  quantize: null  # Start with FP16, add GGUF Q4 after profiling
+  vision_encoder: pytorch  # Consider TRT in future
+  llm_backbone: pytorch    # Consider GGUF in future
+
+expected_performance:
+  # These are estimates based on SmolVLA 450M params on 8GB Jetson
+  # Actual numbers will be filled after hardware profiling
+  latency_ms: null
+  fps: null
+  memory_mb: null
+
+notes: |
+  SmolVLA (450M params) should fit comfortably on Orin Nano 8GB in FP16.
+  This is the baseline recipe - optimize further with GGUF quantization
+  and TensorRT vision encoder based on profiling results.
+  Reference: LiteVLA-Edge achieves 6.6 Hz on Orin with GGUF Q4.

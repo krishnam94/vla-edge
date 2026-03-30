@@ -1,0 +1,11 @@
+name: sources-in-research
+description: All research documents must include source URLs for traceability
+trigger: when writing research notes, docs, or competitive analysis
+rule: |
+  Every research document and technical note must include source URLs
+  (arXiv, GitHub, blog posts, etc.) for every claim or finding.
+  - Inline sources next to specific claims when possible
+  - Add a Sources section at the bottom
+  - When using subagents for research, instruct them to return URLs
+  - This applies to: docs/, research notes, competitive analysis
+  - Does NOT apply to: code comments, commit messages

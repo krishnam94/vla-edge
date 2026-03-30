@@ -1,0 +1,12 @@
+name: test-before-ship
+description: Every feature needs tests before marking complete
+trigger: when completing a task or feature
+rule: |
+  Before marking any feature as done:
+  1. Write unit tests covering happy path + at least one edge case
+  2. Run: pytest -m "not gpu and not jetson and not slow"
+  3. Check coverage on changed modules
+  4. For new backends: test is_available() and get_capabilities() with mocks
+  5. For new models: test predict() with dummy data
+  6. For CLI changes: test the actual Typer command with CliRunner
+  Target: 80%+ coverage on core modules (registry, safety, profiler)

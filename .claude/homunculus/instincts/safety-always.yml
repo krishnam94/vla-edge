@@ -1,0 +1,19 @@
+name: safety-always
+description: Safety metrics are never optional in VLA deployment
+trigger: when writing profiling, evaluation, or report code
+rule: |
+  Every deployment readiness report MUST include safety validation results.
+  There is no --skip-safety flag. There is no "safety is optional" mode.
+
+  Why: OpenVLA's deploy.py returns raw actions with zero clipping. This is
+  dangerous for real robots. vla-edge exists partly to fix this.
+
+  When reporting results, always include:
+  - Action bounds compliance (what % of actions are within safe bounds)
+  - Maximum velocity observed
+  - Workspace boundary violations
+  - Overall safety pass/fail
+
+  If safety validation is not configured, the report should say
+  "Safety: NOT CONFIGURED (add SafetyConfig to enable)" rather than
+  silently omitting safety data.
