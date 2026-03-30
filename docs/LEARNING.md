@@ -1,0 +1,285 @@
+# Learning Journal: VLA Edge Deployment
+
+A growing document that explains concepts, decisions, and discoveries as we build
+vla-edge. Written to be useful for Manning VLA book chapters (especially Ch 9-11).
+
+Each entry explains: what the concept is, why it matters for edge deployment,
+and where to go deeper.
+
+---
+
+## Part 1: Foundations (Phase 1)
+
+### What is a VLA model?
+
+A Vision-Language-Action model takes three inputs - a camera image (vision),
+a natural language instruction (language), and optionally robot state - and
+outputs a robot action (typically 6-7 numbers: x/y/z position, rotation,
+and gripper open/close).
+
+The architecture is usually: frozen vision encoder (ViT/SigLIP) + small LLM
+backbone (0.5-7B params) + action head (MLP, diffusion, or flow matching).
+
+**Why it matters for edge**: The LLM backbone is the bottleneck. On a Jetson
+with 8GB shared memory, a 7B parameter model in FP16 needs 14GB - it doesn't
+fit. This is the core problem vla-edge solves.
+
+**Key models by size**:
+- SmolVLA: 450M params (fits on Jetson Orin Nano in FP16)
+- NanoVLA: 140-520M params (designed for edge)
+- MiniVLA: ~1B params (tight on Orin Nano)
+- OpenVLA: 7B params (needs quantization or bigger hardware)
+- pi0: ~3B params (JAX-based, complex deployment)
+
+Reference: [SmolVLA paper](https://arxiv.org/abs/2506.01844) |
+[OpenVLA paper](https://arxiv.org/abs/2406.09246) |
+[Efficient VLA Survey](https://arxiv.org/abs/2510.24795)
+
+---
+
+### Why edge deployment matters for robotics
+
+Cloud inference adds 50-200ms of network latency. A robot arm moving at 1 m/s
+travels 5-20cm during that delay - enough to miss a grasp or collide with an
+obstacle. Real-time robot control needs 10-30 Hz (33-100ms per cycle), which
+means inference must happen on-device.
+
+Other reasons:
+- **Reliability**: Field robots (warehouses, disaster zones) can't depend on WiFi
+- **Privacy**: Home robots processing camera feeds should stay local
+- **Cost**: Cloud inference at scale is expensive for always-on robots
+- **Physics**: Millisecond control loops can't survive network round-trips
+
+**The gap today**: Most VLA models are developed and tested on A100/H100 GPUs.
+Deploying to a $249 Jetson Orin Nano with 8GB shared memory is a completely
+different engineering challenge. Nobody provides tooling for this transition.
+
+Reference: [VLA-Perf: 15 deployment takeaways](https://arxiv.org/abs/2602.18397) |
+[deepsense.ai: "Most VLAs never make it out of the lab"](https://deepsense.ai/blog/we-put-embodied-ai-on-a-100g-device-why-most-vlas-choke-on-the-edge-and-the-architecture-that-didnt/)
+
+---
+
+### Hardware backend abstraction - why we use it
+
+Different hardware needs different inference strategies:
+- **CPU**: PyTorch eager mode. Slow but works everywhere.
+- **CUDA desktop GPU**: PyTorch + torch.compile or TensorRT. Fast, lots of memory.
+- **Jetson (Ampere, 8GB)**: Split strategy - TensorRT for vision encoder, llama.cpp
+  for LLM backbone, PyTorch for action head. Memory is the constraint.
+- **Future: Hailo, Qualcomm**: Completely different runtimes (HailoRT, QNN SDK).
+
+We abstracted this into a `HardwareBackend` ABC with 4 methods:
+`is_available()`, `get_capabilities()`, `load_model()`, `infer()`.
+
+This follows the pattern of:
+- ONNX Runtime's Execution Providers (GPU, CPU, TensorRT, OpenVINO, etc.)
+- PyTorch's device backends (cpu, cuda, mps, xla)
+- LeRobot's Robot class (6 methods, one per robot type)
+
+The key insight from ONNX Runtime: use a **priority chain with fallback**.
+If TensorRT is available, use it. If not, fall back to CUDA. If not, CPU.
+The user writes `--hardware auto` and gets the best available option.
+
+Reference: [ONNX Runtime Execution Providers](https://onnxruntime.ai/docs/execution-providers/) |
+[LeRobot hardware plugins](https://huggingface.co/docs/lerobot/integrate_hardware)
+
+---
+
+### Decorator registry pattern
+
+Instead of a complex plugin system, we use a simple pattern:
+
+```python
+@register_backend("jetson")
+class JetsonBackend(HardwareBackend):
+    ...
+```
+
+The decorator adds the class to a dict. That's it. ~10 lines of infrastructure.
+
+This is the same pattern used by:
+- lm-evaluation-harness (`@register_model`)
+- HuggingFace transformers (model auto-classes)
+- pytest (marker registration)
+
+We chose this over `entry_points` (pip plugin discovery) because we don't have
+external contributors yet. When we do (v0.3+), we'll add entry_points on top
+of the existing decorator system - no breaking changes needed.
+
+Reference: [Python plugin patterns](https://packaging.python.org/en/latest/guides/creating-and-discovering-plugins/) |
+[lm-eval model guide](https://github.com/EleutherAI/lm-evaluation-harness/blob/main/docs/model_guide.md)
+
+---
+
+### Why action safety validation exists
+
+OpenVLA's `deploy.py` returns raw predicted actions with **zero safety checking**.
+If the model predicts a joint angle of 500 degrees or an end-effector velocity
+of 10 m/s, the robot tries to execute it. This can damage hardware or hurt people.
+
+LeRobot has `EEBoundsAndSafety` - a basic workspace bounds checker. It's the
+ONLY existing implementation in the open-source VLA ecosystem.
+
+We provide configurable safety with multiple dimensions:
+- **Action bounds**: Per-joint min/max (prevents impossible joint angles)
+- **Velocity limits**: Max change between consecutive actions (prevents jerky motion)
+- **Acceleration limits**: Max rate of velocity change (prevents jerk)
+- **Workspace bounds**: 3D box the end-effector must stay within
+- **Severity levels**: "warning" vs "critical" (bounds violation is critical,
+  velocity spike might just be a warning)
+
+**The key insight**: In robotics, safety isn't just "did the task succeed."
+A task can succeed while violating safety constraints (e.g., the robot picked
+up the cup but slammed into the table on the way). vla-edge reports BOTH
+task success AND safety compliance.
+
+Reference: [OpenVLA deploy.py](https://github.com/openvla/openvla/blob/main/experiments/robot/libero/run_libero_eval.py) |
+[Modular Safety Guardrails paper](https://arxiv.org/abs/2602.04056)
+
+---
+
+### Jetson Orin Nano Super - what you need to know
+
+**The hardware**: NVIDIA Ampere GPU with 1024 CUDA cores, 67 TOPS INT8, 8GB
+LPDDR5 unified memory (shared between CPU and GPU). Compute capability 8.7.
+Costs ~$249. Runs Ubuntu 22.04 via JetPack 6.2.
+
+**What "unified memory" means**: Unlike a desktop GPU where CPU has 32GB RAM
+and GPU has 24GB VRAM (separate), on Jetson it's one pool of 8GB shared by
+both. If your model uses 6GB of GPU memory, the CPU only has 2GB left for
+the OS, data loading, and everything else. Budget carefully.
+
+**What works on it**:
+- SmolVLA in FP16 (~1GB) - comfortable
+- OpenVLA 7B in Q4 GGUF (~4GB) - tight but possible
+- TensorRT for vision encoders (ViT) - good acceleration
+- llama.cpp for LLM inference - proven path (LiteVLA-Edge: 6.6 Hz)
+
+**What does NOT work**:
+- TensorRT-LLM: causes kernel panics on Orin Nano. Only works on AGX Orin+.
+- Standard `pip install torch`: fails on aarch64. Must use NVIDIA's JPL wheels.
+- FP16 for some models: Gemma attention layers overflow in FP16 on Jetson.
+
+**Critical lesson**: Don't extrapolate cloud benchmarks to edge. A model that
+runs at 6 Hz on an RTX 4090 might run at 0.5 Hz on Orin Nano. The performance
+degradation is non-linear due to memory bandwidth bottlenecks.
+
+Reference: [NVIDIA Jetson specs](https://www.nvidia.com/en-us/autonomous-machines/embedded-systems/) |
+[LiteVLA-Edge](https://arxiv.org/abs/2603.03380) |
+[Cross-Platform VLA Scaling](https://arxiv.org/abs/2509.11480) |
+[OpenVLA TensorRT on Jetson forum thread](https://forums.developer.nvidia.com/t/tensorrt-cross-compilation-openvla-model-pytorch-for-jetson-orin-converting-on-gpu-server-8x-l20/346524)
+
+---
+
+### GGUF quantization - the proven edge path
+
+GGUF (GPT-Generated Unified Format) is a file format designed for efficient
+LLM inference via llama.cpp. It supports multiple quantization levels:
+
+| Format | Bits/weight | Model quality | Size reduction |
+|--------|------------|---------------|----------------|
+| F16 | 16 | Baseline | 1x |
+| Q8_0 | 8 | ~99% of F16 | 2x smaller |
+| Q4_K_M | 4.5 avg | ~95-97% of F16 | 3.5x smaller |
+| Q4_0 | 4 | ~93-95% of F16 | 4x smaller |
+
+**Why GGUF over bitsandbytes (the standard LLM quantization)?**
+OpenVLA has THREE open issues (#145, #286, #287) about bitsandbytes quantization
+crashing due to `.to()` incompatibility. The root cause: bitsandbytes wraps
+tensors in a way that breaks PyTorch's device placement. No fix available.
+
+GGUF + llama.cpp avoids this entirely - it's a completely separate inference
+runtime. No PyTorch device placement issues.
+
+**Why Q4_K_M specifically?** The "K" variants use a smarter quantization that
+allocates more bits to important weights and fewer to less important ones.
+Q4_K_M is the sweet spot: 4.5 bits average, retains 95-97% of F16 quality,
+and fits a 7B model in ~4GB. Proven by LiteVLA-Edge at 6.6 Hz on Jetson.
+
+**Important VLA-specific insight (from QVLA, ICLR 2026)**: Standard LLM
+quantization (SmoothQuant, AWQ) is suboptimal for VLAs. Small action
+deviations compound over a trajectory - a 2% error per step becomes 20%
+after 10 steps. QVLA showed that action-centric, channel-wise bit allocation
+outperforms SmoothQuant by 22.6%. This is a key optimization for vla-edge v0.2.
+
+Reference: [llama.cpp GGUF format](https://github.com/ggerganov/llama.cpp) |
+[QVLA paper](https://arxiv.org/abs/2602.03782) |
+[OpenVLA quantization issues](https://github.com/openvla/openvla/issues/145)
+
+---
+
+### Where 75% of VLA latency actually comes from
+
+A common misconception: "The vision encoder is the bottleneck because images
+are expensive to process." Wrong.
+
+Google's profiling paper (March 2026) found that **up to 75% of end-to-end
+VLA latency is in the action generation phase** (the LLM decoding step),
+not the vision encoding. The vision encoder runs once per frame (a single
+forward pass). But action generation requires multiple autoregressive decode
+steps (7+ tokens for a 7-DoF action).
+
+This means optimizing the vision encoder (e.g., TensorRT for ViT) helps,
+but only addresses 25% of the problem. The real optimization target is
+the action decoding:
+
+**Training-free speedups** (apply without retraining):
+- PD-VLA: Parallel fixed-point decoding - 4x speedup
+- VLASH: Async inference with future-state estimation - 2x speedup
+- VLA-IAP: Visual token pruning - 1.5x speedup
+
+**Architecture changes** (require retraining):
+- EdgeVLA: Non-autoregressive action prediction - 6x speedup
+- FAST tokenizer: 10x action compression (fewer decode steps)
+
+This is why vla-edge's optimization roadmap prioritizes action decoding
+optimization (Phase 4+) over vision encoder optimization.
+
+Reference: [Characterizing VLA Bottlenecks](https://arxiv.org/abs/2603.02271) |
+[PD-VLA](https://arxiv.org/abs/2503.02310) |
+[VLASH](https://arxiv.org/abs/2512.01031) |
+[EdgeVLA](https://arxiv.org/abs/2507.14049)
+
+---
+
+## Part 2: The Story So Far
+
+### How we chose this project (2026-03-29)
+
+Started with a broad question: "What open-source project should I build?"
+Ran 20+ research agents across healthcare AI, robotics, LLM tooling.
+
+**Ideas we evaluated and rejected**:
+- `medeval` (medical LLM eval) - scored 90/100 but Audere conflict (Foundation Foundry)
+- `SurgVLA-Bench` (surgical VLA benchmark) - scored 71/100, needs surgical collaborator
+- `vla-safety` (VLA safety testing) - PKU-Alignment's SafeVLA (NeurIPS spotlight) dominates
+- `vla-bench-auto` (VLA benchmarking) - Allen AI's vla-eval already exists
+- `VLAs-from-scratch` (educational) - scored 95/100 raw but 3-author ownership conflict
+
+**Why vla-edge won**: Scored 90/100. Zero collaboration dependency. Uses Krishnam's
+Jetson hardware. Directly produces Manning book content (Ch 9-11). No competition
+for the integrated "profile + optimize + validate + deploy" workflow.
+
+Full research: `~/Desktop/docs/notes/PROJECT_RESEARCH_MASTER.md`
+
+### Architecture decisions (2026-03-30)
+
+Chose two thin ABCs + decorator registries after studying LeRobot (6-method
+Robot class), vla-eval (1-method ModelServer), and lm-eval (3-method LM).
+The pattern: keep the mandatory interface tiny, let subclasses add specifics.
+
+Rejected a function-based approach (no extension contract) and a heavy plugin
+system with entry_points (premature for v0.1 with 1-2 backends).
+
+---
+
+## Concepts Queue (to learn and document next)
+
+- [ ] TensorRT engine building - how it works, why vision encoder but not LLM
+- [ ] ONNX export for VLA models - splitting components, handling dynamic shapes
+- [ ] Action chunking - predicting N future actions at once, executing at higher frequency
+- [ ] Async VLA inference - the VLASH pattern of predicting while executing
+- [ ] Diffusion policy heads vs autoregressive decoding - tradeoffs for edge
+- [ ] ROS 2 Humble integration on Jetson - nodes, topics, action servers
+- [ ] Sim-to-real transfer - domain randomization, what breaks
+- [ ] Model profiling methodology - warmup, percentiles, statistical significance

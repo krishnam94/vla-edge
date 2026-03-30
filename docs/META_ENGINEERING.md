@@ -49,6 +49,16 @@ Use `/code-review` on every PR before merging. It runs 5 parallel agents:
 
 Only flags issues with >80% confidence. Filters out false positives.
 
+### Learning Journal
+After implementing any concept, document it in `docs/LEARNING.md`:
+- What the concept is (explain like teaching someone)
+- Why it matters for edge deployment specifically
+- Reference links (papers, docs, code)
+- How it connects to the Manning VLA book chapters
+
+The learning journal grows with the project and feeds directly into book writing.
+It also documents the story of the project - pivots, rejected ideas, and why.
+
 ### Periodic Maintenance
 - Run `code-simplifier` agent monthly to find code that can be simplified
 - Run `/revise-claude-md` after major changes to keep CLAUDE.md current
