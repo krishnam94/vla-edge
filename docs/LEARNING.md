@@ -273,6 +273,97 @@ system with entry_points (premature for v0.1 with 1-2 backends).
 
 ---
 
+### Why `trust_remote_code` matters for robotics
+
+When you call `AutoModel.from_pretrained("some-model", trust_remote_code=True)`,
+HuggingFace downloads and EXECUTES arbitrary Python from that model's repo.
+Most VLA models (OpenVLA, SmolVLA) require this because they have custom
+architecture code that isn't in the transformers library yet.
+
+The risk: a malicious model repo could execute code that:
+- Exfiltrates your HuggingFace token or SSH keys
+- Modifies your robot control pipeline
+- On a robot with physical actuators, this has real-world consequences
+
+Our approach: default to `trust_remote_code=False`. The user must explicitly
+opt in via CLI flag. We log a warning when enabled. For known-safe models
+(registered in our model registry), we can allowlist them in the future.
+
+**Lesson learned**: Our first version had `trust_remote_code=True` hardcoded
+in all three backends. The critic agent caught this as a critical security issue.
+
+Reference: [HuggingFace security advisory on remote code](https://huggingface.co/docs/hub/security-code) |
+[Arbitrary code execution via pickle](https://huggingface.co/docs/hub/security-pickle)
+
+---
+
+### Registry loading - why a boolean flag, not dict emptiness
+
+Our first implementation checked `if _BACKENDS:` to skip re-importing backend
+modules. The bug: if a test registers a fake backend, the dict becomes non-empty,
+and the real backends (CPU, CUDA, Jetson) never get imported.
+
+Fix: use a `_backends_loaded = False` boolean that's set to True after the first
+import attempt, regardless of what's in the dict.
+
+This is a common pattern in Python module initialization. Django's app registry
+uses the same approach (`self.ready = False` flag).
+
+---
+
+### Per-timestep vs per-joint violation counting
+
+When validating action safety, we count how many timesteps had violations.
+Our first version counted per-joint - so one bad timestep with 3 joints
+out of bounds counted as 3 violations. This made `violation_rate` potentially
+exceed 1.0 (100%), which is semantically wrong.
+
+Fix: track violated timestep indices in a set, count the set size.
+
+**The broader lesson**: In robotics safety, the unit of concern is usually
+the timestep (one control cycle), not individual joints. A robot that makes
+one bad move affecting 7 joints made ONE bad decision, not seven.
+
+---
+
+### Non-linear performance on edge hardware
+
+A model that runs at 6 Hz on an RTX 4090 won't run at 3 Hz on hardware with
+"half the compute." Edge performance degrades non-linearly because of:
+- Memory bandwidth bottlenecks (shared CPU/GPU memory on Jetson)
+- Thermal throttling (sustained load on small form factor)
+- Cache effects (smaller L2 cache on edge GPUs)
+- Kernel launch overhead (bigger fraction of total time on slower hardware)
+
+This is why vla-edge exists: you can't predict edge performance from cloud
+benchmarks. You need to measure on the actual target hardware.
+
+Reference: [Cross-Platform VLA Scaling](https://arxiv.org/abs/2509.11480) |
+[VLA-Perf](https://arxiv.org/abs/2602.18397)
+
+---
+
+## Part 3: Process Learnings
+
+### Critic-driven development works (2026-03-30)
+
+After building Phase 1, we ran two parallel agents: an architecture critic
+and a code reviewer. Together they found 10 issues (3 critical, 5 important,
+2 minor). The critical ones (`trust_remote_code`, registry race condition,
+CUDA excluding all aarch64) would have caused real problems on first use.
+
+**The process**: propose -> build -> critique -> fix -> document. Not
+propose -> critique -> build. The critic is more effective with real code
+to review than hypothetical designs.
+
+**What the critic missed**: It didn't catch that `infer()` ignores the
+instruction and state fields from the observation dict. Both agents flagged
+it as "important" but neither called it critical. In practice, this means
+profiling would produce wrong actions (but correct latency numbers), which
+is acceptable for Phase 1 profiling-only use.
+
+---
+
 ## Concepts Queue (to learn and document next)
 
 - [ ] TensorRT engine building - how it works, why vision encoder but not LLM
