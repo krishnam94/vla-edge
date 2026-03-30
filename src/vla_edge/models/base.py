@@ -63,10 +63,10 @@ class VLAModel(ABC):
         Not abstract - default is no-op (some models need no cleanup).
         """
 
-    def __enter__(self):
+    def __enter__(self) -> VLAModel:
         return self
 
-    def __exit__(self, *args):
+    def __exit__(self, *args: Any) -> None:
         self.cleanup()
 
     def preprocess_image(self, image: np.ndarray) -> Any:

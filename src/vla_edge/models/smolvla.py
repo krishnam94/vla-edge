@@ -13,6 +13,7 @@ Reference: https://arxiv.org/abs/2506.01844
 from __future__ import annotations
 
 import logging
+from typing import Any
 
 import numpy as np
 
@@ -64,7 +65,7 @@ class SmolVLAAdapter(VLAModel):
         self._model_id = model_id
         self._device = torch.device(device)
         self._torch_dtype = torch.float32 if dtype == "float32" else torch.bfloat16
-        self._policy = None
+        self._policy: Any = None
         self._loaded = False
 
         logger.info("SmolVLA adapter created (lazy loading, call predict() to load)")
@@ -109,7 +110,7 @@ class SmolVLAAdapter(VLAModel):
         self._ensure_loaded()
 
         # Build observation dict matching LeRobot's expected format
-        observation = {}
+        observation: dict[str, Any] = {}
 
         # Image: convert to tensor, add batch dim
         if isinstance(image, np.ndarray):
