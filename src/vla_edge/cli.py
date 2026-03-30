@@ -170,8 +170,9 @@ def validate(
     )
     table.add_row("Critical violations", str(summary["critical_violations"]))
     table.add_row("Max velocity observed", f"{summary['max_velocity_observed']:.4f}")
-    table.add_row("Avg latency", f"{profile_result['avg_ms']:.1f} ms")
-    table.add_row("FPS", f"{profile_result['fps']:.1f}")
+    table.add_row("Cold start", f"{profile_result.get('cold_start_ms', 0):.0f} ms")
+    table.add_row("Cached avg", f"{profile_result['avg_ms']:.1f} ms")
+    table.add_row("FPS (cached)", f"{profile_result.get('fps_cached', 0):.1f}")
 
     console.print(table)
 
