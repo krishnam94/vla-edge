@@ -212,11 +212,15 @@ for local development we also run the code review agent before pushing.
 ### Claude Code - Repo Skills (custom for vla-edge)
 | Skill | When to use |
 |-------|------------|
-| `/critic` | Before major architecture decisions |
+| `/status` | Start of session - show project state and suggest next steps |
+| `/critic` | Before major architecture decisions (single persona) |
+| `/review-panel` | Major arch/roadmap decisions (3 personas in parallel) |
 | `/profile` | Profile a model and get optimization suggestions |
 | `/add-model` | Adding a new VLA model adapter |
 | `/add-backend` | Adding a new hardware backend |
 | `/benchmark` | Full benchmark run + results update |
+| `/doc-hygiene` | Check all docs for staleness and inconsistencies |
+| `/synthesize` | Generate novel idea combinations from questions + papers + code |
 
 ### Claude Code - Installed Plugins (global, use as-is)
 | Plugin | When to use |
@@ -228,12 +232,12 @@ for local development we also run the code review agent before pushing.
 | `/revise-claude-md` | After major changes to keep CLAUDE.md current |
 | `code-simplifier` | Monthly cleanup pass to find simplifiable code |
 
-### Claude Code - Scheduled Tasks (set up on claude.ai/code/scheduled)
-| Schedule | Task |
-|----------|------|
-| Daily 8 AM | HuggingFace VLA model scan |
-| Monday 9 AM | arXiv + Semantic Scholar paper scan |
-| Friday 5 PM | Project status review |
+### Claude Code - Scheduled Tasks (live on claude.ai/code/scheduled, 3 AM PT)
+| Schedule | Task | Novel Thinking Component |
+|----------|------|------------------------|
+| Daily 3:07 AM | Digest + VLA model scan + cross-domain insight | Cross-domain insight generation |
+| Mon+Fri 3:23 AM | Paper scan + citations + competitors + questions | 3 AI-generated novel questions |
+| Friday 3:41 AM | Project review + doc hygiene + collision + planning | Collision of the Week exploration |
 
 ### Instincts (auto-enforced behavior)
 | Instinct | What it enforces |
@@ -259,3 +263,100 @@ Key papers we track (citations, new methods):
 - NanoVLA (arXiv:2510.25122) - 52x faster, dynamic routing
 
 Full paper database: `~/Desktop/docs/notes/research_vla_edge_papers_2025_2026.md`
+
+### Paper Status Tracking
+
+| Paper | Status | Target Code | Notes |
+|-------|--------|-------------|-------|
+| QVLA (2602.03782) | ANALYZED | optimize/quantize.py | Action-centric quant, Phase 4. Code: github.com/AutoLab-SAI-SJTU/QVLA |
+| SmolVLA (2506.01844) | ANALYZED | models/smolvla.py | Flow matching, 512x512, Phase 2. Analysis: docs/SMOLVLA_ANALYSIS.md |
+| DyQ-VLA (2603.07904) | TRACKED | optimize/ (future) | Dynamic bit-width by kinematic state |
+| PD-VLA (2503.02310) | TRACKED | N/A | Training-free parallel decoding for autoregressive VLAs |
+| VLASH (2512.01031) | TRACKED | N/A | Async inference pattern (MIT Han Lab) |
+| LiteVLA-Edge (2603.03380) | BASELINE | - | 6.6 Hz reference on Jetson Orin |
+| VLA-Perf (2602.18397) | TRACKED | - | Analytical profiling model |
+| NanoVLA (2510.25122) | TRACKED | - | Vision-language decoupling + dynamic routing |
+| TurboQuant (2504.19874) | TRACKED | N/A | KV cache quant - low relevance for VLA (short sequences) |
+| EaqVLA (2505.21567) | TRACKED | optimize/ (future) | Encoding-aligned VLA quantization |
+
+Statuses: TRACKED -> ANALYZED -> IMPLEMENTING -> IMPLEMENTED -> ARCHIVED
+
+---
+
+## Doc Hygiene Process
+
+### Freshness Windows
+
+| Doc | Window | Staleness Signal |
+|-----|--------|------------------|
+| CLAUDE.md | Must match code always | Any claim contradicted by src/ |
+| LEARNING.md | Append-only journal | Missing entry for a shipped feature |
+| QUESTIONS.md | Weekly review | >7 days since last edit |
+| IDEAS.md | Monthly review | >30 days since last edit |
+| META_ENGINEERING.md | Update after each phase | New phase started without update |
+| SCHEDULED_TASKS.md | Must match live triggers | Trigger IDs or schedules change |
+| docs/research/*.md | Valid until implemented or superseded | Paper's insights fully in src/ |
+
+### Decision Tree: Update vs Archive vs Delete
+
+- **Update** if: doc covers an active concept and info is just outdated
+- **Archive** to `docs/archive/` if: analysis informed a decision already made, insights fully implemented
+- **Delete** if: duplicate or draft superseded by final version. Prefer archive.
+
+### Automated Detection
+
+The Friday scheduled task checks: CLAUDE.md vs code drift, QUESTIONS.md freshness,
+LEARNING.md activity, paper implementation status. `/doc-hygiene` skill runs on demand.
+
+---
+
+## Review Log
+
+Track /critic and /review-panel effectiveness over time.
+
+| Date | Tool | Findings | Critical | Instincts Created |
+|------|------|----------|----------|-------------------|
+| 2026-03-30 | /critic | 10 | 3 | (fixed inline: trust_remote_code, registry, aarch64) |
+| 2026-03-30 | /code-review | 16 | 3 | (overlapping with /critic) |
+| 2026-03-30 | /review-panel | 12 | 4 (unanimous) | ADR-005 (profiler first), ADR-006 (leaderboard) |
+
+---
+
+## Self-Improvement Rules
+
+### Instinct Creation
+- Critical finding NOT caught by existing instinct -> candidate for new instinct
+- Pattern appearing in 2+ reviews -> MUST become instinct
+- Do NOT inflate beyond current 6 unless a clear pattern emerges
+
+### Skill Evolution
+- After each use of /critic or /review-panel, check: did the prompt miss something?
+- Update the skill's file list or evaluation criteria if needed
+- /critic auto-discovers modules (reads CLAUDE.md + lists src/) rather than hardcoded files
+
+### Persona Calibration (/review-panel)
+- Production Engineer: strong on memory/latency, missed trust_remote_code in Phase 1
+- Startup ML Engineer: strong on DX/onboarding, no false positives yet
+- Open Source Strategist: called the leaderboard (ADR-006), weakest on technical correctness
+- Update after each panel session
+
+---
+
+## Knowledge Location Matrix
+
+Where to put things so they don't get duplicated:
+
+| Knowledge type | Where it lives | Why |
+|---------------|----------------|-----|
+| Hard constraint (will crash if violated) | Instinct + CLAUDE.md | Auto-enforced |
+| Architecture decision + reasoning | ADR in this file | Needs reasoning trail |
+| Concept explanation (for learning/book) | LEARNING.md | Append-only, feeds Manning book |
+| Paper deep dive | docs/research/PAPER_ANALYSIS.md | One file per paper |
+| Open question (generative) | QUESTIONS.md | Reviewed weekly |
+| Concrete idea (log and move on) | IDEAS.md | Reviewed monthly |
+| Implementation detail | Code comments in src/ | Close to the code |
+| API contract / usage | CLAUDE.md | First thing every session reads |
+| Process / workflow | This file (META_ENGINEERING.md) | How we work |
+
+**Rule**: Factual claims have ONE canonical location (CLAUDE.md Research Insights).
+Other docs reference it, don't repeat it.

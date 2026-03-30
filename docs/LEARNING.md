@@ -208,35 +208,44 @@ Reference: [llama.cpp GGUF format](https://github.com/ggerganov/llama.cpp) |
 
 ---
 
-### Where 75% of VLA latency actually comes from
+### Two types of action generation: autoregressive vs flow matching
+**Manning Chapter: 10 (Optimization)**
 
-A common misconception: "The vision encoder is the bottleneck because images
-are expensive to process." Wrong.
+VLA models generate actions in two fundamentally different ways. This matters
+because the optimization strategy is completely different for each.
 
-Google's profiling paper (March 2026) found that **up to 75% of end-to-end
-VLA latency is in the action generation phase** (the LLM decoding step),
-not the vision encoding. The vision encoder runs once per frame (a single
-forward pass). But action generation requires multiple autoregressive decode
-steps (7+ tokens for a 7-DoF action).
+**Autoregressive (OpenVLA, pi0, RT-2)**: The model generates action tokens
+one at a time, like a text LLM generating words. For a 7-DoF robot arm,
+that's 7+ sequential decode steps. Each step waits for the previous one.
+Latency scales linearly with action dimensions.
 
-This means optimizing the vision encoder (e.g., TensorRT for ViT) helps,
-but only addresses 25% of the problem. The real optimization target is
-the action decoding:
+**Flow matching (SmolVLA, TinyVLA)**: The model takes Gaussian noise and
+iteratively refines it into actions through a fixed number of denoising steps
+(SmolVLA uses 10). All action dimensions are generated simultaneously at
+each step. Latency scales with denoising steps, not action dimensions.
 
-**Training-free speedups** (apply without retraining):
-- PD-VLA: Parallel fixed-point decoding - 4x speedup
-- VLASH: Async inference with future-state estimation - 2x speedup
-- VLA-IAP: Visual token pruning - 1.5x speedup
+**Why this matters for optimization**:
+- For autoregressive VLAs: optimize the decode loop. PD-VLA (parallel
+  fixed-point iteration) gives 4x. Speculative decoding helps. Fewer action
+  tokens (FAST tokenizer: 10x compression) helps.
+- For flow matching VLAs: optimize each denoising step. Fewer steps helps
+  (OneDP: single-step distillation, 41x speedup). Action expert pruning helps.
+  Token pruning is less relevant.
 
-**Architecture changes** (require retraining):
-- EdgeVLA: Non-autoregressive action prediction - 6x speedup
-- FAST tokenizer: 10x action compression (fewer decode steps)
+Google's profiling paper found 75% of latency is in action generation for
+AUTOREGRESSIVE VLAs. For flow matching VLAs like SmolVLA, the split is
+different - the action expert's 10 denoising steps dominate, but they're
+each faster than autoregressive decode steps.
 
-This is why vla-edge's optimization roadmap prioritizes action decoding
-optimization (Phase 4+) over vision encoder optimization.
+**Key insight for vla-edge**: We need to detect which type a model uses and
+apply the right optimization strategy. This is why the HardwareBackend
+abstraction is important - the backend can choose different optimization
+paths based on model type.
 
 Reference: [Characterizing VLA Bottlenecks](https://arxiv.org/abs/2603.02271) |
+[SmolVLA](https://arxiv.org/abs/2506.01844) |
 [PD-VLA](https://arxiv.org/abs/2503.02310) |
+[OneDP](https://arxiv.org/abs/2410.21257) |
 [VLASH](https://arxiv.org/abs/2512.01031) |
 [EdgeVLA](https://arxiv.org/abs/2507.14049)
 

@@ -84,3 +84,21 @@ After all 3 personas report, combine into:
 
 ### What's solid (all 3 agree works well)
 - ...
+
+## After the Panel: Feedback Loop
+
+1. Update META_ENGINEERING.md Review Log with: date, findings count, critical count
+2. Any Critical finding NOT caught by an existing instinct -> candidate for new instinct
+3. Update Persona Calibration Notes below based on what each persona caught/missed
+4. If any finding changes the roadmap, create an ADR in META_ENGINEERING.md
+
+## Persona Calibration Notes
+(Update after each session - helps interpret future panel results)
+
+**Session 1 (2026-03-30, Phase 1 review):**
+- Production Robotics Engineer: Strong on memory/latency/OOM. Caught backend/model
+  responsibility split issue. Missed trust_remote_code (caught by separate /critic).
+- Startup ML Engineer: Strong on DX/onboarding. Correctly identified "no working model"
+  as the biggest blocker. Zero false positives. Most actionable feedback.
+- Open Source Strategist: Called the leaderboard as 10x growth lever (ADR-006).
+  Weakest on technical correctness but strongest on positioning/launch strategy.

@@ -50,11 +50,13 @@ pip-installable toolkit for profiling, optimizing, validating, and deploying VLA
 - ROS 2 Humble is the correct distro (Ubuntu 22.04). Jazzy needs 24.04.
 
 ## Key Research Insights
-- Standard LLM quantization is suboptimal for VLAs. Use action-centric quantization (QVLA).
-- 75% of VLA latency is in action generation, not vision encoding.
-- Training-free parallel decoding (PD-VLA) gives 4x speedup on any autoregressive VLA.
-- 6.6 Hz on Jetson Orin (LiteVLA-Edge) is the baseline to beat.
-- Target: 10+ Hz for v0.1.
+- Standard LLM quantization is suboptimal for VLAs. Use action-centric quantization (QVLA, DyQ-VLA).
+- For AUTOREGRESSIVE VLAs (OpenVLA, pi0): 75% of latency is in action token generation.
+  For FLOW MATCHING VLAs (SmolVLA): bottleneck is 10 denoising steps through action expert. Different optimization strategies needed.
+- SmolVLA uses SigLIP vision (512x512), SmolLM2-360M backbone, flow matching action expert (~100M params). NOT autoregressive.
+- Training-free parallel decoding (PD-VLA) gives 4x speedup on autoregressive VLAs (not applicable to flow matching).
+- 6.6 Hz on Jetson Orin (LiteVLA-Edge) is the baseline to beat. Target: 10+ Hz for v0.1.
+- TurboQuant (Google, ICLR 2026): KV cache quantization - low relevance for VLA (short sequences). QVLA is what matters.
 
 ## Key Technical Decisions
 - Build system: hatchling + hatch-vcs (auto-version from git tags)

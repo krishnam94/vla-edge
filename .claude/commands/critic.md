@@ -18,14 +18,17 @@ Focus area (if specified): $ARGUMENTS
 
 If no area specified, review the entire architecture:
 
-1. **Read CLAUDE.md** for architecture overview
-2. **Read src/vla_edge/backends/base.py** - is the HardwareBackend ABC right?
-3. **Read src/vla_edge/models/base.py** - is the VLAModel ABC right?
-4. **Read src/vla_edge/registry.py** - is the registry pattern appropriate?
-5. **Read src/vla_edge/validate/safety.py** - is the safety approach sound?
-6. **Read src/vla_edge/profile/latency.py** - is the profiling methodology correct?
-7. **Read src/vla_edge/cli.py** - is the CLI design right for the target users?
-8. **Read pyproject.toml** - are the dependencies and extras correct?
+1. **Read CLAUDE.md** for stated architecture
+2. **Discover actual modules**: List all .py files in src/vla_edge/ recursively.
+   Compare actual structure to what CLAUDE.md claims. Flag any drift.
+3. **Read the core abstractions**: backends/base.py, models/base.py, registry.py
+4. **Read the implementations**: all files in backends/, models/, profile/, validate/, optimize/
+5. **Read the CLI**: cli.py - does it wire everything together correctly?
+6. **Read pyproject.toml** - dependencies, extras, build config
+7. **Read tests/** - are the right things tested? What's missing?
+
+The file list above is intentionally dynamic - discover what exists rather than
+assuming a fixed set. The codebase is growing.
 
 ## Critique Framework
 
