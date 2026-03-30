@@ -414,6 +414,39 @@ user decide if the numbers are trustworthy.
 
 ---
 
+### SafetyGuard - inline safety enforcement vs post-hoc validation
+**Manning Chapter: 11 (Production Patterns)**
+
+There are two ways to check safety in a robot control loop:
+
+**Post-hoc validation** (what we had before): Run inference, collect all actions,
+then validate the sequence. Good for offline analysis of recorded trajectories.
+Bad for real-time control - by the time you validate, the robot already executed
+the dangerous actions.
+
+**Inline enforcement** (SafetyGuard, new): Wraps every inference call with
+clip + validate. The guard sits between the backend and the caller:
+
+```
+observation -> backend.infer() -> raw actions -> SafetyGuard -> clipped actions -> robot
+                                                     |
+                                              violation logged
+```
+
+Design choices:
+- Guard clips first, THEN validates. The caller always gets safe actions.
+- Violations are logged but don't block execution (robot needs to keep moving).
+- Guard tracks statistics across calls (violation rate, max velocity observed).
+- Summary available via `guard.summary` for reporting.
+
+This is the pattern from industrial robotics: safety limits are enforced in
+hardware (e-stops, joint limiters) AND software (velocity clamping, workspace
+bounds). The software layer is our SafetyGuard.
+
+Reference: [Modular Safety Guardrails for FM Robots](https://arxiv.org/abs/2602.04056)
+
+---
+
 ## Concepts Queue (to learn and document next)
 
 - [ ] TensorRT engine building - how it works, why vision encoder but not LLM
