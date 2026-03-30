@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>VLA Edge Deployment Leaderboard</title>
+<style>
+  :root { --bg: #0d1117; --card: #161b22; --border: #30363d; --text: #e6edf3; --dim: #8b949e; --accent: #58a6ff; --green: #3fb950; --red: #f85149; --yellow: #d29922; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; padding: 2rem; max-width: 1200px; margin: 0 auto; }
+  h1 { font-size: 1.8rem; margin-bottom: 0.5rem; }
+  .subtitle { color: var(--dim); margin-bottom: 2rem; }
+  .subtitle a { color: var(--accent); text-decoration: none; }
+  table { width: 100%; border-collapse: collapse; background: var(--card); border-radius: 8px; overflow: hidden; }
+  th { background: var(--border); padding: 12px 16px; text-align: left; font-size: 0.85rem; color: var(--dim); text-transform: uppercase; letter-spacing: 0.5px; cursor: pointer; }
+  th:hover { color: var(--accent); }
+  td { padding: 12px 16px; border-top: 1px solid var(--border); font-size: 0.9rem; }
+  tr:hover td { background: rgba(88, 166, 255, 0.05); }
+  .fps { font-weight: bold; }
+  .fps-good { color: var(--green); }
+  .fps-ok { color: var(--yellow); }
+  .fps-slow { color: var(--red); }
+  .chip { display: inline-block; padding: 2px 8px; border-radius: 12px; font-size: 0.75rem; background: var(--border); }
+  .notes { font-size: 0.8rem; color: var(--dim); max-width: 300px; }
+  .updated { color: var(--dim); font-size: 0.8rem; margin-top: 1.5rem; }
+  .contribute { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1.5rem; margin-top: 2rem; }
+  .contribute h3 { margin-bottom: 0.5rem; }
+  .contribute code { background: var(--border); padding: 2px 6px; border-radius: 4px; font-size: 0.85rem; }
+</style>
+</head>
+<body>
+
+<h1>VLA Edge Deployment Leaderboard</h1>
+<p class="subtitle">
+  How fast can VLA models run on real hardware?
+  Measured by <a href="https://github.com/krishnam94/vla-edge">vla-edge</a>.
+</p>
+
+<table id="leaderboard">
+  <thead>
+    <tr>
+      <th onclick="sortTable(0)">Model</th>
+      <th onclick="sortTable(1)">Hardware</th>
+      <th onclick="sortTable(2)">Params</th>
+      <th onclick="sortTable(3)">Dtype</th>
+      <th onclick="sortTable(4)">Cold Start</th>
+      <th onclick="sortTable(5)">Cached</th>
+      <th onclick="sortTable(6)">Amortized FPS</th>
+      <th onclick="sortTable(7)">Memory</th>
+      <th>Notes</th>
+    </tr>
+  </thead>
+  <tbody id="tbody"></tbody>
+</table>
+
+<p class="updated" id="updated"></p>
+
+<div class="contribute">
+  <h3>Submit your benchmarks</h3>
+  <p>Run <code>vla-edge profile &lt;model&gt; --output results.json</code> and
+  <a href="https://github.com/krishnam94/vla-edge/issues/new">open an issue</a>
+  with your results. We'll add them to the leaderboard.</p>
+</div>
+
+<script>
+function esc(s) {
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+async function loadData() {
+  const resp = await fetch('data/results.json');
+  const data = await resp.json();
+
+  document.getElementById('updated').textContent = `Last updated: ${data.last_updated}`;
+
+  const tbody = document.getElementById('tbody');
+  data.entries.forEach(e => {
+    const fps = e.amortized_fps;
+    let fpsClass = 'fps-slow';
+    if (fps >= 10) fpsClass = 'fps-good';
+    else if (fps >= 1) fpsClass = 'fps-ok';
+
+    const row = document.createElement('tr');
+    const cells = [
+      `${esc(e.model)}`,
+      esc(e.hardware),
+      esc(e.params),
+      esc(e.dtype),
+      e.cold_start_ms ? (e.cold_start_ms/1000).toFixed(1)+'s' : '-',
+      e.cached_ms ? e.cached_ms.toFixed(1)+'ms' : '-',
+      fps ? fps.toFixed(2)+' Hz' : 'Pending',
+      e.memory_mb ? e.memory_mb+'MB' : '-',
+      esc(e.notes || '')
+    ];
+    cells.forEach((text, i) => {
+      const td = document.createElement('td');
+      if (i === 0) {
+        const strong = document.createElement('strong');
+        strong.textContent = e.model;
+        td.appendChild(strong);
+        td.appendChild(document.createElement('br'));
+        const chip = document.createElement('span');
+        chip.className = 'chip';
+        chip.textContent = e.architecture;
+        td.appendChild(chip);
+      } else if (i === 6) {
+        td.className = `fps ${fpsClass}`;
+        td.textContent = text;
+      } else if (i === 8) {
+        td.className = 'notes';
+        td.textContent = text;
+      } else {
+        td.textContent = text;
+      }
+      row.appendChild(td);
+    });
+    tbody.appendChild(row);
+  });
+}
+
+function sortTable(col) {
+  const tbody = document.getElementById('tbody');
+  const rows = Array.from(tbody.rows);
+  const asc = tbody.dataset.sortCol == col ? !JSON.parse(tbody.dataset.sortAsc || 'true') : true;
+  rows.sort((a, b) => {
+    const av = a.cells[col].textContent.trim();
+    const bv = b.cells[col].textContent.trim();
+    const an = parseFloat(av) || 0;
+    const bn = parseFloat(bv) || 0;
+    return asc ? (an || av).toString().localeCompare((bn || bv).toString(), undefined, {numeric: true})
+               : (bn || bv).toString().localeCompare((an || av).toString(), undefined, {numeric: true});
+  });
+  rows.forEach(r => tbody.appendChild(r));
+  tbody.dataset.sortCol = col;
+  tbody.dataset.sortAsc = asc;
+}
+
+loadData();
+</script>
+</body>
+</html>

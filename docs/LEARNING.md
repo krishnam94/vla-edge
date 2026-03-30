@@ -447,6 +447,38 @@ Reference: [Modular Safety Guardrails for FM Robots](https://arxiv.org/abs/2602.
 
 ---
 
+### Action chunking hides VLM latency (and benchmarking traps)
+**Manning Chapter: 10 (Optimization)**
+
+SmolVLA generates 50 actions per VLM forward pass (action chunking). The first
+call takes ~52 seconds (full VLM + flow matching). The next 49 calls take
+~3-4ms each (returning cached actions). Naive benchmarking that runs the same
+input 100 times will report 4ms average - missing the 52s elephant.
+
+Proper VLA benchmarking must report:
+- **Cold start**: first frame latency (52s on Mac Air CPU)
+- **Cached/amortized**: subsequent frames within a chunk (3ms)
+- **Amortized per-step**: cold_start / chunk_size + cached (52s / 50 + 3ms = 1.04s)
+- **Chunk exhaustion**: every Nth step re-runs the VLM
+
+This is why our profiler uses different images per iteration and reports
+both cold and amortized numbers.
+
+**VLM vs action expert split (hardware-dependent)**:
+- Mac Air CPU: 99.9% VLM, 0.1% action expert (memory-bandwidth limited)
+- RTX 4090: ~73% VLM, ~27% action (per VLA-Perf, arXiv:2602.18397)
+- Jetson Thor: varies by model architecture
+
+The extreme Mac ratio is a MPS-specific finding, not universal. VLA-Perf
+and AR-VLA (arXiv:2603.10126) already measured this split on NVIDIA hardware.
+Our contribution: first measurements on Mac/MPS.
+
+Reference: [VLA-Perf](https://arxiv.org/abs/2602.18397) |
+[AR-VLA component breakdown](https://arxiv.org/abs/2603.10126) |
+[Characterizing VLA Bottlenecks](https://arxiv.org/abs/2603.02271)
+
+---
+
 ## Concepts Queue (to learn and document next)
 
 - [ ] TensorRT engine building - how it works, why vision encoder but not LLM
