@@ -1,79 +1,76 @@
 # Scheduled Tasks for vla-edge
 
-Live on claude.ai/code/scheduled. All run at ~3 AM PT to avoid session limits.
+Live on claude.ai/code/scheduled. All run at ~3 AM PT (10 AM UTC).
+
+## Architecture
+
+Cloud tasks run on Anthropic's servers. They CAN use WebSearch and WebFetch.
+They CANNOT use gh CLI, git, or any local tools (Lesson 002).
+
+Output is viewable at claude.ai/code/scheduled. The `/status` skill bridges
+the gap: it checks for digest issues on GitHub, and if none exist, runs a
+quick local research scan and creates the issue using your authenticated gh CLI.
+
+```
+Cloud (3 AM)           Local (/status, morning)
+──────────             ────────────────────────
+WebSearch for papers   Read overnight output from claude.ai
+WebSearch for models   OR run quick local research
+Generate insights      Create GitHub issue (gh issue create)
+Output to session      Show priorities for today
+```
 
 ---
 
 ## Task 1: Daily Digest + VLA Model Scan
 **ID**: trig_011zbXF2sXPktw41MCjSgxLD
-**Schedule**: Every night 3:07 AM PT
-**Model**: Sonnet 4.6
+**Schedule**: Daily 3:07 AM PT (10:07 UTC)
+**Tools**: WebSearch, WebFetch
 
-Combines the personal daily research digest with vla-edge model scanning:
-1. **VLA Models**: New HuggingFace robotics models matching VLA patterns
-2. **Review Opportunities**: Conference/journal reviewer calls, CFPs
-3. **Healthcare AI**: New papers/tools from arxiv and journals
-4. **Robotics/Edge AI**: VLA deployment, edge inference, Jetson papers
-5. **EB-1A**: Citation tracking for MergeNet and HealthPulse
-6. **Claude Code**: Changelog and feature updates
+Scans: VLA models on HuggingFace, reviewer calls, healthcare AI papers,
+robotics/edge AI papers, EB-1A citations, Claude Code updates, one cross-domain insight.
 
-**What to do with output**: Scan in 2 min each morning. Act on tagged items.
+**Output**: Structured report in session (viewable at claude.ai).
 
 ---
 
-## Task 2: Monday Research Scan
+## Task 2: Research Scan (Mon + Fri)
 **ID**: trig_01AjkQfFmEQW6s3Zb7ZrHgux
-**Schedule**: Mondays 3:23 AM PT
-**Model**: Sonnet 4.6
+**Schedule**: Mon+Fri 3:23 AM PT (10:23 UTC)
+**Tools**: WebSearch, WebFetch
 
-Deep research scan for vla-edge:
-1. **arXiv papers**: VLA edge deployment, quantization, optimization, CUDA kernels
-2. **Citation tracking**: Who cited QVLA, PD-VLA, VLASH, LiteVLA-Edge, VLA-Perf, NanoVLA
-3. **Competitor watch**: VLA-Perf, vla-eval, LeRobot, SafeVLA new releases
+Scans: arXiv papers (VLA edge, quantization, optimization), Semantic Scholar
+citations to 7 key papers, competitor repos (VLA-Perf, vla-eval, LeRobot, SafeVLA),
+3 AI-generated novel questions.
 
-**What to do with output**: Read Monday morning. If strategic question found,
-run `/review-panel <topic>` before starting the week's work.
+**Output**: Structured report in session (viewable at claude.ai).
 
 ---
 
-## Task 3: Friday Review + Next Week Planning
+## Task 3: Friday Review + Planning
 **ID**: trig_01TUcuKYujeL18fJypMVyZjo
-**Schedule**: Fridays 3:41 AM PT
-**Model**: Sonnet 4.6
+**Schedule**: Friday 3:41 AM PT (10:41 UTC)
+**Tools**: WebSearch, WebFetch
 
-Weekly project health check:
-1. **Progress**: Commits this week
-2. **Issues**: Open count by label, stale flags
-3. **Tests**: CI status
-4. **Competitors**: Anything shipped this week that affects us?
-5. **Process**: Was LEARNING.md updated?
-6. **Next week**: Top 3 priorities recommended
-7. **Strategic flags**: Explicitly calls out "REVIEW-PANEL NEEDED: [topic]" if
-   any competitor move or paper finding needs a strategic discussion
+Scans: GitHub commits/issues this week, competitor activity, LEARNING.md/QUESTIONS.md
+freshness, collision of the week exploration, top 3 priorities, strategic flags,
+monthly Hamming audit (first Friday).
 
-**What to do with output**: Read Friday morning. If REVIEW-PANEL flagged, run it.
-Use the top 3 priorities to plan Monday's /feature-dev sessions.
+**Output**: Structured report in session (viewable at claude.ai).
 
 ---
 
-## The Weekly Flow
+## GitHub Issue Labels for Digest
 
-```
-Mon 3:23 AM  [auto] Monday Research Scan runs
-Mon morning  [you]  Read scan -> /review-panel if strategic question
-Mon-Thu      [you]  /feature-dev on issues, /critic on new code
-Fri 3:41 AM  [auto] Friday Review runs
-Fri morning  [you]  Read review -> update LEARNING.md -> plan next week
-Daily 3:07AM [auto] Digest runs
-Daily AM     [you]  2-min scan of digest
-```
+Created and ready (issues created by /status locally):
+- `daily-digest` - Morning briefing
+- `paper-scan` - Research scan results
+- `weekly-status` - Friday review
 
 ---
 
-## Disabled Tasks
-- **vla-edge: Daily Model Scan** (trig_019kPJJjqxbuZT5YYy8Wfabg) - merged into Task 1
+## Lesson Learned
 
-## Why Only 3 Tasks
-Plan limit is 3 cloud scheduled tasks. We merged the daily model scan into the
-daily digest to free a slot for the Friday review. Monthly architecture review
-is done manually (run `/review-panel` on the 1st of each month).
+Cloud scheduled tasks cannot create GitHub issues directly (no gh CLI auth).
+The /status skill handles issue creation from the local machine. See Lesson 002
+in META_ENGINEERING.md.

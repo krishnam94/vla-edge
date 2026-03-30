@@ -174,6 +174,15 @@ severity levels (warning vs critical).
 
 ## Lessons Learned
 
+### Lesson 002: Cloud scheduled tasks can't run gh CLI (2026-03-31)
+**What happened**: Updated scheduled tasks to create GitHub issues via `gh issue create`.
+Cloud environment doesn't have gh CLI authenticated - issues never appeared.
+**Root cause**: Cloud tasks run on Anthropic's infra, not your machine. No gh/git auth.
+**Fix applied**: Cloud tasks produce output only (viewable at claude.ai). The /status
+skill creates GitHub issues locally using your authenticated gh CLI.
+**Prevention rule**: Cloud scheduled tasks can only use WebSearch/WebFetch. Any GitHub
+write operations must happen from the local CLI session via /status or manually.
+
 ### Lesson 001: Run critic + code review BEFORE pushing, not after (2026-03-30)
 **What happened**: Phase 1 shipped with 3 critical issues (trust_remote_code
 everywhere, registry race condition, CUDA excluding all aarch64).
@@ -233,11 +242,28 @@ for local development we also run the code review agent before pushing.
 | `code-simplifier` | Monthly cleanup pass to find simplifiable code |
 
 ### Claude Code - Scheduled Tasks (live on claude.ai/code/scheduled, 3 AM PT)
-| Schedule | Task | Novel Thinking Component |
-|----------|------|------------------------|
-| Daily 3:07 AM | Digest + VLA model scan + cross-domain insight | Cross-domain insight generation |
-| Mon+Fri 3:23 AM | Paper scan + citations + competitors + questions | 3 AI-generated novel questions |
-| Friday 3:41 AM | Project review + doc hygiene + collision + planning | Collision of the Week exploration |
+
+All tasks write results as GitHub issues (readable by /status skill).
+
+| Schedule | Task | Output Label | Novel Thinking |
+|----------|------|-------------|----------------|
+| Daily 3:07 AM | Digest + VLA model scan | `daily-digest` | Cross-domain insight |
+| Mon+Fri 3:23 AM | Paper scan + citations + competitors | `paper-scan` | 3 AI-generated questions |
+| Friday 3:41 AM | Project review + doc hygiene + planning | `weekly-status` | Collision of the Week |
+
+**How it works**: Cloud tasks run at 3 AM and produce output (viewable at
+claude.ai/code/scheduled). The `/status` skill then either reads existing
+digest issues from GitHub, or runs a quick local research scan and creates
+the digest issue from your authenticated machine. This closes the feedback loop:
+
+```
+3 AM: Cloud task runs research (viewable at claude.ai)
+Morning: You run /status in CLI
+/status: Checks for existing digest issues
+  -> If found: reads and summarizes
+  -> If not: runs quick local research + creates GitHub issue
+  -> Shows priorities for today based on insights + open issues
+```
 
 ### Instincts (auto-enforced behavior)
 | Instinct | What it enforces |
