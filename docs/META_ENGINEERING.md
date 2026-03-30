@@ -174,6 +174,16 @@ severity levels (warning vs critical).
 
 ## Lessons Learned
 
+### Lesson 004: Critic must run BEFORE push, not after (2026-03-31)
+**What happened**: Pushed MPS backend, ONNX export, and OpenVLA adapter across 3
+commits without running critic. Batch critic afterwards found 7 issues including
+2 HIGH (MPS hasattr guard, dtype inconsistency).
+**Root cause**: Lesson 001 said "run critic before push" but the instinct only
+reminded AFTER push. No enforcement mechanism for "before."
+**Fix applied**: Renamed instinct to `pre-push-and-post-push`. Now explicitly says
+"Run /critic BEFORE pushing. Do NOT skip." Batching rule added for multiple commits.
+**Prevention rule**: Critic is mandatory before `git push` for any src/ changes.
+
 ### Lesson 003: /feature-dev plugin skill not loading (2026-03-31)
 **What happened**: Tried `Skill(feature-dev)`, `Skill(commit-commands:feature-dev)`,
 `Skill(feature-dev:feature-dev)` - all returned "Unknown skill."

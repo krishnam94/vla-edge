@@ -1,15 +1,17 @@
-name: post-push-check
-description: Quick checklist after every git push
-trigger: after running git push
+name: pre-push-and-post-push
+description: Critic BEFORE push, checklist AFTER push
+trigger: before and after running git push
 rule: |
-  After every push, spend 2 minutes checking:
-  1. Did CI pass? Run: gh run list --repo krishnam94/vla-edge --limit 1
-  2. Did I update LEARNING.md? (if new concept was implemented)
-  3. Did I close relevant GitHub issues in the commit message? (closes #N)
-  4. Any lesson learned worth adding to META_ENGINEERING.md?
+  BEFORE pushing (mandatory):
+  1. Run /critic on changed files. Do NOT skip this.
+     Exception: doc-only or config-only changes (no src/ changes).
+  2. Fix any HIGH severity findings before pushing.
 
-  After a PHASE or MILESTONE completes (bigger items shipped):
-  5. Run /critic or /review-panel
-  6. Update META_ENGINEERING.md paper status table
-  7. Update milestones on GitHub
-  8. Close milestone if all issues resolved
+  AFTER pushing (2 minutes):
+  3. Did CI pass? Run: gh run list --repo krishnam94/vla-edge --limit 1
+  4. Did I update LEARNING.md? (if new concept was implemented)
+  5. Did I close relevant GitHub issues in the commit message? (closes #N)
+  6. Any lesson learned worth adding to META_ENGINEERING.md?
+
+  Batching rule: if you have 2+ commits ready to push, run critic
+  ONCE on all changed files, not per-commit. Then push all together.
