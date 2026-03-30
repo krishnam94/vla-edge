@@ -186,6 +186,40 @@ def validate(
 
 
 @app.command()
+def optimize(
+    model: str = typer.Argument(..., help="Model name from registry or HuggingFace ID"),
+    format: str = typer.Option("onnx", help="Export format: onnx"),
+    component: str = typer.Option("vision", help="Component: full, vision, action_head"),
+    output_dir: Path = typer.Option(Path("./exported"), help="Output directory"),
+) -> None:
+    """Export a VLA model (or component) to optimized format."""
+    from vla_edge.optimize.onnx_export import export_to_onnx
+    from vla_edge.registry import get_model
+
+    console.print(f"[bold]Exporting[/bold] {model} ({component}) to {format}...")
+
+    try:
+        model_cls = get_model(model)
+        loaded = model_cls(device="cpu")
+        loaded._ensure_loaded()
+    except (KeyError, TypeError) as e:
+        console.print(f"[red]Failed to load model: {e}[/red]")
+        return
+
+    result = export_to_onnx(loaded, output_dir, component=component)
+
+    if result.success:
+        console.print(f"[green]Exported to {result.output_path}[/green]")
+        console.print(f"  Original: {result.original_size_mb:.1f} MB")
+        console.print(f"  Exported: {result.exported_size_mb:.1f} MB")
+    else:
+        console.print(f"[red]Export failed: {result.error}[/red]")
+
+    if hasattr(loaded, "cleanup"):
+        loaded.cleanup()
+
+
+@app.command()
 def models() -> None:
     """List available VLA model adapters."""
     from vla_edge.registry import list_models
