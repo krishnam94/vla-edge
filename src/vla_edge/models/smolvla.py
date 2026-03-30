@@ -88,11 +88,9 @@ class SmolVLAAdapter(VLAModel):
 
         self._model_id = model_id
         # Auto-select device: prefer cuda, fallback to mps (Mac), then cpu
-        if device == "cpu":
-            self._device = torch.device("cpu")
-        elif device == "cuda" and torch.cuda.is_available():
+        if device == "cuda" and torch.cuda.is_available():
             self._device = torch.device("cuda")
-        elif torch.backends.mps.is_available():
+        elif device != "cpu" and hasattr(torch.backends, "mps") and torch.backends.mps.is_available():
             self._device = torch.device("mps")
         else:
             self._device = torch.device("cpu")
@@ -220,18 +218,24 @@ class SmolVLAAdapter(VLAModel):
             # Config uses 256x256 per camera, not 512x512 as the paper's SigLIP input.
             # The policy config is the ground truth.
             required_image_size=(256, 256),
-            supported_dtypes=["float32", "bfloat16"],
+            supported_dtypes=["fp32", "bf16"],
             source_url="https://huggingface.co/lerobot/smolvla_base",
         )
 
     def cleanup(self) -> None:
         """Release model memory. Addresses issue #4."""
-        import torch
-
         if self._policy is not None:
             del self._policy
             self._policy = None
-            self._loaded = False
+        if hasattr(self, "_processor") and self._processor is not None:
+            del self._processor
+            self._processor = None
+        self._loaded = False
+        try:
+            import torch
+
             if torch.cuda.is_available():
                 torch.cuda.empty_cache()
-            logger.info("SmolVLA model released")
+        except ImportError:
+            pass
+        logger.info("SmolVLA model released")

@@ -258,9 +258,12 @@ def _export_action_head(model: Any, output_dir: Path, opset_version: int) -> Exp
 
 def _get_torch_model(model: Any) -> Any:
     """Extract the underlying PyTorch model from a VLAModel adapter."""
-    # VLAModel adapter with _policy
-    if hasattr(model, "_policy"):
+    # SmolVLA adapter
+    if hasattr(model, "_policy") and model._policy is not None:
         return model._policy
+    # OpenVLA adapter
+    if hasattr(model, "_model") and model._model is not None:
+        return model._model
     # Raw PyTorch model
     import torch.nn as nn
 

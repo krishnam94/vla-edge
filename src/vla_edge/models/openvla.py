@@ -38,6 +38,7 @@ class OpenVLAAdapter(VLAModel):
         model_id: str = "openvla/openvla-7b",
         device: str = "cpu",
         dtype: str = "bf16",
+        unnorm_key: str = "bridge_orig",
     ) -> None:
         try:
             import torch
@@ -61,6 +62,7 @@ class OpenVLAAdapter(VLAModel):
             "bf16": torch.bfloat16,
         }.get(dtype, torch.bfloat16)
 
+        self._unnorm_key = unnorm_key
         self._model: Any = None
         self._processor: Any = None
         self._loaded = False
@@ -134,7 +136,7 @@ class OpenVLAAdapter(VLAModel):
         with torch.inference_mode():
             action = self._model.predict_action(
                 **inputs,
-                unnorm_key="bridge_orig",  # Default normalization key
+                unnorm_key=self._unnorm_key,
                 do_sample=False,
             )
 

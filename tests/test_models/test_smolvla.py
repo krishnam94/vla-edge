@@ -48,8 +48,8 @@ def test_smolvla_info_without_loading():
     assert info.action_dim == 6
     assert info.required_image_size == (256, 256)
     assert "Flow Matching" in info.architecture
-    assert "float32" in info.supported_dtypes
-    assert "bfloat16" in info.supported_dtypes
+    assert "fp32" in info.supported_dtypes
+    assert "bf16" in info.supported_dtypes
 
 
 def test_smolvla_image_size_is_512():
@@ -90,7 +90,7 @@ def test_smolvla_load_and_predict():
 
     from vla_edge.models.smolvla import SmolVLAAdapter
 
-    adapter = SmolVLAAdapter(device="cpu", dtype="float32")
+    adapter = SmolVLAAdapter(device="cpu", dtype="fp32")
 
     image = np.random.randint(0, 255, (480, 640, 3), dtype=np.uint8)
     instruction = "pick up the red block"
