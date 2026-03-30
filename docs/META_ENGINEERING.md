@@ -13,21 +13,51 @@ practices used to develop vla-edge. It evolves as we learn.
 4. **Real hardware, real numbers.** Jetson self-hosted runner for honest benchmarks.
 5. **Automate the boring parts.** CI, linting, model scanning, paper tracking are automated.
 
-## Process: Critic-Driven Development
+## Development Workflow: When to Use What
 
-Before major architectural decisions, run the `/critic` skill:
+### Building a New Feature
+Use `/feature-dev <description>` for any non-trivial feature. It runs:
+1. Discovery - clarify what to build
+2. Codebase exploration via `code-explorer` agents
+3. Architecture design via `code-architect` agent
+4. Implementation with TodoWrite tracking
+5. Tests and verification
 
-```
-/critic registry pattern
-```
+For simple additions (new model adapter, new backend), use the repo-specific
+`/add-model` or `/add-backend` skills instead - they're faster and focused.
 
-The critic agent argues against the current approach, grounded in real-world
-precedents from Physical Intelligence, LeRobot, NVIDIA, etc. The process:
-
+### Before Major Architecture Decisions
+Run `/critic <area>` to stress-test the design. The critic argues against
+the current approach grounded in real-world precedents (Physical Intelligence,
+LeRobot, NVIDIA). The process:
 1. **Propose** an architecture or design
 2. **Critique** via `/critic` - find weaknesses
 3. **Decide** - accept criticism that makes sense, reject what doesn't
-4. **Document** the decision and rationale in this file (below)
+4. **Document** the decision as an ADR in this file (below)
+
+### Committing Code
+Use `/commit` for smart commits with context-aware messages.
+Use `/commit-push-pr` when ready to push a feature branch and create a PR.
+
+### Code Review
+Use `/code-review` on every PR before merging. It runs 5 parallel agents:
+1. CLAUDE.md compliance check
+2. Shallow bug scan on changed lines
+3. Git history context review
+4. Previous PR comment review
+5. Code comment compliance
+
+Only flags issues with >80% confidence. Filters out false positives.
+
+### Periodic Maintenance
+- Run `code-simplifier` agent monthly to find code that can be simplified
+- Run `/revise-claude-md` after major changes to keep CLAUDE.md current
+- Run `/critic` quarterly on the full architecture
+
+### Research
+- Use `/project-research` for evaluating new project ideas
+- Use subagents for arXiv scanning, competitive analysis, technical deep dives
+- Always save research with source URLs (instinct: sources-in-research)
 
 ## Architecture Decisions Record
 
@@ -103,19 +133,56 @@ severity levels (warning vs critical).
 
 ## Tools & Automation
 
+### Code Quality (automated, every commit)
 | Tool | Purpose | Config |
 |------|---------|--------|
-| ruff | Lint + format | pyproject.toml |
-| mypy | Type checking | pyproject.toml |
+| ruff | Lint + format (pre-commit + CI) | pyproject.toml |
+| mypy | Type checking (pre-commit + CI) | pyproject.toml |
 | pytest | Testing with hardware markers | pyproject.toml |
 | pre-commit | Pre-push quality gate | .pre-commit-config.yaml |
+
+### CI/CD
+| Tool | Purpose | Config |
+|------|---------|--------|
 | GitHub Actions | CPU CI on every PR | .github/workflows/tests.yml |
 | Jetson runner | GPU/hardware CI on main | .github/workflows/test-jetson.yml |
-| Claude Code | PR review, paper scanning | Scheduled tasks (add after Phase 1) |
-| `/critic` | Architecture criticism | .claude/commands/critic.md |
-| `/profile` | Run profiling | .claude/commands/profile.md |
-| `/add-model` | Add new VLA model | .claude/commands/add-model.md |
-| `/add-backend` | Add new hardware backend | .claude/commands/add-backend.md |
+| PyPI publish | Auto-release on git tag | .github/workflows/release.yml |
+
+### Claude Code - Repo Skills (custom for vla-edge)
+| Skill | When to use |
+|-------|------------|
+| `/critic` | Before major architecture decisions |
+| `/profile` | Profile a model and get optimization suggestions |
+| `/add-model` | Adding a new VLA model adapter |
+| `/add-backend` | Adding a new hardware backend |
+| `/benchmark` | Full benchmark run + results update |
+
+### Claude Code - Installed Plugins (global, use as-is)
+| Plugin | When to use |
+|--------|------------|
+| `/code-review` | On every PR before merging (5 parallel review agents) |
+| `/commit` | For clean, context-aware commit messages |
+| `/commit-push-pr` | When shipping a feature branch to remote + PR |
+| `/feature-dev` | For non-trivial new features (explore -> design -> build) |
+| `/revise-claude-md` | After major changes to keep CLAUDE.md current |
+| `code-simplifier` | Monthly cleanup pass to find simplifiable code |
+
+### Claude Code - Scheduled Tasks (set up on claude.ai/code/scheduled)
+| Schedule | Task |
+|----------|------|
+| Daily 8 AM | HuggingFace VLA model scan |
+| Monday 9 AM | arXiv + Semantic Scholar paper scan |
+| Friday 5 PM | Project status review |
+
+### Instincts (auto-enforced behavior)
+| Instinct | What it enforces |
+|----------|-----------------|
+| jetson-constraints | TRT-LLM broken, use llama.cpp, 8GB memory budget |
+| safety-always | Never skip safety metrics in reports |
+| extensible-arch | New backend/model = one file, no core changes |
+| no-hardcoded-keys | Env vars only for tokens/keys |
+| test-before-ship | Tests required before marking features done |
+| sources-in-research | Source URLs in all research docs |
 
 ---
 
