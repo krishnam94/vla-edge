@@ -1,5 +1,5 @@
 ---
-description: Resume work on vla-edge - show status and suggest next steps
+description: Show vla-edge project status and suggest next steps
 ---
 
 # Resume vla-edge Development
