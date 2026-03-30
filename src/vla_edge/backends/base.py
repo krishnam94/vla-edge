@@ -57,12 +57,19 @@ class HardwareBackend(ABC):
         """Return hardware specs and supported formats/dtypes."""
 
     @abstractmethod
-    def load_model(self, model_path: str, dtype: str = "fp16") -> Any:
+    def load_model(
+        self,
+        model_path: str,
+        dtype: str = "fp16",
+        trust_remote_code: bool = False,
+    ) -> Any:
         """Load a model in this backend's preferred format.
 
         Args:
             model_path: HuggingFace model ID or local path.
             dtype: Data type for model weights (fp32, fp16, int8, int4).
+            trust_remote_code: If True, allow executing code from model repos.
+                Most VLA models require this. Default False for security.
 
         Returns:
             A loaded model object (type depends on backend).

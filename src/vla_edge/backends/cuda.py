@@ -25,10 +25,11 @@ class CUDABackend(HardwareBackend):
     def is_available(self) -> bool:
         if not _HAS_CUDA:
             return False
-        # Jetson is handled by the JetsonBackend
-        import platform
+        # Jetson is handled by JetsonBackend - detect via tegra release file
+        from pathlib import Path
 
-        return platform.machine() != "aarch64"
+        is_jetson = Path("/etc/nv_tegra_release").exists()
+        return not is_jetson
 
     def get_capabilities(self) -> HardwareCapabilities:
         if not _HAS_CUDA:
@@ -44,9 +45,16 @@ class CUDABackend(HardwareBackend):
             compute_capability=(props.major, props.minor),
         )
 
-    def load_model(self, model_path: str, dtype: str = "fp16") -> Any:
+    def load_model(self, model_path: str, dtype: str = "fp16", trust_remote_code: bool = False) -> Any:
         """Load a PyTorch model on CUDA."""
+        import logging
+
         from transformers import AutoModel
+
+        if trust_remote_code:
+            logging.getLogger(__name__).warning(
+                "Loading model with trust_remote_code=True - executing remote code from %s", model_path
+            )
 
         dtype_map = {
             "fp32": torch.float32,
@@ -59,7 +67,7 @@ class CUDABackend(HardwareBackend):
             model_path,
             torch_dtype=torch_dtype,
             low_cpu_mem_usage=True,
-            trust_remote_code=True,
+            trust_remote_code=trust_remote_code,
         ).to("cuda:0")
         model.eval()
         return model

@@ -68,13 +68,23 @@ class JetsonBackend(HardwareBackend):
             compute_capability=(props.major, props.minor),
         )
 
-    def load_model(self, model_path: str, dtype: str = "fp16") -> Any:
+    def load_model(self, model_path: str, dtype: str = "fp16", trust_remote_code: bool = False) -> Any:
         """Load model on Jetson GPU.
 
         For Jetson Orin Nano (8GB): prefer GGUF Q4 or FP16 models under 4B params.
         TensorRT-LLM is NOT supported on Orin Nano - use llama.cpp/GGUF instead.
+
+        TODO (Phase 4): Add GGUF loading path via llama-cpp-python for LLM backbone.
+        Currently uses PyTorch path - only suitable for small models (<3B FP16).
         """
+        import logging
+
         from transformers import AutoModel
+
+        if trust_remote_code:
+            logging.getLogger(__name__).warning(
+                "Loading model with trust_remote_code=True - executing remote code from %s", model_path
+            )
 
         dtype_map = {"fp32": torch.float32, "fp16": torch.float16}
         torch_dtype = dtype_map.get(dtype, torch.float16)
@@ -83,7 +93,7 @@ class JetsonBackend(HardwareBackend):
             model_path,
             torch_dtype=torch_dtype,
             low_cpu_mem_usage=True,
-            trust_remote_code=True,
+            trust_remote_code=trust_remote_code,
         ).to("cuda:0")
         model.eval()
         return model

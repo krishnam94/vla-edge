@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import logging
 import platform
 import time
 from typing import Any
@@ -11,6 +12,8 @@ import psutil
 
 from vla_edge.backends.base import HardwareBackend, HardwareCapabilities, InferenceResult
 from vla_edge.registry import register_backend
+
+logger = logging.getLogger(__name__)
 
 
 @register_backend("cpu")
@@ -29,18 +32,23 @@ class CPUBackend(HardwareBackend):
             supported_formats=["pytorch", "onnx"],
         )
 
-    def load_model(self, model_path: str, dtype: str = "fp32") -> Any:
+    def load_model(self, model_path: str, dtype: str = "fp32", trust_remote_code: bool = False) -> Any:
         """Load a PyTorch model on CPU."""
         try:
             import torch
             from transformers import AutoModel
+
+            if trust_remote_code:
+                logger.warning(
+                    "Loading model with trust_remote_code=True - executing remote code from %s", model_path
+                )
 
             torch_dtype = torch.float32
             model = AutoModel.from_pretrained(
                 model_path,
                 torch_dtype=torch_dtype,
                 low_cpu_mem_usage=True,
-                trust_remote_code=True,
+                trust_remote_code=trust_remote_code,
             )
             model.eval()
             return model

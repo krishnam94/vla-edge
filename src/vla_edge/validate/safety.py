@@ -82,7 +82,7 @@ def validate_actions(
         actions = actions[np.newaxis, :]
 
     violations: list[SafetyViolation] = []
-    clipped = 0
+    clipped_steps: set[int] = set()
     max_vel = 0.0
     max_acc = 0.0
 
@@ -104,7 +104,7 @@ def validate_actions(
                             severity="critical",
                         )
                     )
-                    clipped += 1
+                    clipped_steps.add(t)
 
         # Check velocity (requires t > 0)
         if t > 0 and config.max_velocity is not None:
@@ -166,7 +166,7 @@ def validate_actions(
         is_safe=is_safe,
         violations=violations,
         total_actions=len(actions),
-        clipped_actions=clipped,
+        clipped_actions=len(clipped_steps),
         max_velocity_observed=max_vel,
         max_acceleration_observed=max_acc,
     )

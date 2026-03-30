@@ -13,6 +13,8 @@ logger = logging.getLogger(__name__)
 
 _BACKENDS: dict[str, type[HardwareBackend]] = {}
 _MODELS: dict[str, type[VLAModel]] = {}
+_backends_loaded = False
+_models_loaded = False
 
 # Priority order for auto-detection (highest to lowest)
 _BACKEND_PRIORITY = ["jetson", "cuda", "mps", "cpu"]
@@ -62,10 +64,14 @@ def get_backend(name: str = "auto") -> HardwareBackend:
     if name == "auto":
         for backend_name in _BACKEND_PRIORITY:
             if backend_name in _BACKENDS:
-                backend = _BACKENDS[backend_name]()
-                if backend.is_available():
-                    logger.info("Auto-detected backend: %s", backend_name)
-                    return backend
+                try:
+                    backend = _BACKENDS[backend_name]()
+                    if backend.is_available():
+                        logger.info("Auto-detected backend: %s", backend_name)
+                        return backend
+                except Exception:
+                    logger.debug("Backend %s failed availability check", backend_name)
+                    continue
         raise RuntimeError("No available backend. Registered: " + ", ".join(_BACKENDS.keys()))
 
     if name not in _BACKENDS:
@@ -102,8 +108,10 @@ def list_models() -> list[str]:
 
 def _ensure_backends_loaded() -> None:
     """Import backend modules to trigger @register_backend decorators."""
-    if _BACKENDS:
+    global _backends_loaded
+    if _backends_loaded:
         return
+    _backends_loaded = True
     import contextlib
 
     import vla_edge.backends.cpu
@@ -117,8 +125,10 @@ def _ensure_backends_loaded() -> None:
 
 def _ensure_models_loaded() -> None:
     """Import model modules to trigger @register_model decorators."""
-    if _MODELS:
+    global _models_loaded
+    if _models_loaded:
         return
+    _models_loaded = True
     import contextlib
 
     with contextlib.suppress(ImportError):

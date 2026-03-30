@@ -51,8 +51,8 @@ def run_profile(
         timings.append(result.latency_ms)
         peak_memory = max(peak_memory, result.memory_peak_mb)
 
-    timings.sort()
     avg = sum(timings) / len(timings)
+    timings_arr = np.array(timings)
 
     return {
         "model": model_name,
@@ -61,11 +61,11 @@ def run_profile(
         "warmup": warmup,
         "load_time_s": round(load_time_s, 2),
         "avg_ms": round(avg, 2),
-        "p50_ms": round(timings[len(timings) // 2], 2),
-        "p95_ms": round(timings[int(len(timings) * 0.95)], 2),
-        "p99_ms": round(timings[int(len(timings) * 0.99)], 2),
-        "min_ms": round(timings[0], 2),
-        "max_ms": round(timings[-1], 2),
+        "p50_ms": round(float(np.percentile(timings_arr, 50)), 2),
+        "p95_ms": round(float(np.percentile(timings_arr, 95)), 2),
+        "p99_ms": round(float(np.percentile(timings_arr, 99)), 2),
+        "min_ms": round(float(timings_arr.min()), 2),
+        "max_ms": round(float(timings_arr.max()), 2),
         "fps": round(1000 / avg, 1) if avg > 0 else 0,
         "peak_memory_mb": round(peak_memory, 1),
         "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
