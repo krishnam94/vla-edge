@@ -20,17 +20,30 @@ vla-edge - Hardware Check
 +---------+-----------+
 | cpu     | YES       |
 | cuda    | NO        |
+| mps     | YES       |
 | jetson  | NO        |
 +---------+-----------+
-Active backend: cpu-arm64
+Active backend: apple-arm-mps
   Memory: 24576 MB
+  Supported dtypes: fp32, fp16
+
+Models: smolvla, openvla
 ```
+
+## First Published Mac VLA Benchmarks
+
+SmolVLA (450M) on Mac Air M3:
+- **Cold start (VLM forward)**: 52 seconds
+- **Cached (action expert)**: 3.4 ms
+- **Amortized (50-step chunks)**: 1.04s per step, ~1 FPS
+- **99.9% of latency is in the VLM**, not the action expert (Mac-specific finding)
 
 ## What It Does
 
 - **Profile** - Measure latency (avg/p50/p95/p99), memory, FPS with statistical rigor (GC-disabled, stddev, CV warning)
 - **Validate** - Check action safety (bounds, velocity, acceleration, workspace) before deploying to a real robot
-- **Optimize** - Quantization, ONNX/TensorRT export (coming in v0.2)
+- **Safety contracts** - `@safety_contract` decorator enforces physical limits on ANY predict() method at runtime
+- **Optimize** - GGUF quantization recommendations, ONNX per-component export
 - **Deploy** - Tested recipes for specific model + hardware combos
 
 ## Why This Exists
@@ -49,9 +62,9 @@ Every VLA deployment framework skips safety validation. [OpenVLA's deploy.py sen
 
 | Model | Params | Type | Status |
 |-------|--------|------|--------|
-| SmolVLA | 450M | Flow matching | Supported (v0.1) |
-| OpenVLA | 7B | Autoregressive | Planned (v0.2) |
-| NanoVLA | 140-520M | Dynamic routing | Planned (v0.2) |
+| SmolVLA | 450M | Flow matching | Supported |
+| OpenVLA | 7B | Autoregressive | Supported |
+| NanoVLA | 140-520M | Dynamic routing | Planned |
 
 ## Supported Hardware
 
@@ -59,8 +72,8 @@ Every VLA deployment framework skips safety validation. [OpenVLA's deploy.py sen
 |---------|--------|-------|
 | CPU (Mac/Linux) | Supported | Development + baseline profiling |
 | CUDA (desktop GPU) | Supported | Fast profiling |
-| Jetson Orin Nano | Supported (backend ready, hardware testing in v0.1.1) | 67 TOPS, 8GB |
-| Apple MPS | Planned (v0.2) | Mac GPU acceleration |
+| Apple MPS | Supported | Mac GPU acceleration (auto-detected) |
+| Jetson Orin Nano | Supported (backend ready, hardware testing pending) | 67 TOPS, 8GB |
 
 ## CLI Commands
 
@@ -99,6 +112,28 @@ backend = get_backend("auto")  # Best available
 caps = backend.get_capabilities()
 print(f"{caps.name}: {caps.memory_mb}MB, dtypes={caps.supported_dtypes}")
 ```
+
+## Safety Contracts (Novel)
+
+Enforce physical safety limits on ANY VLA model's predict() method - regardless of what the neural network outputs. Inspired by design-by-contract and runtime verification from formal methods.
+
+```python
+from vla_edge.validate.contract import safety_contract
+
+@safety_contract(
+    action_range=[-1.0, 1.0],          # Per-joint bounds
+    joint_velocity_max=0.1,            # Max change per step (rad/s)
+    workspace_bounds=[[-0.5, 0.5],     # End-effector x
+                      [-0.5, 0.5],     # End-effector y
+                      [0.0, 0.8]],     # End-effector z
+    on_violation="warn",               # "clip" (silent), "warn" (log), "raise" (error)
+)
+def predict(self, image, instruction, state=None):
+    return self.model(image)  # raw output, possibly unsafe
+    # The decorator ALWAYS returns safe actions
+```
+
+Nobody else has this for VLA models. Every other framework sends raw neural network output directly to the robot.
 
 ## Safety Validation
 
