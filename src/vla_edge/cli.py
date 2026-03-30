@@ -196,6 +196,28 @@ def optimize(
     from vla_edge.optimize.onnx_export import export_to_onnx
     from vla_edge.registry import get_model
 
+    if format == "gguf":
+        from vla_edge.optimize.quantize import quantize_to_gguf, recommend_quantization
+
+        console.print(f"[bold]Quantizing[/bold] {model} to GGUF...")
+        try:
+            model_cls = get_model(model)
+            info = model_cls.model_info()
+            rec = recommend_quantization(info.param_count)
+            console.print(f"  Recommended quantization for {info.param_count / 1e9:.1f}B params: {rec}")
+        except (KeyError, AttributeError):
+            pass
+
+        result = quantize_to_gguf(model, output_dir, quantization=component or "q4_k_m")
+        if result.success:
+            console.print(f"[green]Quantized to {result.quantized_path}[/green]")
+            console.print(
+                f"  {result.original_size_mb}MB -> {result.quantized_size_mb}MB ({result.compression_ratio}x)"
+            )
+        else:
+            console.print(f"[red]{result.error}[/red]")
+        return
+
     console.print(f"[bold]Exporting[/bold] {model} ({component}) to {format}...")
 
     try:
