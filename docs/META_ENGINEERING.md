@@ -174,6 +174,17 @@ severity levels (warning vs critical).
 
 ## Lessons Learned
 
+### Lesson 003: /feature-dev plugin skill not loading (2026-03-31)
+**What happened**: Tried `Skill(feature-dev)`, `Skill(commit-commands:feature-dev)`,
+`Skill(feature-dev:feature-dev)` - all returned "Unknown skill."
+**Root cause**: Plugin is installed at correct path but Skill tool resolution doesn't
+find it. Possibly a plugin manifest or loading order issue.
+**Fix applied**: Ran the feature-dev exploration manually as an agent - same process,
+different invocation. Got full implementation plan.
+**Prevention rule**: When a tool fails, investigate root cause (check paths, config,
+manifests) before retrying with different syntax. Added `investigate-errors` instinct.
+**TODO**: Debug why Skill tool can't find installed plugins and fix.
+
 ### Lesson 002: Cloud scheduled tasks can't run gh CLI (2026-03-31)
 **What happened**: Updated scheduled tasks to create GitHub issues via `gh issue create`.
 Cloud environment doesn't have gh CLI authenticated - issues never appeared.
@@ -203,6 +214,15 @@ for local development we also run the code review agent before pushing.
 
 ## Tools & Automation
 
+### Hooks (enforced automatically via .claude/settings.json)
+| Hook | Trigger | What it does |
+|------|---------|-------------|
+| Ruff format | After .py edit/write | Auto-formats Python files |
+| Block credentials | Before writing .env/.key/.token | Hard block (exit 2) |
+| Post-push reminder | After `git push` | Reminds: check CI, update LEARNING.md |
+| Post-commit reminder | After `git commit` | Reminds: close issues (closes #N) |
+| trust_remote_code guard | Before writing backend .py | Warns if hardcoded True |
+
 ### Code Quality (automated, every commit)
 | Tool | Purpose | Config |
 |------|---------|--------|
@@ -210,6 +230,13 @@ for local development we also run the code review agent before pushing.
 | mypy | Type checking (pre-commit + CI) | pyproject.toml |
 | pytest | Testing with hardware markers | pyproject.toml |
 | pre-commit | Pre-push quality gate | .pre-commit-config.yaml |
+
+### Milestones (GitHub)
+| Milestone | Target | What's in it |
+|-----------|--------|-------------|
+| v0.1.0 - First Working Demo | 2026-05-01 | SmolVLA profiling, safety, recipes, README. HN-launchable. |
+| v0.2.0 - Optimization Pipeline | 2026-06-15 | GGUF quantization, ONNX/TRT, leaderboard, multiple models. |
+| v0.3.0 - Community & Scale | 2026-08-01 | Entry points, ICRA paper, 20+ leaderboard entries. |
 
 ### CI/CD
 | Tool | Purpose | Config |

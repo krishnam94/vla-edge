@@ -1,0 +1,16 @@
+name: investigate-errors
+description: Always root-cause errors before retrying or working around them
+trigger: when a tool call, command, or test fails
+rule: |
+  When something fails, NEVER just retry blindly or work around it.
+  Always investigate the root cause first:
+
+  1. Read the error message carefully
+  2. Check if the tool/command exists and is accessible
+  3. Check if prerequisites are met (auth, deps, paths)
+  4. If a skill/plugin fails to load, check the plugin directory structure
+  5. Document the root cause and fix in META_ENGINEERING.md lessons
+  6. If the fix requires config changes, make them before retrying
+
+  Pattern to avoid: try -> fail -> try different syntax -> fail -> give up -> workaround
+  Pattern to follow: try -> fail -> investigate why -> fix root cause -> verify fix -> proceed
