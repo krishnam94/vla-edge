@@ -27,12 +27,26 @@ For simple additions (new model adapter, new backend), use the repo-specific
 `/add-model` or `/add-backend` skills instead - they're faster and focused.
 
 ### Before Major Architecture Decisions
-Run `/critic <area>` to stress-test the design. The critic argues against
-the current approach grounded in real-world precedents (Physical Intelligence,
-LeRobot, NVIDIA). The process:
-1. **Propose** an architecture or design
-2. **Critique** via `/critic` - find weaknesses
-3. **Decide** - accept criticism that makes sense, reject what doesn't
+Two levels of review depending on the scope:
+
+**`/critic <area>`** - Single persona (production robotics engineer). Use for:
+- Targeted code-level questions ("is this ABC right?")
+- Quick sanity checks on a specific module
+- Post-implementation review of a feature
+
+**`/review-panel <decision>`** - 3 personas in parallel. Use for:
+- Major architecture changes (new ABC, new abstraction layer)
+- Roadmap pivots (changing project direction, adding major features)
+- Pre-launch review (before v0.1 ship, before HN post)
+- The 3 personas and what they catch:
+  1. **Production Robotics Engineer** - will it work on real hardware?
+  2. **Startup ML Engineer (The User)** - can someone actually use this?
+  3. **Open Source Strategist** - will this get adopted?
+
+The process:
+1. **Propose** an architecture or roadmap change
+2. **Review** via `/critic` (small) or `/review-panel` (big)
+3. **Decide** - unanimous findings = must fix, majority = should fix, single = discuss
 4. **Document** the decision as an ADR in this file (below)
 
 ### Committing Code
