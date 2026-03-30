@@ -56,7 +56,9 @@ cuda = [
 ]
 smolvla = [
     "vla-edge[pytorch]",
-    "lerobot>=0.2.0",
+    "lerobot>=0.4.0",
+    "transformers>=4.40.0",
+    "num2words",
 ]
 all = [
     "vla-edge[pytorch,gguf,safety,tensorrt,smolvla]",
