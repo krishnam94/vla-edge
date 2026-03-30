@@ -1,153 +1,79 @@
 # Scheduled Tasks for vla-edge
 
-Set up at: https://claude.ai/code/scheduled
-Repo: krishnam94/vla-edge
-Model: Opus 4.6 (1M context)
+Live on claude.ai/code/scheduled. All run at ~3 AM PT to avoid session limits.
 
 ---
 
-## Task 1: Daily VLA Model Scan
+## Task 1: Daily Digest + VLA Model Scan
+**ID**: trig_011zbXF2sXPktw41MCjSgxLD
+**Schedule**: Every night 3:07 AM PT
+**Model**: Sonnet 4.6
 
-**Name**: vla-edge: Daily Model Scan
-**Schedule**: Daily, 8:00 AM PT
-**Repo**: krishnam94/vla-edge
+Combines the personal daily research digest with vla-edge model scanning:
+1. **VLA Models**: New HuggingFace robotics models matching VLA patterns
+2. **Review Opportunities**: Conference/journal reviewer calls, CFPs
+3. **Healthcare AI**: New papers/tools from arxiv and journals
+4. **Robotics/Edge AI**: VLA deployment, edge inference, Jetson papers
+5. **EB-1A**: Citation tracking for MergeNet and HealthPulse
+6. **Claude Code**: Changelog and feature updates
 
-```
-Search HuggingFace API for new robotics models (pipeline_tag=robotics)
-published in the last 24 hours. Check for models matching VLA patterns
-(smolvla, openvla, pi0, octo, minivla, litevla, groot, nanovla, edgevla,
-rt-2, cogact in tags or name).
-
-For each new model found:
-1. Check if a GitHub issue already exists for it in krishnam94/vla-edge
-2. If not, create a GitHub issue with label 'new-model-candidate' including:
-   - Model name and HuggingFace link
-   - Estimated param count (from model card or config)
-   - Whether it's likely edge-deployable (<3B params)
-   - Architecture type if identifiable
-
-If no new models found, do nothing (no noise).
-```
+**What to do with output**: Scan in 2 min each morning. Act on tagged items.
 
 ---
 
-## Task 2: Weekly Paper + Competitor Scan (Monday)
+## Task 2: Monday Research Scan
+**ID**: trig_01AjkQfFmEQW6s3Zb7ZrHgux
+**Schedule**: Mondays 3:23 AM PT
+**Model**: Sonnet 4.6
 
-**Name**: vla-edge: Monday Research Scan
-**Schedule**: Weekly, Monday 9:00 AM PT
-**Repo**: krishnam94/vla-edge
+Deep research scan for vla-edge:
+1. **arXiv papers**: VLA edge deployment, quantization, optimization, CUDA kernels
+2. **Citation tracking**: Who cited QVLA, PD-VLA, VLASH, LiteVLA-Edge, VLA-Perf, NanoVLA
+3. **Competitor watch**: VLA-Perf, vla-eval, LeRobot, SafeVLA new releases
 
-```
-Do three scans and combine into one GitHub issue:
-
-SCAN 1 - arXiv Papers:
-Search arXiv (cs.RO, cs.AI, cs.CV, cs.LG) for papers from the past 7 days:
-- "VLA" AND ("edge" OR "deployment" OR "quantization" OR "optimization" OR "efficient")
-- "robot policy" AND ("Jetson" OR "embedded" OR "real-time" OR "inference")
-- "action tokenization" OR "speculative decoding" AND "robot"
-- "CUDA kernel" AND ("transformer" OR "attention" OR "inference")
-- "vision language action" AND ("pruning" OR "distillation" OR "compression")
-
-SCAN 2 - Citations:
-Check Semantic Scholar for new citations to these papers since last Monday:
-- QVLA (2602.03782), PD-VLA (2503.02310), VLASH (2512.01031)
-- LiteVLA-Edge (2603.03380), VLA-Perf (2602.18397), NanoVLA (2510.25122)
-
-SCAN 3 - Competitor Activity:
-Check these repos for new releases, major commits, or announcements:
-- NVlabs/vla-perf (NVIDIA's profiler)
-- allenai/vla-evaluation-harness (Allen AI's eval)
-- huggingface/lerobot (LeRobot updates)
-- PKU-Alignment/SafeVLA (safety competitor)
-
-Combine into one GitHub issue with label 'paper-scan':
-- Section 1: New Papers (title, arXiv link, one-line summary, relevance)
-- Section 2: New Citations (who cited what, paper link)
-- Section 3: Competitor Updates (what changed, link)
-- Flag any paper with open-source code prominently
-- Flag anything that directly competes with or validates vla-edge
-
-If nothing notable found, don't create an issue.
-```
+**What to do with output**: Read Monday morning. If strategic question found,
+run `/review-panel <topic>` before starting the week's work.
 
 ---
 
-## Task 3: Friday Project Health Check
+## Task 3: Friday Review + Next Week Planning
+**ID**: trig_01TUcuKYujeL18fJypMVyZjo
+**Schedule**: Fridays 3:41 AM PT
+**Model**: Sonnet 4.6
 
-**Name**: vla-edge: Friday Review
-**Schedule**: Weekly, Friday 5:00 PM PT
-**Repo**: krishnam94/vla-edge
+Weekly project health check:
+1. **Progress**: Commits this week
+2. **Issues**: Open count by label, stale flags
+3. **Tests**: CI status
+4. **Competitors**: Anything shipped this week that affects us?
+5. **Process**: Was LEARNING.md updated?
+6. **Next week**: Top 3 priorities recommended
+7. **Strategic flags**: Explicitly calls out "REVIEW-PANEL NEEDED: [topic]" if
+   any competitor move or paper finding needs a strategic discussion
+
+**What to do with output**: Read Friday morning. If REVIEW-PANEL flagged, run it.
+Use the top 3 priorities to plan Monday's /feature-dev sessions.
+
+---
+
+## The Weekly Flow
 
 ```
-Review krishnam94/vla-edge and create a status summary as a GitHub issue
-with label 'weekly-status':
-
-1. PROGRESS: List commits this week with one-line summaries
-2. TESTS: Are CI tests passing? Any new test failures?
-3. ISSUES: Count open issues by label. Any stale (>14 days no activity)?
-4. COVERAGE: If coverage data available, report current %
-5. BACKLOG: List the top 3 highest-priority open issues for next week
-6. LEARNING: Check if docs/LEARNING.md was updated this week. If not, flag it.
-7. COMPETITORS: Quick check - did VLA-Perf, vla-eval, or LeRobot release
-   anything this week that affects our roadmap?
-
-Keep it concise - this is a 2-minute read, not a report.
+Mon 3:23 AM  [auto] Monday Research Scan runs
+Mon morning  [you]  Read scan -> /review-panel if strategic question
+Mon-Thu      [you]  /feature-dev on issues, /critic on new code
+Fri 3:41 AM  [auto] Friday Review runs
+Fri morning  [you]  Read review -> update LEARNING.md -> plan next week
+Daily 3:07AM [auto] Digest runs
+Daily AM     [you]  2-min scan of digest
 ```
 
 ---
 
-## Task 4: Monthly Architecture Review
+## Disabled Tasks
+- **vla-edge: Daily Model Scan** (trig_019kPJJjqxbuZT5YYy8Wfabg) - merged into Task 1
 
-**Name**: vla-edge: Monthly Architecture Review
-**Schedule**: Monthly, 1st of month, 10:00 AM PT
-**Repo**: krishnam94/vla-edge
-
-```
-Do a thorough monthly review of krishnam94/vla-edge:
-
-1. ARCHITECTURE: Read CLAUDE.md and all files in src/vla_edge/. Are the
-   abstractions still right? Has any module grown beyond its intended scope?
-   Flag any code smells or architectural drift.
-
-2. DEPENDENCIES: Check pyproject.toml. Are any deps outdated? Any new
-   security advisories? Run a conceptual dependency audit.
-
-3. COMPETITION: Deep check on VLA-Perf, vla-eval, LeRobot, and any new
-   tools. Has anyone shipped something that overlaps with vla-edge?
-   Should we adjust our roadmap?
-
-4. PAPERS: Review docs/notes/research_vla_edge_papers_2025_2026.md.
-   Are there papers from the past month we should incorporate? Any new
-   optimization techniques we're missing?
-
-5. COMMUNITY: Check GitHub stars, forks, issues from external users.
-   Any patterns in what people are asking for?
-
-6. RECOMMENDATIONS: Based on the above, suggest 1-3 specific actions
-   for the coming month.
-
-Create a GitHub issue with label 'monthly-review' with the full report.
-```
-
----
-
-## Why NOT More Tasks
-
-We considered and rejected:
-- **Daily code review**: Overkill without daily commits. Weekly is enough.
-- **Daily competitor scan**: Nothing changes daily. Weekly Monday scan covers this.
-- **Auto-implementation of issues**: Claude can't autonomously build features
-  well enough without human judgment. Dev is interactive, not scheduled.
-- **Hourly anything**: Noise. Even daily is borderline for model scanning.
-
----
-
-## Labels Needed for Scheduled Tasks
-
-Already created:
-- `new-model-candidate` (green)
-- `paper-scan` (purple)
-
-Need to create:
-- `weekly-status` (gray)
-- `monthly-review` (gold)
+## Why Only 3 Tasks
+Plan limit is 3 cloud scheduled tasks. We merged the daily model scan into the
+daily digest to free a slot for the Friday review. Monthly architecture review
+is done manually (run `/review-panel` on the 1st of each month).
