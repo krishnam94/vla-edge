@@ -479,6 +479,44 @@ Reference: [VLA-Perf](https://arxiv.org/abs/2602.18397) |
 
 ---
 
+### Safety contracts - design by contract for robot policies
+**Manning Chapter: 11 (Production Patterns)**
+
+In software engineering, "design by contract" (from Eiffel language) means
+functions declare their preconditions and postconditions, and the runtime
+enforces them. We applied this to VLA model prediction:
+
+```python
+@safety_contract(action_range=[-1, 1], joint_velocity_max=0.1)
+def predict(self, image, instruction, state=None):
+    return self.model(image)  # decorated version always returns safe actions
+```
+
+The decorator wraps predict() and:
+1. Calls the original function (gets raw neural network output)
+2. Clips to action_range bounds
+3. Clamps velocity (delta from previous action)
+4. Clips workspace bounds (end-effector position)
+5. Re-clips to action_range after velocity clamping (order matters!)
+6. Logs violations for post-hoc analysis
+
+**Why this is novel**: Every other VLA framework sends raw neural network output
+directly to the robot. OpenVLA's deploy.py has zero safety checks. LeRobot's
+EEBoundsAndSafety is the only existing implementation, and it's imperative
+(you call it explicitly), not declarative (the contract IS the safety spec).
+
+**Design decisions**:
+- "clip" mode (default) silently enforces - the robot must keep moving
+- "warn" mode logs violations - good for development, catches drifting policies
+- "raise" mode throws an exception - good for testing, catches bugs early
+- Velocity clamping uses the previous action from the LAST call, enabling
+  state tracking across an episode without explicit state management
+
+Reference: [Design by Contract](https://en.wikipedia.org/wiki/Design_by_contract) |
+[Modular Safety Guardrails](https://arxiv.org/abs/2602.04056)
+
+---
+
 ## Concepts Queue (to learn and document next)
 
 - [ ] TensorRT engine building - how it works, why vision encoder but not LLM
