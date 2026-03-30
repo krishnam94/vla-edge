@@ -130,7 +130,14 @@ severity levels (warning vs critical).
 
 ## Lessons Learned
 
-(Add entries here as we learn from mistakes)
+### Lesson 001: Run critic + code review BEFORE pushing, not after (2026-03-30)
+**What happened**: Phase 1 shipped with 3 critical issues (trust_remote_code
+everywhere, registry race condition, CUDA excluding all aarch64).
+**Root cause**: Committed and nearly pushed without running review agents.
+**Fix applied**: Ran /critic + code review agent in parallel. Fixed 7 issues.
+**Prevention rule**: Always run critic + code review before `git push`. Added
+to META_ENGINEERING.md workflow. The /code-review plugin runs on PRs, but
+for local development we also run the code review agent before pushing.
 
 ### Template
 **Date**: YYYY-MM-DD
