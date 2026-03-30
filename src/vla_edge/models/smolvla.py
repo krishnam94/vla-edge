@@ -39,6 +39,30 @@ def _check_lerobot() -> bool:
     return _LEROBOT_AVAILABLE
 
 
+def _import_smolvla_policy() -> type:
+    """Import SmolVLAPolicy bypassing lerobot.policies.__init__.
+
+    lerobot 0.4.4's policies/__init__.py eagerly imports ALL policies
+    including GR00T, which has a broken dataclass (non-default after default).
+    We pre-create the policies module to skip that __init__.
+    """
+    import sys
+    import types
+
+    # Pre-create lerobot.policies without running its __init__
+    if "lerobot.policies" not in sys.modules:
+        import lerobot
+
+        policies_mod = types.ModuleType("lerobot.policies")
+        policies_mod.__path__ = [lerobot.__path__[0] + "/policies"]
+        policies_mod.__package__ = "lerobot.policies"
+        sys.modules["lerobot.policies"] = policies_mod
+
+    from lerobot.policies.smolvla.modeling_smolvla import SmolVLAPolicy
+
+    return SmolVLAPolicy
+
+
 @register_model("smolvla")
 class SmolVLAAdapter(VLAModel):
     """SmolVLA 450M parameter VLA adapter.
@@ -63,7 +87,15 @@ class SmolVLAAdapter(VLAModel):
         import torch
 
         self._model_id = model_id
-        self._device = torch.device(device)
+        # Auto-select device: prefer cuda, fallback to mps (Mac), then cpu
+        if device == "cpu":
+            self._device = torch.device("cpu")
+        elif device == "cuda" and torch.cuda.is_available():
+            self._device = torch.device("cuda")
+        elif torch.backends.mps.is_available():
+            self._device = torch.device("mps")
+        else:
+            self._device = torch.device("cpu")
         self._torch_dtype = torch.float32 if dtype == "float32" else torch.bfloat16
         self._policy: Any = None
         self._loaded = False
@@ -75,16 +107,22 @@ class SmolVLAAdapter(VLAModel):
         if self._loaded:
             return
 
-        from lerobot.common.policies.smolvla.modeling_smolvla import SmolVLAPolicy
+        smolvla_policy_cls = _import_smolvla_policy()
 
         logger.info("Loading SmolVLAPolicy from %s...", self._model_id)
-        self._policy = SmolVLAPolicy.from_pretrained(
+        self._policy = smolvla_policy_cls.from_pretrained(
             self._model_id,
             torch_dtype=self._torch_dtype,
         )
         self._policy.to(self._device)
         self._policy.eval()
         self._loaded = True
+        # Load tokenizer for language processing
+        from transformers import AutoProcessor
+
+        self._processor = AutoProcessor.from_pretrained(self._policy.config.vlm_model_name)
+        self._tokenizer_max_length = self._policy.config.tokenizer_max_length
+
         logger.info("SmolVLA loaded successfully on %s", self._device)
 
     def predict(
@@ -109,26 +147,49 @@ class SmolVLAAdapter(VLAModel):
 
         self._ensure_loaded()
 
-        # Build observation dict matching LeRobot's expected format
+        # Build observation dict matching LeRobot SmolVLA's expected format.
+        # SmolVLA expects keys like 'observation.images.camera1' (not 'observation.image')
+        # and images as (B, C, H, W) tensors. Image size from config (typically 256x256).
         observation: dict[str, Any] = {}
 
-        # Image: convert to tensor, add batch dim
+        # Get expected image features from policy config
+        img_features = self._policy.config.image_features
+        img_key = next(iter(img_features))  # e.g., 'observation.images.camera1'
+        expected_shape = img_features[img_key].shape  # e.g., (3, 256, 256)
+        target_h, target_w = expected_shape[1], expected_shape[2]
+
         if isinstance(image, np.ndarray):
-            img_tensor = torch.from_numpy(image).float()
-            # Normalize to [0, 1] only if uint8 input
-            if image.dtype == np.uint8:
-                img_tensor = img_tensor / 255.0
-            if img_tensor.ndim == 3:
-                img_tensor = img_tensor.permute(2, 0, 1).unsqueeze(0)  # HWC -> BCHW
-            observation["observation.image"] = img_tensor.to(self._device)
+            from PIL import Image as PILImage
+
+            # Resize to expected dimensions
+            pil_img = PILImage.fromarray(image if image.dtype == np.uint8 else (image * 255).astype(np.uint8))
+            pil_img = pil_img.resize((target_w, target_h))
+            img_arr = np.array(pil_img, dtype=np.float32) / 255.0
+
+            img_tensor = torch.from_numpy(img_arr).permute(2, 0, 1).unsqueeze(0)  # HWC -> BCHW
+            observation[img_key] = img_tensor.to(self._device)
+
+            # Pad missing cameras with zeros (SmolVLA supports up to 3)
+            for key, feat in img_features.items():
+                if key not in observation:
+                    shape = feat.shape
+                    observation[key] = torch.zeros(1, *shape, device=self._device)
 
         # State
         if state is not None:
             state_tensor = torch.from_numpy(state).float().unsqueeze(0)
             observation["observation.state"] = state_tensor.to(self._device)
 
-        # Instruction
-        observation["task"] = instruction
+        # Tokenize instruction
+        tokens = self._processor.tokenizer(
+            instruction,
+            return_tensors="pt",
+            padding="max_length",
+            max_length=self._tokenizer_max_length,
+            truncation=True,
+        )
+        observation["observation.language.tokens"] = tokens["input_ids"].to(self._device)
+        observation["observation.language.attention_mask"] = tokens["attention_mask"].bool().to(self._device)
 
         # Run policy (handles flow matching denoising internally)
         with torch.inference_mode():
@@ -156,7 +217,9 @@ class SmolVLAAdapter(VLAModel):
             param_count=450_000_000,
             architecture="VLM (SmolVLM2-500M) + Flow Matching Action Expert",
             action_dim=6,
-            required_image_size=(512, 512),
+            # Config uses 256x256 per camera, not 512x512 as the paper's SigLIP input.
+            # The policy config is the ground truth.
+            required_image_size=(256, 256),
             supported_dtypes=["float32", "bfloat16"],
             source_url="https://huggingface.co/lerobot/smolvla_base",
         )

@@ -46,7 +46,7 @@ def test_smolvla_info_without_loading():
     assert info.name == "smolvla"
     assert info.param_count == 450_000_000
     assert info.action_dim == 6
-    assert info.required_image_size == (512, 512)
+    assert info.required_image_size == (256, 256)
     assert "Flow Matching" in info.architecture
     assert "float32" in info.supported_dtypes
     assert "bfloat16" in info.supported_dtypes
@@ -59,7 +59,7 @@ def test_smolvla_image_size_is_512():
     except ImportError:
         pytest.skip("lerobot not installed")
 
-    assert SmolVLAAdapter.model_info().required_image_size == (512, 512)
+    assert SmolVLAAdapter.model_info().required_image_size == (256, 256)
 
 
 def test_vla_model_context_manager():
