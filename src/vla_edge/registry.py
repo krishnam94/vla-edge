@@ -120,6 +120,9 @@ def _ensure_backends_loaded() -> None:
         import vla_edge.backends.cuda
 
     with contextlib.suppress(ImportError):
+        import vla_edge.backends.mps
+
+    with contextlib.suppress(ImportError):
         import vla_edge.backends.jetson  # noqa: F401
 
 
