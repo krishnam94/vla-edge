@@ -139,6 +139,18 @@ severity levels (warning vs critical).
 
 ## Self-Improvement Practices
 
+### Daily Innovation Rhythm (15 min total)
+- **Morning (5 min)**: Scan daily digest output. Read titles only, star 1-2 for later.
+- **Question capture (2 min)**: Write 1 question in `docs/QUESTIONS.md` before starting work.
+- **End-of-day (5 min)**: What surprised you? Write one sentence in LEARNING.md.
+- **Cross-domain (3 min)**: Skim one non-robotics source (HN, game dev, audio DSP, mobile ML).
+
+### Weekly Innovation (1 hour)
+- Deep paper read (30 min): 3-pass method, extract transferable insight
+- Collision matrix (15 min): Pick one cell from NOVEL_THINKING.md matrix, explore
+- Question review (10 min): Answer 1, add 3, cross out dead ends
+- Idea log review (5 min): Any ideas worth prototyping?
+
 ### After Every Session
 - Run tests, check coverage
 - Update CHANGELOG.md with what changed
