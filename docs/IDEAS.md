@@ -4,6 +4,24 @@ Log ideas and move on. Don't evaluate immediately. Review monthly.
 
 ---
 
+## 2026-03-29: ProbeFlow Adaptive Denoising for SmolVLA
+**Source**: ProbeFlow paper (arXiv:2603.17850) + SmolVLA's 10-step flow matching bottleneck
+**Idea**: Integrate ProbeFlow's linearity probe into SmolVLA's action expert denoising loop. Use cosine similarity between initial and lookahead velocity vectors to skip unnecessary steps. Training-free, drop-in modification.
+**Why novel**: Nobody has applied adaptive flow matching step scheduling to SmolVLA specifically. ProbeFlow was tested on Evo-1, not SmolVLA. Combining it with Jetson edge constraints and our safety validation is new territory.
+**Estimated impact**: Reduce action expert forward passes from 10 to ~3-4 average. ~2.5-3x speedup on the action decoding bottleneck.
+**Risk**: LIBERO showed 3.8% accuracy drop. Need to validate safety metrics don't degrade.
+**Status**: RESEARCHED - see `docs/research/ADAPTIVE_FLOW_MATCHING.md`
+**Adjacent to**: profiling, action expert optimization, safety validation
+
+## 2026-03-29: Horizon-Aware Action Execution (inspired by FASTER)
+**Source**: FASTER paper (arXiv:2603.19199) - horizon-aware schedule for flow VLAs
+**Idea**: Even without retraining, start executing early actions from a partially-denoised chunk while continuing to refine later actions. Combines with ProbeFlow (fewer total steps) and SmolVLA's async inference design.
+**Why novel**: FASTER requires fine-tuning. A training-free approximation using SmolVLA's existing async execution + partial chunk emission is unexplored.
+**Status**: UNEXPLORED
+**Adjacent to**: ProbeFlow, async inference, latency optimization
+
+---
+
 ## 2026-03-30: Chaos Engineering for Robot Policies
 **Source**: Netflix chaos monkey + VLA safety validation (collision matrix)
 **Idea**: `vla-edge chaos run --model smolvla --scenario action-corruption` - systematically inject faults (corrupt action tokens, drop frames, add noise) and measure safety degradation. Produces a "resilience report."
