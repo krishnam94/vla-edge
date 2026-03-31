@@ -212,10 +212,10 @@ manifests) before retrying with different syntax. Added `investigate-errors` ins
 **What happened**: Updated scheduled tasks to create GitHub issues via `gh issue create`.
 Cloud environment doesn't have gh CLI authenticated - issues never appeared.
 **Root cause**: Cloud tasks run on Anthropic's infra, not your machine. No gh/git auth.
-**Fix applied**: Cloud tasks produce output only (viewable at claude.ai). The /status
+**Fix applied**: Cloud tasks produce output only (viewable at claude.ai). The /morning
 skill creates GitHub issues locally using your authenticated gh CLI.
 **Prevention rule**: Cloud scheduled tasks can only use WebSearch/WebFetch. Any GitHub
-write operations must happen from the local CLI session via /status or manually.
+write operations must happen from the local CLI session via /morning or manually.
 
 ### Lesson 001: Run critic + code review BEFORE pushing, not after (2026-03-30)
 **What happened**: Phase 1 shipped with 3 critical issues (trust_remote_code
@@ -271,7 +271,7 @@ for local development we also run the code review agent before pushing.
 ### Claude Code - Repo Skills (custom for vla-edge)
 | Skill | When to use |
 |-------|------------|
-| `/status` | Start of session - show project state and suggest next steps |
+| `/morning` | Start of session - show project state and suggest next steps |
 | `/critic` | Before major architecture decisions (single persona) |
 | `/review-panel` | Major arch/roadmap decisions (3 personas in parallel) |
 | `/profile` | Profile a model and get optimization suggestions |
@@ -293,7 +293,7 @@ for local development we also run the code review agent before pushing.
 
 ### Claude Code - Scheduled Tasks (live on claude.ai/code/scheduled, 3 AM PT)
 
-All tasks write results as GitHub issues (readable by /status skill).
+All tasks write results as GitHub issues (readable by /morning skill).
 
 | Schedule | Task | Output Label | Novel Thinking |
 |----------|------|-------------|----------------|
@@ -302,14 +302,14 @@ All tasks write results as GitHub issues (readable by /status skill).
 | Friday 3:41 AM | Project review + doc hygiene + planning | `weekly-status` | Collision of the Week |
 
 **How it works**: Cloud tasks run at 3 AM and produce output (viewable at
-claude.ai/code/scheduled). The `/status` skill then either reads existing
+claude.ai/code/scheduled). The `/morning` skill then either reads existing
 digest issues from GitHub, or runs a quick local research scan and creates
 the digest issue from your authenticated machine. This closes the feedback loop:
 
 ```
 3 AM: Cloud task runs research (viewable at claude.ai)
-Morning: You run /status in CLI
-/status: Checks for existing digest issues
+Morning: You run /morning in CLI
+/morning: Checks for existing digest issues
   -> If found: reads and summarizes
   -> If not: runs quick local research + creates GitHub issue
   -> Shows priorities for today based on insights + open issues

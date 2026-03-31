@@ -7,12 +7,12 @@ Live on claude.ai/code/scheduled. All run at ~3 AM PT (10 AM UTC).
 Cloud tasks run on Anthropic's servers. They CAN use WebSearch and WebFetch.
 They CANNOT use gh CLI, git, or any local tools (Lesson 002).
 
-Output is viewable at claude.ai/code/scheduled. The `/status` skill bridges
+Output is viewable at claude.ai/code/scheduled. The `/morning` skill bridges
 the gap: it checks for digest issues on GitHub, and if none exist, runs a
 quick local research scan and creates the issue using your authenticated gh CLI.
 
 ```
-Cloud (3 AM)           Local (/status, morning)
+Cloud (3 AM)           Local (/morning, morning)
 ──────────             ────────────────────────
 WebSearch for papers   Read overnight output from claude.ai
 WebSearch for models   OR run quick local research
@@ -62,7 +62,7 @@ monthly Hamming audit (first Friday).
 
 ## GitHub Issue Labels for Digest
 
-Created and ready (issues created by /status locally):
+Created and ready (issues created by /morning locally):
 - `daily-digest` - Morning briefing
 - `paper-scan` - Research scan results
 - `weekly-status` - Friday review
@@ -72,5 +72,5 @@ Created and ready (issues created by /status locally):
 ## Lesson Learned
 
 Cloud scheduled tasks cannot create GitHub issues directly (no gh CLI auth).
-The /status skill handles issue creation from the local machine. See Lesson 002
+The /morning skill handles issue creation from the local machine. See Lesson 002
 in META_ENGINEERING.md.

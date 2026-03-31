@@ -1,5 +1,5 @@
 ---
-description: Morning briefing - overnight research, project status, create digest issue, suggest next steps
+description: vla-edge morning briefing - overnight research, project status, suggest next steps
 allowed-tools: Bash(gh issue *), Bash(git *), Bash(pytest *), Read, Glob, Grep, WebSearch, WebFetch
 ---
 
