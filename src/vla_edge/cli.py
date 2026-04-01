@@ -78,7 +78,7 @@ def profile(
     table.add_row("Image size", str(result.get("image_size", "unknown")))
     cold = result.get("cold_start_ms", 0)
     if cold > 1000:
-        table.add_row("[bold]Cold start[/bold]", f"[red]{cold/1000:.1f} s[/red]")
+        table.add_row("[bold]Cold start[/bold]", f"[red]{cold / 1000:.1f} s[/red]")
     else:
         table.add_row("Cold start", f"{cold:.1f} ms")
     table.add_row("Cached avg", f"{result['avg_ms']:.1f} ms")
