@@ -1,0 +1,29 @@
+{
+  "experiment": "EXP-004 CORRECTED: SmolVLA on LIBERO (queue flushed)",
+  "correction": "Previous 3.42x speedup was action queue aliasing artifact. Real speedup is 1.28x overall, 4.1x cold start.",
+  "n_samples": 10,
+  "device": "cpu",
+  "baseline": {
+    "cold_start_ms": 51376,
+    "subsequent_avg_ms": 14193,
+    "overall_avg_ms": 17911,
+    "violations": 13,
+    "max_action": 2.34
+  },
+  "probeflow": {
+    "cold_start_ms": 12468,
+    "subsequent_avg_ms": 14042,
+    "overall_avg_ms": 13984,
+    "steps_used": 2,
+    "violations": 10,
+    "max_action": 2.27
+  },
+  "real_speedup": {
+    "cold_start": 4.12,
+    "subsequent": 1.01,
+    "overall": 1.28
+  },
+  "key_finding": "VLM prefix recomputation (~14s) dominates. ProbeFlow only saves on action expert denoising (2 steps vs 10). Real benefit is cold start.",
+  "safety_finding": "Actions exceed [-1,1] on ALL 10 LIBERO observations. Max 2.34. Safety contracts are necessary.",
+  "timestamp": "2026-04-01"
+}
