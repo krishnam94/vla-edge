@@ -38,19 +38,34 @@ def exp_b_method_comparison():
 
     # Method 2: Naive clip (just np.clip, no velocity)
     naive_clipped = np.clip(actions, -1, 1)
+    # Count velocity violations per-timestep (consistent with SafeContract)
     naive_vel_violations = 0
     for t in range(1, len(naive_clipped)):
         delta = np.abs(naive_clipped[t] - naive_clipped[t - 1])
         if np.any(delta > 0.1):
             naive_vel_violations += 1
 
+    # Time naive clip independently
+    n_bench_iter = 500
+    naive_times = []
+    for _ in range(100):  # warmup
+        np.clip(actions[0], -1, 1)
+    for i in range(n_bench_iter):
+        a = actions[i % len(actions)]
+        t0 = time.perf_counter()
+        np.clip(a, -1, 1)
+        naive_times.append((time.perf_counter() - t0) * 1e6)
+    naive_avg_us = np.mean(naive_times)
+
     # Method 3: SafeContract (clip + velocity)
     config = SafetyConfig(action_bounds=bounds, max_velocity=np.full(7, 0.1, dtype=np.float32))
     sc_result = validate_actions(actions, config)
     sc_clipped = clip_actions(actions, config)
+    # Count SafeContract velocity violations per-timestep (consistent with naive_clip)
+    sc_vel_violations = sum(1 for v in sc_result.violations if v.violation_type == "velocity")
 
     # Method 4: AEGIS-lite (QP setup + clip)
-    bench = benchmark_aegis_vs_safecontract(actions, bounds_lo, bounds_hi, n_iterations=500)
+    bench = benchmark_aegis_vs_safecontract(actions, bounds_lo, bounds_hi, n_iterations=n_bench_iter)
 
     results = {
         "experiment": "EXP-B: Method comparison",
@@ -63,14 +78,14 @@ def exp_b_method_comparison():
             },
             "naive_clip": {
                 "oob_rate_pct": 0.0,
-                "overhead_us": round(bench["safecontract_avg_us"], 2),
+                "overhead_us": round(naive_avg_us, 2),
                 "velocity_violations": naive_vel_violations,
                 "note": "Clips bounds but ignores velocity",
             },
             "safecontract": {
                 "oob_rate_pct": 0.0,
                 "overhead_us": round(bench["safecontract_avg_us"], 2),
-                "velocity_violations": sum(1 for v in sc_result.violations if v.violation_type == "velocity"),
+                "velocity_violations": sc_vel_violations,
                 "bounds_violations_caught": sum(
                     1 for v in sc_result.violations if v.violation_type == "bounds"
                 ),
@@ -89,7 +104,7 @@ def exp_b_method_comparison():
     path = RESULTS_DIR / "exp_b_comparison.json"
     path.write_text(json.dumps(results, indent=2))
     print(f"  No safety: {raw_oob:.0f}% OOB")
-    print(f"  Naive clip: 0% OOB, {naive_vel_violations} velocity violations uncaught")
+    print(f"  Naive clip: 0% OOB, {naive_vel_violations} velocity violations uncaught, {naive_avg_us:.1f}us")
     print(f"  SafeContract: 0% OOB, {len(sc_result.violations)} total violations caught, {bench['safecontract_avg_us']:.1f}us")
     print(f"  AEGIS-lite: identical output, {bench['aegis_avg_us']:.1f}us ({bench['speedup']}x slower)")
     return results
@@ -218,58 +233,91 @@ def exp_e_overhead():
 
     print("\nEXP-E: Overhead comparison")
 
+    N_ITER = 5000
+
+    # Pre-generate actions so RNG cost is excluded from timing
+    rng = np.random.default_rng(42)
+    precomputed_actions = [rng.standard_normal(7).astype(np.float32) for _ in range(N_ITER)]
+
+    # Undecorated baseline (pure function, no contract)
+    def mock_bare(image, instruction, state=None):
+        return precomputed_actions[0]  # placeholder, overridden in loop
+
     # Standard SafeContract
     @safety_contract(action_range=[-1, 1], joint_velocity_max=0.1)
     def mock_standard(image, instruction, state=None):
-        return np.random.randn(7).astype(np.float32)
+        return precomputed_actions[0]  # placeholder, overridden in loop
 
     # Adaptive SafeContract
     @adaptive_safety_contract(safe_bounds=[-1.5, 1.5], danger_bounds=[-0.5, 0.5], velocity_threshold=0.05)
     def mock_adaptive(image, instruction, state=None):
-        return np.random.randn(7).astype(np.float32)
+        return precomputed_actions[0]  # placeholder, overridden in loop
 
     # Warmup
-    for _ in range(100):
+    for i in range(100):
+        precomputed_actions[0] = precomputed_actions[i % N_ITER]
+        mock_bare(None, "test")
         mock_standard(None, "test")
         mock_adaptive(None, "test")
 
-    # Time standard
+    # Time bare (undecorated) - measures function call overhead without contract
+    bare_times = []
+    for i in range(N_ITER):
+        precomputed_actions[0] = precomputed_actions[i]
+        t0 = time.perf_counter()
+        mock_bare(None, "test")
+        bare_times.append((time.perf_counter() - t0) * 1e6)
+
+    # Time standard SafeContract
     standard_times = []
-    for _ in range(5000):
+    for i in range(N_ITER):
+        precomputed_actions[0] = precomputed_actions[i]
         t0 = time.perf_counter()
         mock_standard(None, "test")
         standard_times.append((time.perf_counter() - t0) * 1e6)
 
-    # Time adaptive
+    # Time adaptive SafeContract
     adaptive_times = []
-    for _ in range(5000):
+    for i in range(N_ITER):
+        precomputed_actions[0] = precomputed_actions[i]
         t0 = time.perf_counter()
         mock_adaptive(None, "test")
         adaptive_times.append((time.perf_counter() - t0) * 1e6)
 
-    # AEGIS comparison
-    actions = np.random.randn(100, 7).astype(np.float32) * 2
+    # Contract-only overhead = decorated - undecorated
+    bare_avg = np.mean(bare_times)
+    standard_avg = np.mean(standard_times)
+    adaptive_avg = np.mean(adaptive_times)
+    standard_overhead = max(0, standard_avg - bare_avg)
+    adaptive_overhead = max(0, adaptive_avg - bare_avg)
+
+    # AEGIS comparison (same data, same iterations)
+    actions = rng.standard_normal((100, 7)).astype(np.float32) * 2
     aegis_bench = benchmark_aegis_vs_safecontract(
-        actions, np.full(7, -1.0), np.full(7, 1.0), n_iterations=5000
+        actions, np.full(7, -1.0), np.full(7, 1.0), n_iterations=N_ITER
     )
 
     results = {
         "experiment": "EXP-E: Overhead microbenchmark",
-        "n_iterations": 5000,
-        "standard_contract_us": round(np.mean(standard_times), 2),
-        "adaptive_contract_us": round(np.mean(adaptive_times), 2),
+        "n_iterations": N_ITER,
+        "bare_function_us": round(bare_avg, 2),
+        "standard_total_us": round(standard_avg, 2),
+        "standard_contract_overhead_us": round(standard_overhead, 2),
+        "adaptive_total_us": round(adaptive_avg, 2),
+        "adaptive_contract_overhead_us": round(adaptive_overhead, 2),
         "aegis_lite_us": aegis_bench["aegis_avg_us"],
         "safecontract_clip_us": aegis_bench["safecontract_avg_us"],
         "aegis_speedup": aegis_bench["speedup"],
         "vla_inference_us": 16839000,
-        "contract_overhead_ratio": round(np.mean(standard_times) / 16839000, 8),
+        "contract_overhead_ratio": round(standard_overhead / 16839000, 8),
     }
 
     path = RESULTS_DIR / "exp_e_overhead.json"
     path.write_text(json.dumps(results, indent=2))
-    print(f"  Standard: {results['standard_contract_us']:.1f}us")
-    print(f"  Adaptive: {results['adaptive_contract_us']:.1f}us")
-    print(f"  AEGIS-lite: {results['aegis_lite_us']:.1f}us")
+    print(f"  Bare function: {bare_avg:.1f}us")
+    print(f"  Standard total: {standard_avg:.1f}us (contract overhead: {standard_overhead:.1f}us)")
+    print(f"  Adaptive total: {adaptive_avg:.1f}us (contract overhead: {adaptive_overhead:.1f}us)")
+    print(f"  AEGIS-lite: {aegis_bench['aegis_avg_us']:.1f}us")
     print(f"  VLA inference: {results['vla_inference_us']/1000:.0f}ms")
     print(f"  Overhead ratio: {results['contract_overhead_ratio']:.8f}")
     return results

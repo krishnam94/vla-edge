@@ -42,14 +42,41 @@ Track what we ran, what worked, what failed. Single source of truth for results.
 - **Data**: `experiments/icra_ws_2026/results/exp4_corrected.json`
 - **Lesson 007**: Always flush model caches before benchmarking
 
-### EXP-005: Contract Strictness Pareto Sweep
-- **Purpose**: Theorem 3 empirical validation
-- **Method**: Sweep contract bounds from loose to tight on LIBERO actions
-- **Metrics**: Violation rate vs action quality (smoothness, divergence)
-- **Status**: Planned, depends on EXP-004
+### EXP-A: Baseline Violation Profiling (2026-04-01)
+- **Model**: SmolVLA on 100 LIBERO observations, queue flushed
+- **Finding**: **100% OOB**, range [-2.16, 3.70], 544 violations (121 bounds + 423 velocity)
+- **Data**: `experiments/icra_ws_2026/results/exp_a_baseline.json`
+
+### EXP-B: Method Comparison (2026-04-01)
+- SafeContract vs AEGIS-lite vs naive clip vs no safety (200 actions)
+- Naive clip misses 199 velocity violations. SafeContract = AEGIS output, **17.1x faster**
+- **Data**: `experiments/icra_ws_2026/results/exp_b_comparison.json`
+
+### EXP-C: Composition Verification (2026-04-01)
+- Composed catches union of individual violations (1,482 = 490 + 675 + 317)
+- **Data**: `experiments/icra_ws_2026/results/exp_c_composition.json`
+
+### EXP-D: Pareto Sweep (2026-04-01)
+- 5 strictness levels. 948 to 2,561 violations, 0.026 to 0.908 clip magnitude
+- **Data**: `experiments/icra_ws_2026/results/exp_d_pareto.json`
+
+### EXP-E: Overhead Microbenchmark (2026-04-01)
+- SafeContract clip 0.9us, adaptive 14.6us, AEGIS 13.5us. Contract = 0.000081% of inference
+- **Data**: `experiments/icra_ws_2026/results/exp_e_overhead.json`
+
+### EXP-F: Component Ablation (2026-04-01)
+- Each catches unique violations. Full = 2,467 (more than any individual)
+- **Data**: `experiments/icra_ws_2026/results/exp_f_ablation.json`
+
+### Paper Figures (2026-04-01)
+- 4 figures generated: action ranges, Pareto, ablation, overhead
+- Location: `paper/icra_ws_2026/figures/`
+
+### EXP-005: Cross-Architecture (partial, 2026-04-01)
+- SmolVLA complete (n=5). ACT/Diffusion failed on LeRobot video format.
+- **Data**: `experiments/icra_ws_2026/results/exp5_cross_architecture.json`
 
 ### EXP-006: SmolVLA on Jetson Orin Nano
-- **Purpose**: First edge hardware benchmark
 - **Status**: BLOCKED - Jetson hardware not set up
 - **Guide**: docs/JETSON_SETUP_GUIDE.md
 

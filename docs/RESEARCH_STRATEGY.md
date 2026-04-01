@@ -9,10 +9,16 @@ Single source of truth for research direction, paper plans, and process.
 
 ---
 
-## Active Paper Target: ICRA VLA Pipelines Workshop (Apr 15)
+## Primary Target: CoRL 2026 (May 29, archival) - EB-1A value
+
+**Title**: "SafeContract: Formally Verified, Phase-Adaptive Safety Contracts for VLA Policies"
+**Format**: 8 pages, archival, peer-reviewed
+**EB-1A value**: HIGH (archival at top robotics venue, Criterion 5+6)
+
+## Draft Milestone: ICRA VLA Pipelines Workshop (Apr 15, non-archival)
 
 **Title**: "SafeContract: Composable Safety Guarantees for VLA Action Spaces"
-**Format**: 2-4 pages, non-archival
+**Format**: 2-4 pages, non-archival (stepping stone to CoRL)
 **Approach**: Mathematical theorems + offline LIBERO analysis (no sim loop needed)
 
 ### Why this paper, why this venue

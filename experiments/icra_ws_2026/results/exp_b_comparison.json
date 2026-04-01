@@ -9,22 +9,22 @@
     },
     "naive_clip": {
       "oob_rate_pct": 0.0,
-      "overhead_us": 0.74,
+      "overhead_us": 1.17,
       "velocity_violations": 199,
       "note": "Clips bounds but ignores velocity"
     },
     "safecontract": {
       "oob_rate_pct": 0.0,
-      "overhead_us": 0.74,
+      "overhead_us": 0.7,
       "velocity_violations": 1339,
       "bounds_violations_caught": 680,
       "total_violations_caught": 2019
     },
     "aegis_lite": {
       "oob_rate_pct": 0.0,
-      "overhead_us": 12.66,
+      "overhead_us": 12.45,
       "note": "Identical output to SafeContract for box constraints",
-      "speedup_vs_safecontract": "SafeContract is 17.1x faster"
+      "speedup_vs_safecontract": "SafeContract is 17.7x faster"
     }
   },
   "outputs_identical_clip_vs_aegis": true

@@ -1,11 +1,14 @@
 {
   "experiment": "EXP-E: Overhead microbenchmark",
   "n_iterations": 5000,
-  "standard_contract_us": 13.71,
-  "adaptive_contract_us": 14.57,
-  "aegis_lite_us": 13.53,
-  "safecontract_clip_us": 0.9,
-  "aegis_speedup": 15.1,
+  "bare_function_us": 0.05,
+  "standard_total_us": 12.67,
+  "standard_contract_overhead_us": 12.63,
+  "adaptive_total_us": 13.53,
+  "adaptive_contract_overhead_us": 13.49,
+  "aegis_lite_us": 13.4,
+  "safecontract_clip_us": 0.91,
+  "aegis_speedup": 14.7,
   "vla_inference_us": 16839000,
-  "contract_overhead_ratio": 8.1e-07
+  "contract_overhead_ratio": 7.5e-07
 }
