@@ -33,17 +33,24 @@ Single source of truth for research direction, paper plans, and process.
 - ProbeFlow interaction: does fewer steps increase violations?
 - Plot: Pareto curve (contract strictness vs violation rate)
 
-### 15-Day Timeline
-| Day | Task |
-|-----|------|
-| 1-3 | Write 3 theorems + proofs |
-| 3-4 | Download LIBERO trajectories, set up batch inference |
-| 4-6 | Run SmolVLA on LIBERO observations (overnight MPS) |
-| 6-7 | ProbeFlow x Safety interaction experiments |
-| 7-8 | Generate figures + tables |
-| 8-12 | Write paper (LaTeX, iterate) |
-| 12-14 | Internal review (/review-panel) |
-| 15 | Submit |
+### 14-Day Timeline (revised 2026-04-01)
+| Day | Task | Status |
+|-----|------|--------|
+| 1 (Apr 1) | Deep research: competitors, CP, adaptive bounds, survey | IN PROGRESS |
+| 2 | Synthesize, finalize contributions, run /novelty-check | |
+| 3-4 | Implement adaptive contracts + CP calibration | |
+| 5-6 | Run corrected experiments (queue-flushed, 100+ samples) | |
+| 7-8 | Generate figures, comparison tables vs AEGIS | |
+| 9-11 | Write paper (LaTeX) | Draft exists |
+| 12-13 | /review-panel + final /novelty-check | |
+| 14 (Apr 14) | Submit | |
+
+### Corrected Claims (2026-04-01, post correctness-critic)
+- ~~3.42x speedup~~ -> 1.28x overall, 4.1x cold start only (queue artifact)
+- ~~ProbeFlow reduces violations~~ -> Noise (n=20, KV cache reuse)
+- Actions exceed [-1,1]: CONFIRMED (max 2.34) - strongest empirical finding
+- 27us overhead: CONFIRMED
+- Lesson 007: ALWAYS flush model caches before benchmarking
 
 ---
 
