@@ -1,0 +1,104 @@
+# Research Strategy for vla-edge
+
+Single source of truth for research direction, paper plans, and process.
+
+---
+
+## Active Paper Target: ICRA VLA Pipelines Workshop (Apr 15)
+
+**Title**: "SafeContract: Composable Safety Guarantees for VLA Action Spaces"
+**Format**: 2-4 pages, non-archival
+**Approach**: Mathematical theorems + offline LIBERO analysis (no sim loop needed)
+
+### Why this paper, why this venue
+- VLA Pipelines workshop is about deploying VLAs to real robots - safety is first-class
+- Nobody has formalized VLA action safety with provable guarantees
+- 2-4 pages non-archival = clean idea + supporting evidence, not full benchmark
+- Mathematical rigor differentiates from teams submitting LIBERO success rates
+
+### Three Theorems
+1. **Individual guarantee**: clipping preserves Lipschitz continuity within bounds
+2. **Composition safety**: when workspace + velocity contracts compose safely (non-empty feasible set)
+3. **Interference conditions**: when contracts CONFLICT (deadlock where no action is feasible)
+
+### Experiments (offline, no sim loop)
+- Download LIBERO trajectories as HDF5 (observations only)
+- Run SmolVLA batch inference on 500 observations (overnight on MPS)
+- Apply SafeContract post-hoc: measure violations, clipping magnitude, smoothness
+- ProbeFlow interaction: does fewer steps increase violations?
+- Plot: Pareto curve (contract strictness vs violation rate)
+
+### 15-Day Timeline
+| Day | Task |
+|-----|------|
+| 1-3 | Write 3 theorems + proofs |
+| 3-4 | Download LIBERO trajectories, set up batch inference |
+| 4-6 | Run SmolVLA on LIBERO observations (overnight MPS) |
+| 6-7 | ProbeFlow x Safety interaction experiments |
+| 7-8 | Generate figures + tables |
+| 8-12 | Write paper (LaTeX, iterate) |
+| 12-14 | Internal review (/review-panel) |
+| 15 | Submit |
+
+---
+
+## Pipeline Papers (in priority order)
+
+| # | Paper | Status | Target | Key Result Needed |
+|---|-------|--------|--------|-------------------|
+| 1 | **SafeContract** (formal safety) | ACTIVE - targeting Apr 15 | ICRA WS | 3 theorems + LIBERO offline |
+| 2 | **SafeContract** (full version) | PLANNED | CoRL 2026 (May 29) | + learned params + full Pareto |
+| 3 | **ChaosVLA** (chaos engineering) | PLANNED | NeurIPS WS (Sep) | 12 faults x 2 models x SIMPLER |
+| 4 | **"Is RL Necessary?"** (D3P comparison) | PLANNED | NeurIPS WS (Sep) | Pareto frontier comparison |
+
+---
+
+## Research Process
+
+### How ideas are generated
+1. **Specialist agents** (5 types: efficiency, systems, safety, bio-inspired, evaluation)
+2. **Each uses a different novel thinking method** (first principles, bisociation, TRIZ, adjacent possible, Hamming)
+3. **Cross-domain inspiration** from audio codecs, game engines, AV safety, biology, HFT, compilers
+
+### How ideas are validated
+1. **Novelty critic** - skeptical reviewer searches for damaging prior work
+2. **Must survive**: "Is this just gluing two papers?" test
+3. **Must have**: counterintuitive finding or formal contribution, not just combination
+
+### How ideas become papers
+1. Generate (specialist agents) -> Kill (novelty critic) -> Frame (paper planner) -> Execute (experiments)
+2. Mandatory: /review-panel before submission
+3. Workshop papers first (lower bar, faster feedback), then expand to full papers
+
+### Key lesson (Lesson 006)
+Never propose a paper without running skeptical novelty reviewer. Initial agents produced
+obvious combinations (SAAD, SplitPipe, QuantProbe) that were killed by critic.
+The pivoted directions (formal contracts, chaos engineering, cross-domain) survived.
+
+---
+
+## Research Sessions Index
+
+| Date | File | Topic |
+|------|------|-------|
+| 2026-03-31 | optimization_synthesis.md | Top 3 ideas (pre-critique) |
+| 2026-03-31 | novelty_critique.md | Critique killed all 3, identified novel directions |
+| 2026-03-31 | formal_safety_contracts.md | SafeContract deep dive - CONFIRMED NOVEL |
+| 2026-03-31 | d3p_comparison.md | Training-free vs D3P - Gigerenzer argument |
+| 2026-03-29 | cross_domain_techniques.md | 6 techniques from adjacent fields |
+
+## Paper Analysis Index
+
+| Paper | File | Relevance |
+|-------|------|-----------|
+| QVLA | docs/research/QVLA_ANALYSIS.md | Action-centric quantization |
+| ProbeFlow | docs/research/ADAPTIVE_FLOW_MATCHING.md | Adaptive denoising |
+| SmolVLA | docs/SMOLVLA_ANALYSIS.md | Our primary model |
+| GPTQ OpenVLA | docs/research/GPTQ_OPENVLA_ANALYSIS.md | Pre-quantized models |
+
+## Conference Deadlines
+
+See `docs/CONFERENCE_TRACKER.md` for full table. Key:
+- **Apr 15**: ICRA VLA Pipelines Workshop (2-4 pg, non-archival) - ACTIVE TARGET
+- **May 29**: CoRL 2026 (full paper) - stretch goal
+- **Sep 2026**: NeurIPS workshops - ChaosVLA + "Is RL Necessary?"
