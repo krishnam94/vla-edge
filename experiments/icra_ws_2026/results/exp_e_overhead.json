@@ -1,0 +1,11 @@
+{
+  "experiment": "EXP-E: Overhead microbenchmark",
+  "n_iterations": 5000,
+  "standard_contract_us": 13.71,
+  "adaptive_contract_us": 14.57,
+  "aegis_lite_us": 13.53,
+  "safecontract_clip_us": 0.9,
+  "aegis_speedup": 15.1,
+  "vla_inference_us": 16839000,
+  "contract_overhead_ratio": 8.1e-07
+}

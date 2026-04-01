@@ -1,0 +1,36 @@
+{
+  "experiment": "EXP-F: Component ablation",
+  "components": [
+    {
+      "component": "none",
+      "violations": 0,
+      "is_safe": true
+    },
+    {
+      "component": "bounds_only",
+      "violations": 680,
+      "is_safe": false
+    },
+    {
+      "component": "velocity_only",
+      "violations": 1339,
+      "is_safe": true
+    },
+    {
+      "component": "workspace_only",
+      "violations": 448,
+      "is_safe": false
+    },
+    {
+      "component": "bounds+velocity",
+      "violations": 2019,
+      "is_safe": false
+    },
+    {
+      "component": "full",
+      "violations": 2467,
+      "is_safe": false
+    }
+  ],
+  "finding": "Each component catches violations the others miss. Full composition catches the most."
+}

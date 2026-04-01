@@ -1,0 +1,31 @@
+{
+  "experiment": "EXP-B: Method comparison",
+  "n_actions": 200,
+  "methods": {
+    "no_safety": {
+      "oob_rate_pct": 99.0,
+      "overhead_us": 0,
+      "velocity_violations": "N/A (not checked)"
+    },
+    "naive_clip": {
+      "oob_rate_pct": 0.0,
+      "overhead_us": 0.74,
+      "velocity_violations": 199,
+      "note": "Clips bounds but ignores velocity"
+    },
+    "safecontract": {
+      "oob_rate_pct": 0.0,
+      "overhead_us": 0.74,
+      "velocity_violations": 1339,
+      "bounds_violations_caught": 680,
+      "total_violations_caught": 2019
+    },
+    "aegis_lite": {
+      "oob_rate_pct": 0.0,
+      "overhead_us": 12.66,
+      "note": "Identical output to SafeContract for box constraints",
+      "speedup_vs_safecontract": "SafeContract is 17.1x faster"
+    }
+  },
+  "outputs_identical_clip_vs_aegis": true
+}

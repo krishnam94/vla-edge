@@ -1,0 +1,43 @@
+{
+  "experiment": "EXP-C: Composition verification",
+  "configs": [
+    {
+      "config": "bounds_only",
+      "total_violations": 490,
+      "bounds": 490,
+      "velocity": 0,
+      "workspace": 0,
+      "is_safe": false
+    },
+    {
+      "config": "velocity_only",
+      "total_violations": 675,
+      "bounds": 0,
+      "velocity": 675,
+      "workspace": 0,
+      "is_safe": true
+    },
+    {
+      "config": "workspace_only",
+      "total_violations": 317,
+      "bounds": 0,
+      "velocity": 0,
+      "workspace": 317,
+      "is_safe": false
+    },
+    {
+      "config": "all_composed",
+      "total_violations": 1482,
+      "bounds": 490,
+      "velocity": 675,
+      "workspace": 317,
+      "is_safe": false
+    }
+  ],
+  "composition_property": {
+    "max_individual_violations": 675,
+    "composed_violations": 1482,
+    "composed_catches_more": true,
+    "note": "Composed contract catches violations from ALL individual contracts"
+  }
+}

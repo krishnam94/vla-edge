@@ -1,0 +1,51 @@
+{
+  "experiment": "EXP-D: Pareto strictness sweep",
+  "levels": [
+    {
+      "strictness": "very_loose",
+      "bound": 3.0,
+      "velocity_limit": 1.0,
+      "violations": 948,
+      "violation_rate": 0.6771,
+      "clip_magnitude": 0.0258,
+      "action_smoothness": 1.6228
+    },
+    {
+      "strictness": "loose",
+      "bound": 2.0,
+      "velocity_limit": 0.5,
+      "violations": 1404,
+      "violation_rate": 1.0029,
+      "clip_magnitude": 0.13,
+      "action_smoothness": 1.4265
+    },
+    {
+      "strictness": "moderate",
+      "bound": 1.0,
+      "velocity_limit": 0.1,
+      "violations": 2019,
+      "violation_rate": 1.4421,
+      "clip_magnitude": 0.4525,
+      "action_smoothness": 0.9002
+    },
+    {
+      "strictness": "tight",
+      "bound": 0.5,
+      "velocity_limit": 0.05,
+      "violations": 2388,
+      "violation_rate": 1.7057,
+      "clip_magnitude": 0.75,
+      "action_smoothness": 0.4903
+    },
+    {
+      "strictness": "very_tight",
+      "bound": 0.3,
+      "velocity_limit": 0.02,
+      "violations": 2561,
+      "violation_rate": 1.8293,
+      "clip_magnitude": 0.9075,
+      "action_smoothness": 0.299
+    }
+  ],
+  "pareto_finding": "Tighter contracts catch more violations but clip actions more aggressively"
+}
