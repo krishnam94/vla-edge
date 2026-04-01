@@ -174,6 +174,16 @@ severity levels (warning vs critical).
 
 ## Lessons Learned
 
+### Lesson 006: Multi-agent research system needs a kill step (2026-03-31)
+**What happened**: 3 specialist agents proposed SAAD, SplitPipe, QuantProbe as "novel."
+Novelty critic killed all 3 (D3P, TMPQ-DM, HeteroLLM are damaging prior work).
+Pivoted 5 new agents to genuinely novel directions - all confirmed by exhaustive search.
+**Root cause**: Specialists were influenced by most recent papers (ProbeFlow, QVLA)
+and produced obvious combinations. No independent novelty check.
+**Fix applied**: /research skill now includes mandatory novelty critic step.
+Generate -> critique -> kill weak ideas -> pivot -> confirm novel ones.
+**Prevention rule**: NEVER propose a paper without running skeptical novelty reviewer.
+
 ### Lesson 005: Review panel catches what critic misses (2026-03-31)
 **What happened**: End-of-day review panel found 14 issues across 3 personas.
 Critical: profiling reported 674 FPS (should be 52s cold start), workspace_bounds
@@ -354,8 +364,20 @@ Full paper database: `~/Desktop/docs/notes/research_vla_edge_papers_2025_2026.md
 | NanoVLA (2510.25122) | TRACKED | - | Vision-language decoupling + dynamic routing |
 | TurboQuant (2504.19874) | TRACKED | N/A | KV cache quant - low relevance for VLA (short sequences) |
 | EaqVLA (2505.21567) | TRACKED | optimize/ (future) | Encoding-aligned VLA quantization |
+| D3P (2508.06804) | ANALYZED | - | RL-trained step adaptor. DAMAGING prior work for SAAD. |
+| TMPQ-DM (2404.09532) | ANALYZED | - | Joint quant+steps for diffusion. DAMAGING for QuantProbe. |
 
 Statuses: TRACKED -> ANALYZED -> IMPLEMENTING -> IMPLEMENTED -> ARCHIVED
+
+### Paper Directions (confirmed novel 2026-03-31)
+
+| Paper | Status | Novelty | Target Venue | Deadline |
+|-------|--------|---------|-------------|----------|
+| SafeContract (formal safety contracts) | CONFIRMED NOVEL | Design-by-contract for VLA, 4 contributions | CoRL 2026 / ICRA WS Apr 15 | May 29 / Apr 15 |
+| ChaosVLA (chaos engineering) | CONFIRMED NOVEL | Pipeline fault injection (empty cell in 2x2) | CoRL 2026 / NeurIPS WS | May 29 / Sep |
+| "Is RL Necessary?" (D3P comparison) | CONFIRMED NOVEL | Training-free matches RL (Gigerenzer argument) | NeurIPS WS | Sep 2026 |
+
+Research sessions: `docs/research/sessions/2026-03-31_*.md` (5 files)
 
 ---
 
