@@ -1,0 +1,16 @@
+{
+  "model": "smolvla",
+  "optimization": "probeflow",
+  "probeflow_config": {"epsilon": 0.15, "n_min": 2, "n_max": 10, "dt_probe": 0.5},
+  "hardware": "Mac Air M3 (CPU)",
+  "dtype": "float32",
+  "baseline_cold_ms": 28165,
+  "probeflow_cold_ms": 11935,
+  "speedup": 2.4,
+  "steps_used": 2,
+  "steps_max": 10,
+  "action_divergence_l1": 0.1543,
+  "notes": "ProbeFlow detected near-linear trajectory (high cosine similarity), allocated minimum 2 steps. 2.4x cold start speedup. Action divergence needs task-level validation.",
+  "timestamp": "2026-03-31",
+  "vla_edge_version": "0.2.0-dev"
+}

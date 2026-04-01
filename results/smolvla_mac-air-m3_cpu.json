@@ -1,0 +1,20 @@
+{
+  "model": "smolvla",
+  "model_params": 450000000,
+  "architecture": "flow_matching",
+  "backend": "cpu-arm64",
+  "hardware": "Mac Air M3 (24GB RAM)",
+  "dtype": "float32",
+  "image_size": [256, 256],
+  "cold_start_ms": 51683,
+  "cached_inference_ms": 3.4,
+  "action_chunk_size": 50,
+  "amortized_ms_per_step": 1037,
+  "amortized_fps": 0.96,
+  "vlm_forward_ms": 51683,
+  "action_expert_ms": 3.4,
+  "peak_memory_mb": 1800,
+  "notes": "VLM forward runs once per chunk (50 steps). Subsequent steps return cached actions at 3-4ms. Amortized = vlm_forward / chunk_size + action_expert.",
+  "timestamp": "2026-03-31T12:00:00Z",
+  "vla_edge_version": "0.1.0"
+}
