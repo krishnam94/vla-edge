@@ -56,3 +56,40 @@ Log ideas and move on. Don't evaluate immediately. Review monthly.
 **Why novel**: Current benchmarks measure task success rate. Nobody measures statistical significance of action-level differences between model variants.
 **Status**: UNEXPLORED
 **Adjacent to**: profiling, validation, degradation measurement
+
+---
+
+## 2026-03-29: Variable Bitrate Denoising (from Audio Codecs)
+**Source**: Opus codec SILK/CELT/Hybrid per-frame mode switching + SmolVLA flow matching
+**Idea**: Classify action DIFFICULTY before denoising (proactive) rather than probing during denoising (reactive like ProbeFlow). Simple linear motions get 2-3 steps ("SILK mode"), precision grasping gets 8-10 steps ("CELT mode"). Plus: per-dimension denoising precision allocation - joints near target get fewer steps, joints making large moves get more.
+**Why novel**: Nobody has framed adaptive denoising as a signal-classification problem. ProbeFlow is reactive. Per-dimension allocation appears completely unexplored.
+**Status**: RESEARCHED - see `docs/research/sessions/2026-03-29_cross_domain_techniques.md`
+**Adjacent to**: ProbeFlow, action expert optimization, safety validation
+
+## 2026-03-29: Inference Frame Budget / DRS for VLA (from Game Engines)
+**Source**: UE5/Unity Dynamic Resolution Scaling + VLA inference pipeline
+**Idea**: When inference is about to miss the control deadline (e.g. 100ms for 10Hz), automatically degrade quality knobs in priority order: reduce denoising steps, reduce image resolution, reuse cached vision embedding, emit last-known-safe action. Key game engine insight: scale DOWN fast (aggressive), scale UP slow (conservative), with hysteresis to prevent oscillation. Decompose the inference budget into per-subsystem budgets with independent quality controls.
+**Why novel**: DRS has never been applied to robot inference. Async inference exists but doesn't adaptively adjust quality knobs. The asymmetric scaling + hysteresis pattern is well-proven in games but absent from robotics.
+**Status**: RESEARCHED - see `docs/research/sessions/2026-03-29_cross_domain_techniques.md`
+**Adjacent to**: profiling, safety validation, thermal management
+
+## 2026-03-29: SOTIF-VLA Safety Framework (from AV Safety Certification)
+**Source**: ISO 21448 SOTIF + Waymo's Demonstrably Safe AI + VLA safety validation
+**Idea**: Adapt SOTIF's systematic framework to VLA manipulation. Define "VLA triggering conditions" (unusual lighting, ambiguous instructions, transparent objects, thermal throttle). Define "VLA functional insufficiencies" (quantization drift, under-denoising, vision resolution loss). Use SOTIF's 4-quadrant model (Known Safe / Known Unsafe / Unknown Safe / Unknown Unsafe) to systematically reduce residual risk. Add Waymo-inspired pre-execution action critic.
+**Why novel**: SOTIF is strictly automotive. Nobody has adapted it to robot manipulation or VLAs. The concept of "VLA triggering conditions" as a formal safety category doesn't exist.
+**Status**: RESEARCHED - see `docs/research/sessions/2026-03-29_cross_domain_techniques.md`
+**Adjacent to**: safety validation, chaos engineering, formal contracts
+
+## 2026-03-29: Prediction-Error Gated Model Switching (from Neuroscience)
+**Source**: Cerebellar forward models in motor control + VLA model routing
+**Idea**: Train a tiny forward dynamics model (~5M params) that predicts the next observation given current observation + action. If prediction error is low (world matches expectations), use fast/distilled policy. If prediction error is high (unexpected happened), escalate to full VLA. Different from DeeR-VLA (which checks action consistency across exits - self-referential) because this checks if the WORLD matches expectations (grounded in reality).
+**Why novel**: SP-VLA has dual paths but not prediction-error gated. DeeR-VLA and NanoVLA route by task complexity, not by world-model prediction error. The neuroscience literature is clear that prediction error is the biological gating signal, but nobody has implemented it in VLA.
+**Status**: RESEARCHED - see `docs/research/sessions/2026-03-29_cross_domain_techniques.md`
+**Adjacent to**: model registry, DeeR-VLA, NanoVLA, safety
+
+## 2026-03-29: Speculative Action Execution (from HFT)
+**Source**: HFT FPGA speculative execution + flow matching denoising
+**Idea**: After 2 denoising steps (out of 10), emit a "speculative action" to the robot. Continue denoising. After step 10, compare final vs speculative. If they agree, the robot is already executing correctly (saved 80% wait time). If they disagree, emit a smooth correction. Core HFT insight: cost of slightly-wrong-but-fast is usually less than perfectly-right-but-late.
+**Why novel**: FASTER addresses TTFA but requires retraining. Async inference decouples execution from prediction but doesn't emit speculative early actions. The speculative-execute-then-correct pattern from HFT is new for VLA denoising.
+**Status**: RESEARCHED - see `docs/research/sessions/2026-03-29_cross_domain_techniques.md`
+**Adjacent to**: ProbeFlow, FASTER, async inference, latency optimization

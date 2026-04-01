@@ -35,3 +35,13 @@ Add 3/week. Answer 1/week. Cross out dead ends.
 - What if safety validation is the wrong abstraction? (should it be continuous monitoring, not pre/post check?)
 - What if we don't need VLAs at all for most manipulation tasks? (ACT/diffusion policies are smaller and faster)
 - What if the leaderboard is more valuable than the toolkit itself?
+
+## Cross-Domain (added 2026-03-29)
+
+- Opus allocates bits per-band based on perceptual masking. Can we allocate denoising precision per-action-dimension based on "action masking" (some joints matter more than others)?
+- Game engine DRS uses asymmetric scaling (degrade fast, recover slow). What's the right asymmetry ratio for VLA inference quality adjustment?
+- SOTIF defines "triggering conditions" for AV failures. What are the triggering conditions for VLA manipulation failures? Has anyone systematically cataloged them?
+- V8 resets its tier-up counter when type feedback changes. What's the VLA equivalent of "type feedback changed" - scene change? New object? Different instruction structure?
+- The cerebellum gates control using prediction error, not task difficulty. Why does every VLA routing paper (DeeR-VLA, NanoVLA) route by difficulty rather than by prediction error?
+- HFT systems act on partial information because being late is worse than being wrong. At what control frequency does this become true for robot manipulation? 5Hz? 10Hz? 20Hz?
+- Waymo distills large teacher models into small student models for vehicle deployment. Could vla-edge's optimization pipeline include a distillation step, not just quantization?
