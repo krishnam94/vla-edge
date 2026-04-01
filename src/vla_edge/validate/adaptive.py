@@ -131,8 +131,7 @@ def adaptive_safety_contract(
             lo, hi = bounds[0], bounds[1]
             if np.any(action < lo) or np.any(action > hi):
                 violations.append(
-                    f"bounds ({current_phase}): [{action.min():.3f}, {action.max():.3f}] "
-                    f"outside [{lo}, {hi}]"
+                    f"bounds ({current_phase}): [{action.min():.3f}, {action.max():.3f}] outside [{lo}, {hi}]"
                 )
             action = np.clip(action, lo, hi)
 
