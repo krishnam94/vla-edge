@@ -281,7 +281,9 @@ for local development we also run the code review agent before pushing.
 ### Claude Code - Repo Skills (custom for vla-edge)
 | Skill | When to use |
 |-------|------------|
-| `/morning` | Start of session - show project state and suggest next steps |
+| `/morning` | Start of session - project state + overnight insights |
+| `/verify-experiments` | After running experiments - check methodology, caching, statistics |
+| `/novelty-check` | Before proposing a paper - search for damaging prior work |
 | `/critic` | Before major architecture decisions (single persona) |
 | `/review-panel` | Major arch/roadmap decisions (3 personas in parallel) |
 | `/profile` | Profile a model and get optimization suggestions |

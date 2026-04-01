@@ -77,10 +77,17 @@ Single source of truth for research direction, paper plans, and process.
 2. **Must survive**: "Is this just gluing two papers?" test
 3. **Must have**: counterintuitive finding or formal contribution, not just combination
 
+### How experiments are verified
+1. **`/verify-experiments`** runs after EVERY experiment (mandatory, Lesson 007)
+2. Checks: caching artifacts, sample size, normalization mismatches, statistical validity
+3. Any SUSPICIOUS result must be investigated before citing in paper
+4. Better to have no number than a wrong number
+
 ### How ideas become papers
 1. Generate (specialist agents) -> Kill (novelty critic) -> Frame (paper planner) -> Execute (experiments)
-2. Mandatory: /review-panel before submission
-3. Workshop papers first (lower bar, faster feedback), then expand to full papers
+2. **After experiments**: mandatory /verify-experiments
+3. **Before submission**: mandatory /review-panel + /novelty-check
+4. Workshop papers first (lower bar, faster feedback), then expand to full papers
 
 ### Key lesson (Lesson 006)
 Never propose a paper without running skeptical novelty reviewer. Initial agents produced
