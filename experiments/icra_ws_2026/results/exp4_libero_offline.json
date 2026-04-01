@@ -1,0 +1,36 @@
+{
+  "experiment": "EXP-004: SmolVLA on LIBERO (offline)",
+  "n_samples": 20,
+  "device": "cpu",
+  "dataset": "HuggingFaceVLA/smol-libero",
+  "baseline": {
+    "avg_latency_ms": 2099.3,
+    "cold_start_ms": 41955.9,
+    "violations": 80,
+    "violation_rate": 1.0,
+    "action_range": [
+      -0.9797,
+      2.2147
+    ]
+  },
+  "probeflow": {
+    "avg_latency_ms": 614.3,
+    "cold_start_ms": 12257.3,
+    "avg_steps": 2.0,
+    "step_histogram": {
+      "2": 1
+    },
+    "violations": 63,
+    "violation_rate": 1.0,
+    "action_range": [
+      -0.6296,
+      2.7091
+    ]
+  },
+  "comparison": {
+    "action_divergence_l1": 0.4565,
+    "speedup": 3.42,
+    "baseline_violations_more": 17
+  },
+  "timestamp": "2026-04-01T04:36:20Z"
+}
