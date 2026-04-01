@@ -2,6 +2,11 @@
 
 Single source of truth for research direction, paper plans, and process.
 
+**Navigation**: See [docs/INDEX.md](INDEX.md) for full project doc index.
+**Experiments**: See [docs/EXPERIMENT_LOG.md](EXPERIMENT_LOG.md) for all results.
+**Process**: See [docs/META_ENGINEERING.md](META_ENGINEERING.md) for dev workflow.
+**Milestones**: GitHub milestones (v0.1.0 done, v0.2.0 in progress, v0.3.0 planned).
+
 ---
 
 ## Active Paper Target: ICRA VLA Pipelines Workshop (Apr 15)
