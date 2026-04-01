@@ -1,0 +1,32 @@
+{
+  "experiment": "EXP-A: Baseline violation profiling",
+  "n_samples": 100,
+  "consecutive": true,
+  "queue_flushed": true,
+  "action_range": [
+    -2.156237840652466,
+    3.6981513500213623
+  ],
+  "per_dim_max": [
+    0.9475119113922119,
+    0.7437147498130798,
+    1.633652687072754,
+    2.5920724868774414,
+    1.8985590934753418,
+    3.6981513500213623
+  ],
+  "per_dim_min": [
+    -2.156237840652466,
+    -0.1539480984210968,
+    0.3827901780605316,
+    1.3228094577789307,
+    -1.1426090002059937,
+    -0.5321788787841797
+  ],
+  "violations": 544,
+  "bounds_violations": 121,
+  "velocity_violations": 423,
+  "avg_latency_ms": 16839.3,
+  "cold_start_ms": 52990.0,
+  "oob_rate": 1.0
+}
