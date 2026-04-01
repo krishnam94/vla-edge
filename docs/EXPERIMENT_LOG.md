@@ -32,12 +32,15 @@ Track what we ran, what worked, what failed. Single source of truth for results.
 
 ## Planned Experiments
 
-### EXP-004: SmolVLA on LIBERO Observations (offline)
-- **Purpose**: Key experiment for ICRA Apr 15 paper
-- **Method**: Download smol-libero (1.79 GB), batch inference, analyze actions
-- **Metrics**: Violation rates, clipping magnitude, ProbeFlow step distribution
-- **Status**: LIBERO data access documented, download not started
-- **Estimated runtime**: 3-6 hours on MPS (500 observations)
+### EXP-004: SmolVLA on LIBERO (CORRECTED, queue flushed)
+- **CRITICAL**: Previous 3.42x was artifact. Real speedup: **1.28x overall, 4.1x cold only**
+- **Fix**: Flush action queue before each call (policy.reset())
+- **Corrected results** (10 samples, CPU):
+  - Baseline: 17.9s avg, 51s cold. ProbeFlow: 14.0s avg, 12s cold.
+  - **Actions exceed [-1,1] on ALL observations (max 2.34)** - safety contracts needed
+  - Violations: 13 vs 10 (comparable)
+- **Data**: `experiments/icra_ws_2026/results/exp4_corrected.json`
+- **Lesson 007**: Always flush model caches before benchmarking
 
 ### EXP-005: Contract Strictness Pareto Sweep
 - **Purpose**: Theorem 3 empirical validation
