@@ -517,6 +517,53 @@ Reference: [Design by Contract](https://en.wikipedia.org/wiki/Design_by_contract
 
 ---
 
+### VLA models output unsafe actions on real data (empirical finding)
+**Manning Chapter: 11 (Production Patterns)**
+
+On LIBERO observations, SmolVLA outputs actions ranging from -0.98 to 2.29.
+Ground truth LIBERO actions are ALWAYS within [-1, 1] (0.0% out of bounds).
+This means the model itself produces actions that would violate physical
+constraints if sent directly to a robot.
+
+This validates our entire safety contract approach: you CANNOT trust the
+neural network output. You MUST clip at the boundary.
+
+Key numbers from EXP-004:
+- Ground truth: 100% within [-1, 1], mean near 0, std ~0.3-0.5 per dim
+- SmolVLA baseline (10 steps): max 2.29, 80 violations per 20 samples
+- SmolVLA ProbeFlow (2 steps): max 2.71, 63 violations per 20 samples
+
+The surprising finding: ProbeFlow (fewer steps) had FEWER violations than
+baseline (more steps). Hypothesis: over-denoising drifts the trajectory
+further from the linear (in-bounds) path. Needs more investigation but
+potentially publishable.
+
+Reference: EXP-004 results at `experiments/icra_ws_2026/results/exp4_libero_offline.json`
+
+---
+
+### Contract composition is mathematically clean (formal result)
+**Manning Chapter: 11 (Production Patterns)**
+
+Theorem 2: For hyperrectangular contracts (action bounds, velocity bounds),
+sequential clipping equals intersection clipping. `clip(clip(a, C1), C2) = clip(a, C1 ∩ C2)`.
+Decorator stacking order doesn't matter.
+
+Theorem 3: Deadlock (empty feasible set) is provably unreachable from safe
+initial states when velocity limits are positive. The previous action is always
+in-bounds (by induction), so it's always a feasible point.
+
+Corollary: An O(d) per-dimension check verifies interference-freedom at
+contract definition time, before any inference runs.
+
+These are elementary proofs but nobody has stated them for VLA policies.
+The formal methods community would consider them trivial, but the robotics
+community hasn't thought about this.
+
+Reference: `docs/research/sessions/2026-03-29_theorems_2_3_composition_interference.md`
+
+---
+
 ## Concepts Queue (to learn and document next)
 
 - [ ] TensorRT engine building - how it works, why vision encoder but not LLM
