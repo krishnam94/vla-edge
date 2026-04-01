@@ -1,0 +1,44 @@
+[
+  {
+    "oob_percent": 0,
+    "violations_detected": 999,
+    "violation_rate": 0.999,
+    "avg_clip_magnitude": 0.2594,
+    "action_smoothness_jerk": 0.204
+  },
+  {
+    "oob_percent": 5,
+    "violations_detected": 999,
+    "violation_rate": 0.999,
+    "avg_clip_magnitude": 0.3088,
+    "action_smoothness_jerk": 0.2057
+  },
+  {
+    "oob_percent": 10,
+    "violations_detected": 1000,
+    "violation_rate": 1.0,
+    "avg_clip_magnitude": 0.3548,
+    "action_smoothness_jerk": 0.2018
+  },
+  {
+    "oob_percent": 20,
+    "violations_detected": 999,
+    "violation_rate": 0.999,
+    "avg_clip_magnitude": 0.4466,
+    "action_smoothness_jerk": 0.2047
+  },
+  {
+    "oob_percent": 50,
+    "violations_detected": 999,
+    "violation_rate": 0.999,
+    "avg_clip_magnitude": 0.7273,
+    "action_smoothness_jerk": 0.2024
+  },
+  {
+    "oob_percent": 100,
+    "violations_detected": 1000,
+    "violation_rate": 1.0,
+    "avg_clip_magnitude": 1.2267,
+    "action_smoothness_jerk": 0.1978
+  }
+]

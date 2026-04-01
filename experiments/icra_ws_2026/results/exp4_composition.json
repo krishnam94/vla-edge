@@ -1,0 +1,30 @@
+[
+  {
+    "config": "loose",
+    "total_violations": 62,
+    "avg_violations_per_trajectory": 0.62,
+    "bounds": 2.0,
+    "velocity_limit": 0.5
+  },
+  {
+    "config": "medium",
+    "total_violations": 12912,
+    "avg_violations_per_trajectory": 129.12,
+    "bounds": 1.0,
+    "velocity_limit": 0.10000000149011612
+  },
+  {
+    "config": "tight",
+    "total_violations": 31528,
+    "avg_violations_per_trajectory": 315.28,
+    "bounds": 0.5,
+    "velocity_limit": 0.05000000074505806
+  },
+  {
+    "config": "very_tight",
+    "total_violations": 46049,
+    "avg_violations_per_trajectory": 460.49,
+    "bounds": 0.30000001192092896,
+    "velocity_limit": 0.019999999552965164
+  }
+]

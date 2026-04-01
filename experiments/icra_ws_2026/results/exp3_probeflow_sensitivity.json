@@ -1,0 +1,182 @@
+[
+  {
+    "epsilon": 0.05,
+    "cosine_similarity": 0.2,
+    "allocated_steps": 10
+  },
+  {
+    "epsilon": 0.05,
+    "cosine_similarity": 0.5,
+    "allocated_steps": 10
+  },
+  {
+    "epsilon": 0.05,
+    "cosine_similarity": 0.7,
+    "allocated_steps": 10
+  },
+  {
+    "epsilon": 0.05,
+    "cosine_similarity": 0.9,
+    "allocated_steps": 5
+  },
+  {
+    "epsilon": 0.05,
+    "cosine_similarity": 0.95,
+    "allocated_steps": 4
+  },
+  {
+    "epsilon": 0.05,
+    "cosine_similarity": 0.99,
+    "allocated_steps": 2
+  },
+  {
+    "epsilon": 0.1,
+    "cosine_similarity": 0.2,
+    "allocated_steps": 10
+  },
+  {
+    "epsilon": 0.1,
+    "cosine_similarity": 0.5,
+    "allocated_steps": 10
+  },
+  {
+    "epsilon": 0.1,
+    "cosine_similarity": 0.7,
+    "allocated_steps": 8
+  },
+  {
+    "epsilon": 0.1,
+    "cosine_similarity": 0.9,
+    "allocated_steps": 3
+  },
+  {
+    "epsilon": 0.1,
+    "cosine_similarity": 0.95,
+    "allocated_steps": 3
+  },
+  {
+    "epsilon": 0.1,
+    "cosine_similarity": 0.99,
+    "allocated_steps": 2
+  },
+  {
+    "epsilon": 0.15,
+    "cosine_similarity": 0.2,
+    "allocated_steps": 10
+  },
+  {
+    "epsilon": 0.15,
+    "cosine_similarity": 0.5,
+    "allocated_steps": 8
+  },
+  {
+    "epsilon": 0.15,
+    "cosine_similarity": 0.7,
+    "allocated_steps": 6
+  },
+  {
+    "epsilon": 0.15,
+    "cosine_similarity": 0.9,
+    "allocated_steps": 3
+  },
+  {
+    "epsilon": 0.15,
+    "cosine_similarity": 0.95,
+    "allocated_steps": 2
+  },
+  {
+    "epsilon": 0.15,
+    "cosine_similarity": 0.99,
+    "allocated_steps": 2
+  },
+  {
+    "epsilon": 0.2,
+    "cosine_similarity": 0.2,
+    "allocated_steps": 10
+  },
+  {
+    "epsilon": 0.2,
+    "cosine_similarity": 0.5,
+    "allocated_steps": 7
+  },
+  {
+    "epsilon": 0.2,
+    "cosine_similarity": 0.7,
+    "allocated_steps": 5
+  },
+  {
+    "epsilon": 0.2,
+    "cosine_similarity": 0.9,
+    "allocated_steps": 3
+  },
+  {
+    "epsilon": 0.2,
+    "cosine_similarity": 0.95,
+    "allocated_steps": 2
+  },
+  {
+    "epsilon": 0.2,
+    "cosine_similarity": 0.99,
+    "allocated_steps": 2
+  },
+  {
+    "epsilon": 0.3,
+    "cosine_similarity": 0.2,
+    "allocated_steps": 7
+  },
+  {
+    "epsilon": 0.3,
+    "cosine_similarity": 0.5,
+    "allocated_steps": 5
+  },
+  {
+    "epsilon": 0.3,
+    "cosine_similarity": 0.7,
+    "allocated_steps": 4
+  },
+  {
+    "epsilon": 0.3,
+    "cosine_similarity": 0.9,
+    "allocated_steps": 2
+  },
+  {
+    "epsilon": 0.3,
+    "cosine_similarity": 0.95,
+    "allocated_steps": 2
+  },
+  {
+    "epsilon": 0.3,
+    "cosine_similarity": 0.99,
+    "allocated_steps": 2
+  },
+  {
+    "epsilon": 0.5,
+    "cosine_similarity": 0.2,
+    "allocated_steps": 5
+  },
+  {
+    "epsilon": 0.5,
+    "cosine_similarity": 0.5,
+    "allocated_steps": 4
+  },
+  {
+    "epsilon": 0.5,
+    "cosine_similarity": 0.7,
+    "allocated_steps": 3
+  },
+  {
+    "epsilon": 0.5,
+    "cosine_similarity": 0.9,
+    "allocated_steps": 2
+  },
+  {
+    "epsilon": 0.5,
+    "cosine_similarity": 0.95,
+    "allocated_steps": 2
+  },
+  {
+    "epsilon": 0.5,
+    "cosine_similarity": 0.99,
+    "allocated_steps": 2
+  }
+]

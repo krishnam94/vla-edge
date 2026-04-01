@@ -1,0 +1,8 @@
+{
+  "experiment": "safety_contract_overhead",
+  "iterations": 10000,
+  "avg_us": 27.27,
+  "p50_us": 26.58,
+  "p99_us": 37.29,
+  "stddev_us": 5.45
+}
