@@ -34,8 +34,12 @@ from typing import Any
 
 import numpy as np
 
-logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
+logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s", force=True)
 logger = logging.getLogger(__name__)
+
+# Force unbuffered output for background/piped execution
+sys.stdout.reconfigure(line_buffering=True)
+sys.stderr.reconfigure(line_buffering=True)
 
 RESULTS_DIR = Path(__file__).parent / "results"
 RESULTS_DIR.mkdir(exist_ok=True)
@@ -126,8 +130,11 @@ def load_smolvla_policy(model_id: str, device: str):
     logger.info("Loading SmolVLA from %s on %s...", model_id, device)
     policy = SmolVLAPolicy.from_pretrained(model_id)
 
+    # Force to the requested device (from_pretrained may auto-detect MPS on Mac)
     torch_device = torch.device(device)
     policy.to(torch_device)
+    # Also override config.device so internal methods use the correct device
+    policy.config.device = torch_device
     policy.eval()
 
     # Load tokenizer
@@ -135,7 +142,8 @@ def load_smolvla_policy(model_id: str, device: str):
 
     processor = AutoProcessor.from_pretrained(policy.config.vlm_model_name)
 
-    logger.info("SmolVLA loaded. Action dim: %d, chunk size: %d",
+    logger.info("SmolVLA loaded on %s. Action dim: %d, chunk size: %d",
+                torch_device,
                 policy.config.output_features["action"].shape[0],
                 policy.config.chunk_size)
     return policy, processor, torch_device
@@ -284,43 +292,72 @@ def run_episode(
         for k in policy._queues:
             policy._queues[k] = deque(maxlen=policy._queues[k].maxlen)
 
+    t_start = time.perf_counter()
     for step in range(max_steps):
-        # Build observation
-        obs = build_observation(raw_obs, task_description, policy, processor, device)
+        try:
+            # Build observation
+            obs = build_observation(raw_obs, task_description, policy, processor, device)
 
-        # Get action from policy
-        with torch.inference_mode():
-            action_tensor = policy.select_action(obs)
-        action = action_tensor.detach().cpu().numpy().squeeze()
+            # Get action from policy
+            with torch.inference_mode():
+                action_tensor = policy.select_action(obs)
+            action = action_tensor.detach().cpu().numpy().squeeze()
 
-        # Track violations on raw action
-        tracker.check(action)
+            if step == 0:
+                logger.info("    First action: shape=%s, range=[%.3f, %.3f]",
+                            action.shape, action.min(), action.max())
 
-        # Apply safety contract if enabled
-        if use_safety:
-            action = apply_safety_contract(action, last_safe_action, action_range, velocity_max)
-            last_safe_action = action.copy()
+            # Track violations on raw action
+            tracker.check(action)
 
-        action_magnitudes.append(float(np.linalg.norm(action)))
+            # Apply safety contract if enabled
+            if use_safety:
+                action = apply_safety_contract(action, last_safe_action, action_range, velocity_max)
+                last_safe_action = action.copy()
 
-        # Step environment
-        raw_obs, reward, done, info = env.step(action)
-        total_reward += reward
+            action_magnitudes.append(float(np.linalg.norm(action)))
 
-        # Check success
-        is_success = env.check_success()
-        if done or is_success:
+            # Step environment
+            raw_obs, reward, done, info = env.step(action)
+            total_reward += reward
+
+            # Progress logging every 50 steps
+            if (step + 1) % 50 == 0:
+                elapsed = time.perf_counter() - t_start
+                logger.info("    Step %d/%d (%.1fs elapsed, %.1f steps/s, violations=%d)",
+                            step + 1, max_steps, elapsed, (step + 1) / elapsed, len(tracker.violations))
+
+            # Check success
+            is_success = env.check_success()
+            if done or is_success:
+                elapsed = time.perf_counter() - t_start
+                logger.info("    Episode done at step %d (%.1fs, success=%s)", step + 1, elapsed, is_success)
+                return EpisodeResult(
+                    success=is_success,
+                    steps=step + 1,
+                    total_reward=total_reward,
+                    violations=len(tracker.violations),
+                    violation_details=tracker.violations[-10:],
+                    avg_action_magnitude=float(np.mean(action_magnitudes)),
+                    max_action_magnitude=float(np.max(action_magnitudes)),
+                )
+        except Exception as e:
+            logger.error("    Error at step %d: %s", step, e)
+            import traceback
+            traceback.print_exc()
             return EpisodeResult(
-                success=is_success,
-                steps=step + 1,
+                success=False,
+                steps=step,
                 total_reward=total_reward,
                 violations=len(tracker.violations),
-                violation_details=tracker.violations[-10:],  # keep last 10
-                avg_action_magnitude=float(np.mean(action_magnitudes)),
-                max_action_magnitude=float(np.max(action_magnitudes)),
+                violation_details=tracker.violations[-10:] + [f"ERROR: {e}"],
+                avg_action_magnitude=float(np.mean(action_magnitudes)) if action_magnitudes else 0.0,
+                max_action_magnitude=float(np.max(action_magnitudes)) if action_magnitudes else 0.0,
             )
 
     # Timed out
+    elapsed = time.perf_counter() - t_start
+    logger.info("    Episode timed out at %d steps (%.1fs)", max_steps, elapsed)
     return EpisodeResult(
         success=False,
         steps=max_steps,

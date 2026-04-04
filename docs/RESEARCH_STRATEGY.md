@@ -77,6 +77,7 @@ Single source of truth for research direction, paper plans, and process.
 1. **Specialist agents** (5 types: efficiency, systems, safety, bio-inspired, evaluation)
 2. **Each uses a different novel thinking method** (first principles, bisociation, TRIZ, adjacent possible, Hamming)
 3. **Cross-domain inspiration** from audio codecs, game engines, AV safety, biology, HFT, compilers
+4. **Wiki gap mining** - `/wiki gaps` cross-references "Gaps We Spotted" sections across all wiki articles to find uncovered research opportunities. Gaps that appear in multiple articles independently are high-signal.
 
 ### How ideas are validated
 1. **Novelty critic** - skeptical reviewer searches for damaging prior work
@@ -99,6 +100,19 @@ Single source of truth for research direction, paper plans, and process.
 Never propose a paper without running skeptical novelty reviewer. Initial agents produced
 obvious combinations (SAAD, SplitPipe, QuantProbe) that were killed by critic.
 The pivoted directions (formal contracts, chaos engineering, cross-domain) survived.
+
+### Key lesson (Lesson 008)
+Soft-knee compression seemed novel (no direct competitor) but experiments showed negligible
+benefit on realistic data. Motor controllers absorb clipping discontinuities. Always validate
+with experiments before committing to a paper direction. "Novel" is not enough - it must also
+matter in practice.
+
+### Key lesson (Lesson 009)
+Wiki "Future Directions" and "Gaps We Spotted" sections from paper analysis are a goldmine
+for idea generation. Cross-referencing gaps across articles surfaces research opportunities
+that individual paper reading misses. Formalized as `/wiki gaps` command.
+Of 50+ ideas generated via 5 thinking methods, only 3 survived deep novelty validation.
+Kill rate: 86%. The novelty critic is essential.
 
 ---
 
