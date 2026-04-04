@@ -1,0 +1,110 @@
+{
+  "experiment": "EXP-G: Controlled ablation with scripted policies",
+  "policies": {
+    "clean": {
+      "description": "Always within bounds",
+      "raw_violations": {
+        "bounds_violations": 0,
+        "velocity_violations": 0,
+        "bounds_steps": 0,
+        "velocity_steps": 0,
+        "total_violations": 0
+      },
+      "safe_violations": {
+        "bounds_violations": 0,
+        "velocity_violations": 0,
+        "bounds_steps": 0,
+        "velocity_steps": 0,
+        "total_violations": 0
+      },
+      "trajectory_metrics": {
+        "mean_deviation": 0.0,
+        "max_deviation": 0.0,
+        "pct_actions_modified": 0.0,
+        "mean_jerk_raw": 0.021769,
+        "mean_jerk_safe": 0.021769,
+        "raw_action_range": [
+          -0.4324,
+          0.2159
+        ],
+        "safe_action_range": [
+          -0.4324,
+          0.2159
+        ]
+      },
+      "safecontract_eliminates_violations": true
+    },
+    "drifting": {
+      "description": "Gradual drift outside bounds",
+      "raw_violations": {
+        "bounds_violations": 115,
+        "velocity_violations": 0,
+        "bounds_steps": 42,
+        "velocity_steps": 0,
+        "total_violations": 115
+      },
+      "safe_violations": {
+        "bounds_violations": 0,
+        "velocity_violations": 0,
+        "bounds_steps": 0,
+        "velocity_steps": 0,
+        "total_violations": 0
+      },
+      "trajectory_metrics": {
+        "mean_deviation": 0.044011,
+        "max_deviation": 0.61747,
+        "pct_actions_modified": 42.0,
+        "mean_jerk_raw": 0.021769,
+        "mean_jerk_safe": 0.017976,
+        "raw_action_range": [
+          -0.4324,
+          1.6175
+        ],
+        "safe_action_range": [
+          -0.4324,
+          1.0
+        ]
+      },
+      "safecontract_eliminates_violations": true
+    },
+    "jerky": {
+      "description": "Sudden velocity spikes",
+      "raw_violations": {
+        "bounds_violations": 2,
+        "velocity_violations": 73,
+        "bounds_steps": 2,
+        "velocity_steps": 12,
+        "total_violations": 75
+      },
+      "safe_violations": {
+        "bounds_violations": 0,
+        "velocity_violations": 0,
+        "bounds_steps": 0,
+        "velocity_steps": 0,
+        "total_violations": 0
+      },
+      "trajectory_metrics": {
+        "mean_deviation": 0.019427,
+        "max_deviation": 1.057117,
+        "pct_actions_modified": 12.0,
+        "mean_jerk_raw": 0.117223,
+        "mean_jerk_safe": 0.03877,
+        "raw_action_range": [
+          -1.3796,
+          0.6622
+        ],
+        "safe_action_range": [
+          -0.4324,
+          0.2446
+        ]
+      },
+      "safecontract_eliminates_violations": true
+    }
+  },
+  "key_finding": "SafeContract eliminates 100% of violations across all three policy types while modifying only the minimum necessary actions. Clean policy: 0.0% modified. Drifting policy: 42.0% modified. Jerky policy: 12.0% modified.",
+  "overhead": {
+    "mean_us_per_trajectory": 488.76,
+    "per_step_us": 4.89,
+    "note": "Full trajectory (100 steps) enforcement cost"
+  }
+}
