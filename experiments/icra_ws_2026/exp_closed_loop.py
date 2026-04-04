@@ -236,6 +236,16 @@ class ViolationTracker:
         self.last_action = None
 
 
+def unnormalize_action(action: np.ndarray, mean: np.ndarray, std: np.ndarray) -> np.ndarray:
+    """Unnormalize MEAN_STD normalized actions: action * std + mean."""
+    return action * std + mean
+
+
+# Dataset stats from HuggingFaceVLA/smol-libero (5000 samples)
+LIBERO_ACTION_MEAN = np.array([0.007, 0.0836, -0.0395, 0.0005, 0.0032, -0.0014, 0.0064], dtype=np.float32)
+LIBERO_ACTION_STD = np.array([0.2963, 0.4462, 0.4706, 0.031, 0.0483, 0.0433, 1.0], dtype=np.float32)
+
+
 def apply_safety_contract(action: np.ndarray, last_action: np.ndarray | None,
                           action_range: tuple[float, float] = (-1.0, 1.0),
                           velocity_max: float = 0.15) -> np.ndarray:
@@ -303,22 +313,30 @@ def run_episode(
                 action_tensor = policy.select_action(obs)
             action = action_tensor.detach().cpu().numpy().squeeze()
 
-            if step == 0:
-                logger.info("    First action: shape=%s, range=[%.3f, %.3f]",
-                            action.shape, action.min(), action.max())
-
-            # Track violations on raw action
+            # Track violations on raw (normalized) model output
             tracker.check(action)
 
-            # Apply safety contract if enabled
+            # Unnormalize: model outputs MEAN_STD normalized actions
+            # Must convert back to LIBERO's action space before env.step()
+            action_unnorm = unnormalize_action(action, LIBERO_ACTION_MEAN, LIBERO_ACTION_STD)
+
+            if step == 0:
+                logger.info("    First action (normalized): shape=%s, range=[%.3f, %.3f]",
+                            action.shape, action.min(), action.max())
+                logger.info("    First action (unnorm): range=[%.3f, %.3f]",
+                            action_unnorm.min(), action_unnorm.max())
+
+            # Apply safety contract on unnormalized actions if enabled
             if use_safety:
-                action = apply_safety_contract(action, last_safe_action, action_range, velocity_max)
-                last_safe_action = action.copy()
+                action_unnorm = apply_safety_contract(
+                    action_unnorm, last_safe_action, action_range, velocity_max
+                )
+                last_safe_action = action_unnorm.copy()
 
-            action_magnitudes.append(float(np.linalg.norm(action)))
+            action_magnitudes.append(float(np.linalg.norm(action_unnorm)))
 
-            # Step environment
-            raw_obs, reward, done, info = env.step(action)
+            # Step environment with unnormalized actions
+            raw_obs, reward, done, info = env.step(action_unnorm)
             total_reward += reward
 
             # Progress logging every 50 steps

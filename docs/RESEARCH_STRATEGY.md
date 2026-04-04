@@ -107,6 +107,12 @@ benefit on realistic data. Motor controllers absorb clipping discontinuities. Al
 with experiments before committing to a paper direction. "Novel" is not enough - it must also
 matter in practice.
 
+### Key lesson (Lesson 010)
+ALWAYS check action normalization when connecting a model to an environment.
+SmolVLA outputs MEAN_STD normalized actions. We sent them raw to LIBERO sim,
+causing 0% task success (robot barely moved). The fix was unnormalize with
+dataset stats. Created INTEGRATION_CHECKLIST.md to prevent this class of bug.
+
 ### Key lesson (Lesson 009)
 Wiki "Future Directions" and "Gaps We Spotted" sections from paper analysis are a goldmine
 for idea generation. Cross-referencing gaps across articles surfaces research opportunities
