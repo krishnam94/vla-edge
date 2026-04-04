@@ -1,0 +1,61 @@
+{
+  "experiment": "EXP-SK-4: Extended Pareto (hard vs soft-knee)",
+  "levels": [
+    {
+      "strictness": "loose",
+      "bound": 2.0,
+      "knee_width": 0.4,
+      "hard_clip": {
+        "mean_jerk": 2.466139,
+        "clip_magnitude": 0.129989
+      },
+      "soft_knee": {
+        "mean_jerk": 2.475315,
+        "clip_magnitude": 0.133052,
+        "jerk_reduction": -0.003700000001117587
+      }
+    },
+    {
+      "strictness": "moderate",
+      "bound": 1.0,
+      "knee_width": 0.2,
+      "hard_clip": {
+        "mean_jerk": 1.616478,
+        "clip_magnitude": 0.452482
+      },
+      "soft_knee": {
+        "mean_jerk": 1.618861,
+        "clip_magnitude": 0.453826,
+        "jerk_reduction": -0.001500000013038516
+      }
+    },
+    {
+      "strictness": "tight",
+      "bound": 0.5,
+      "knee_width": 0.1,
+      "hard_clip": {
+        "mean_jerk": 0.922241,
+        "clip_magnitude": 0.749982
+      },
+      "soft_knee": {
+        "mean_jerk": 0.923015,
+        "clip_magnitude": 0.750425,
+        "jerk_reduction": -0.0007999999797903001
+      }
+    },
+    {
+      "strictness": "very_tight",
+      "bound": 0.3,
+      "knee_width": 0.06,
+      "hard_clip": {
+        "mean_jerk": 0.576234,
+        "clip_magnitude": 0.907531
+      },
+      "soft_knee": {
+        "mean_jerk": 0.57649,
+        "clip_magnitude": 0.907696,
+        "jerk_reduction": -0.00039999998989515007
+      }
+    }
+  ]
+}

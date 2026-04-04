@@ -1,0 +1,27 @@
+{
+  "experiment": "EXP-SK-3: Soft-knee on SmolVLA-like actions",
+  "note": "Synthetic actions matching EXP-A distribution (per-dim min/max)",
+  "n_samples": 100,
+  "n_dims": 6,
+  "action_range_original": [
+    -2.118,
+    4.143
+  ],
+  "hard_clip": {
+    "mean_jerk": 0.556899,
+    "max_jerk": 3.649411,
+    "clip_magnitude": 0.339378
+  },
+  "softknee_W0.2": {
+    "mean_jerk": 0.558904,
+    "max_jerk": 3.705974,
+    "clip_magnitude": 0.341108,
+    "jerk_reduction": -0.003599999938160181
+  },
+  "softknee_W0.3": {
+    "mean_jerk": 0.559836,
+    "max_jerk": 3.726792,
+    "clip_magnitude": 0.342891,
+    "jerk_reduction": -0.0052999998442828655
+  }
+}

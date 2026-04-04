@@ -1,0 +1,8 @@
+{
+  "experiment": "EXP-SK-2: Overhead comparison",
+  "n_iterations": 10000,
+  "hard_clip_us": 1.04,
+  "softknee_us": 17.88,
+  "overhead_ratio": 17.14,
+  "both_negligible_vs_inference": true
+}

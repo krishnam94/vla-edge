@@ -1,0 +1,57 @@
+{
+  "experiment": "EXP-SK-1: Smoothness comparison",
+  "n_actions": 200,
+  "action_dim": 7,
+  "data_type": "synthetic random walk (cumsum normal, sigma=0.3)",
+  "methods": {
+    "raw": {
+      "mean_jerk": 0.334635,
+      "max_jerk": 1.484204,
+      "mean_velocity": 0.236535,
+      "oob_rate": 0.935
+    },
+    "hard_clip": {
+      "mean_jerk": 0.143994,
+      "max_jerk": 1.288203,
+      "mean_velocity": 0.09912,
+      "clip_magnitude": 1.094451,
+      "oob_rate": 0.0
+    },
+    "softknee_W0.1": {
+      "knee_width": 0.1,
+      "mean_jerk": 0.143922,
+      "max_jerk": 1.288203,
+      "mean_velocity": 0.099084,
+      "clip_magnitude": 1.094676,
+      "oob_rate": 0.0,
+      "jerk_reduction_vs_hard": 0.0005000000237487257
+    },
+    "softknee_W0.2": {
+      "knee_width": 0.2,
+      "mean_jerk": 0.144342,
+      "max_jerk": 1.288203,
+      "mean_velocity": 0.099273,
+      "clip_magnitude": 1.095362,
+      "oob_rate": 0.0,
+      "jerk_reduction_vs_hard": -0.002400000113993883
+    },
+    "softknee_W0.3": {
+      "knee_width": 0.3,
+      "mean_jerk": 0.145723,
+      "max_jerk": 1.307779,
+      "mean_velocity": 0.099797,
+      "clip_magnitude": 1.096717,
+      "oob_rate": 0.0,
+      "jerk_reduction_vs_hard": -0.012000000104308128
+    },
+    "softknee_W0.5": {
+      "knee_width": 0.5,
+      "mean_jerk": 0.149903,
+      "max_jerk": 1.362129,
+      "mean_velocity": 0.10158,
+      "clip_magnitude": 1.100966,
+      "oob_rate": 0.0,
+      "jerk_reduction_vs_hard": -0.04100000113248825
+    }
+  }
+}
