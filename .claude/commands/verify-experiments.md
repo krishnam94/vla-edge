@@ -45,6 +45,17 @@ For each experiment result file:
 - Does the result contradict known properties? (e.g., more steps = worse = suspicious)
 - Are there hidden confounds? (cache state, warmup, GC, thermal throttling)
 
+### 6. Data Leakage and Methodology Integrity
+- **Calibration leakage**: Are safety bounds/thresholds computed from the SAME data they're tested on? (e.g., bounds = mean +/- 4*std from test actions = leakage). Calibration and test data must be separate.
+- **Condition independence**: Are both conditions (with/without SafeContract) run on the SAME episodes with the SAME seeds? Or could ordering effects bias results?
+- **Circular baselines**: Is the "clean" policy designed to pass by construction? If so, the zero-false-positive claim is tautological, not empirical.
+- **Designed distinctness**: Were synthetic distributions designed to be different, then shown to be different? This is circular. Real model data on genuinely different tasks is needed.
+- **Environment confounds**: Could fingerprint differences come from different scene layouts (environments) rather than different task behaviors?
+- **Future information**: Does any enforcement step use future actions (lookahead) that wouldn't be available at deployment time?
+- **Normalization direction**: Is noise added in raw space or normalized space? Are violations checked on the right representation?
+- **Model warmup**: Could the first condition benefit from/suffer from model warmup effects that the second condition doesn't experience?
+- **Episode independence**: Are episodes truly independent? (different seeds, different init states) Or are they correlated?
+
 ## Output Format
 
 For each result:

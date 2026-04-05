@@ -21,8 +21,11 @@ Run the `/verify-experiments` checklist on a specific experiment:
 2. Check: do paper numbers match JSON? Methodology described accurately? Sample size sufficient?
 3. Check: random seeds set? Queue flushed (Lesson 007)? Normalization correct (Lesson 010)?
 4. Check: all claimed comparisons actually run? (Lesson: "never claim all X without testing all X")
-5. Mark status as VALIDATED or FAILED with issues list
-6. Update EXPERIMENT_REGISTRY.md
+5. **Data leakage check**: Are calibration parameters (bounds, thresholds) computed from separate data than test data? Are both conditions using the same episodes/seeds?
+6. **Circular baseline check**: Is any result true by construction? (e.g., "clean policy has 0 violations" when clean = within bounds by design)
+7. **Confound check**: Could the result be explained by something other than what's claimed? (normalization mismatch, environment differences, model warmup)
+8. Mark status as VALIDATED or FAILED with issues list
+9. Update EXPERIMENT_REGISTRY.md
 
 ### `status`
 Show all experiments with:
