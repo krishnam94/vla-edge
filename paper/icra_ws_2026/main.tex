@@ -61,7 +61,7 @@ We introduce \texttt{SafeContract} with three contributions:
 \begin{enumerate}
     \item A \texttt{@safety\_contract} Python decorator that enforces composable safety constraints on any VLA \texttt{predict()} method at runtime, with formal composition properties (Properties~\ref{prop:composition}--\ref{prop:shift}).
     \item Controlled ablations showing zero false positives on clean policies and full violation detection on corrupted ones (EXP-G), establishing the monitor's precision.
-    \item Violation fingerprinting: each task produces a characteristic joint-violation signature, and violation rate change detects task switches with $p < 0.0001$ (EXP-H), demonstrating monitoring value beyond enforcement.
+    \item Violation fingerprinting: each task produces a characteristic joint-violation signature, and violation rate change detects task switches with $p < 0.005$ for all six task pairs (EXP-H), demonstrating monitoring value beyond enforcement.
 \end{enumerate}
 
 \section{Method}
@@ -279,7 +279,7 @@ This experiment is the paper's central finding: violation patterns are informati
 We simulate four manipulation tasks, each with a characteristic action distribution reflecting real robot kinematics:
 \begin{itemize}
     \item \textbf{Reaching}: large shoulder/elbow movements. Violations concentrate on joints 0-1 (OOB).
-    \item \textbf{Stacking}: precise wrist adjustments. Violations concentrate on joints 4-5 (velocity).
+    \item \textbf{Stacking}: precise wrist adjustments. Bounds violations on wrist joints 3-5, with high velocity violations across all joints.
     \item \textbf{Drawer opening}: shoulder-dominant pulling. Violations concentrate on joint 0 only (OOB).
     \item \textbf{Pouring}: wrist pitch rotation. Violations concentrate on joint 3 (velocity, pitch axis).
 \end{itemize}
@@ -289,7 +289,7 @@ Each task runs for 200 steps with bounds $[-1, 1]$ and $v_{\max} = 0.1$. We reco
 \textbf{Result 1: Distinct violation fingerprints.}
 Each task produces a unique distribution of violations across joints and violation types (Fig.~\ref{fig:fingerprint}).
 Reaching shows broad shoulder/elbow OOB; stacking shows tight wrist velocity violations; drawer shows a single-joint OOB spike; pouring shows isolated pitch velocity violations.
-These fingerprints are stable across 5 random seeds (mean coefficient of variation $<$0.33 for all tasks).
+These fingerprints are stable across 5 random seeds (coefficient of variation $<$0.15 for reaching, drawer, and pouring; 0.38 for stacking due to its lower violation rate).
 
 \textbf{Result 2: Shift detection via violation rate.}
 We concatenate two task sequences (e.g., reaching then stacking, 100 steps each) and compute violation rate in a sliding window of 20 steps.
