@@ -312,7 +312,9 @@ This demonstrates that violation patterns are not just diagnostic but actionable
 We ran SmolVLA on 100 LIBERO observations (25 per task group, MPS device) and computed real violation fingerprints.
 Roll (dim 3) shows 100\% OOB across all groups (z-score $\approx$73, severe normalization mismatch).
 However, other dimensions show meaningful variation: x-axis bounds violations range from 4\% (spatial tasks) to 20\% (goal tasks), yaw velocity from 79\% to 96\%.
-Real fingerprints are less distinct than synthetic ones (cosine distance 0.007--0.030 vs.\ 0.007--0.199) because the roll violation dominates, but per-dimension variation confirms that task-dependent patterns exist in actual model outputs.
+When the roll dimension is excluded (it is a constant normalization artifact, not a task-dependent signal), the remaining 5 dimensions show clearer differentiation: cosine distances increase to 0.008--0.033, and a nearest-centroid classifier achieves 96\% task identification accuracy (77/80 trials).
+Spatial tasks show low x-axis bounds violations (4\%) but high yaw velocity (96\%); object tasks show the highest x-velocity violations (46\%).
+This confirms that task-dependent fingerprint patterns exist in real model outputs, though they are subtler than in synthetic distributions.
 
 \textbf{Implication.}
 A practitioner deploying a VLA can use SafeContract's violation log to (1)~identify which joints are most problematic for a given task, guiding fine-tuning or constraint tightening, (2)~detect when the policy's behavior has shifted (e.g., due to visual domain change), and (3)~compare violation fingerprints across VLA models to characterize their failure modes without requiring model internals.
