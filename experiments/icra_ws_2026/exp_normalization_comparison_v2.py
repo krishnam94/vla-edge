@@ -105,11 +105,14 @@ def compute_violations(
     }
 
 
-def get_consecutive_episodes(ds, n_episodes: int = 5, min_len: int = 20):
+def get_consecutive_episodes(ds, n_episodes: int = 5, min_len: int = 20, max_frames: int = 50):
     """Group dataset by episode_index and return consecutive frame data.
 
     Returns list of dicts, each with 'actions' (np array of consecutive GT actions),
     'episode_index', 'task_index', and 'indices' (dataset row indices).
+
+    Caps each episode at max_frames to keep inference runtime practical.
+    50 consecutive frames is enough to measure velocity reliably.
     """
     episode_indices = np.array(ds["episode_index"])
     frame_indices = np.array(ds["frame_index"])
@@ -136,6 +139,10 @@ def get_consecutive_episodes(ds, n_episodes: int = 5, min_len: int = 20):
         ep_frames = frame_indices[mask]
         sort_order = np.argsort(ep_frames)
         row_indices = row_indices[sort_order]
+
+        # Cap at max_frames consecutive frames
+        if len(row_indices) > max_frames:
+            row_indices = row_indices[:max_frames]
 
         # Get GT actions for these consecutive frames
         gt_actions = np.array([ds[int(i)]["action"] for i in row_indices], dtype=np.float32)

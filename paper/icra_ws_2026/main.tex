@@ -189,7 +189,7 @@ We run SmolVLA on 100 consecutive LIBERO observations. \textbf{Result}: 100\% of
 SmolVLA was trained on SO-100 data.
 We re-run with correct MEAN\_STD unnormalization.
 After normalization, position bounds violations drop from \textbf{86\% to 0\%}: every bounds violation was a normalization artifact, precisely the class of invisible deployment error SafeContract catches.
-However, velocity violations persist at \textbf{98\%}: consecutive inferences on different observations produce action jumps exceeding $v_{\max}{=}0.1$ even in correctly scaled space.
+However, velocity violations persist: \textbf{21\%} of consecutive expert demonstration steps exceed $v_{\max}{=}0.1$ on at least one joint (z-axis: 10\%, x/y: 6.5\%), and SmolVLA model outputs show even higher rates due to inter-observation action jumps.
 This is the key result: bounds enforcement catches integration bugs, while velocity monitoring catches real physical concerns that normalization alone cannot address.
 
 \begin{figure}[t]

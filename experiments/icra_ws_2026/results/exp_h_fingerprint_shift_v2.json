@@ -1,0 +1,309 @@
+{
+  "experiment": "EXP-H v2: Fingerprinting + shift detection (non-overlapping windows)",
+  "fingerprints": {
+    "reaching": {
+      "bounds_per_dim": [
+        0.165,
+        0.195,
+        0.095,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "velocity_per_dim": [
+        0.9095,
+        0.9397,
+        0.9196,
+        0.4673,
+        0.407,
+        0.4372,
+        0.5075
+      ],
+      "overall_violation_rate": 0.36
+    },
+    "stacking": {
+      "bounds_per_dim": [
+        0.005,
+        0.01,
+        0.015,
+        0.06,
+        0.045,
+        0.03,
+        0.0
+      ],
+      "velocity_per_dim": [
+        0.8744,
+        0.8693,
+        0.8492,
+        0.8844,
+        0.8794,
+        0.8844,
+        0.0
+      ],
+      "overall_violation_rate": 0.145
+    },
+    "drawer": {
+      "bounds_per_dim": [
+        0.205,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "velocity_per_dim": [
+        0.7588,
+        0.6281,
+        0.4874,
+        0.1859,
+        0.1457,
+        0.1658,
+        0.0
+      ],
+      "overall_violation_rate": 0.205
+    },
+    "pouring": {
+      "bounds_per_dim": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.21,
+        0.005,
+        0.0
+      ],
+      "velocity_per_dim": [
+        0.7638,
+        0.7387,
+        0.6784,
+        0.794,
+        0.8844,
+        0.8342,
+        0.0
+      ],
+      "overall_violation_rate": 0.215
+    }
+  },
+  "shift_detection": {
+    "window_size": 20,
+    "stride": 20,
+    "n_steps_per_task": 200,
+    "fix": "v1 used overlapping windows (stride=1), creating dependent samples that inflated binomial test significance. v2 uses non-overlapping windows (stride=window_size=20) for independent samples.",
+    "all_pairs": {
+      "reaching->stacking": {
+        "mean_a": 0.36,
+        "mean_b": 0.18,
+        "rate_change": -0.18,
+        "n_windows_a": 10,
+        "n_windows_b": 10,
+        "successes_b_gt_mean_a": 0,
+        "binomial_p_value": 0.001953,
+        "shift_detected_p05": true,
+        "rates_a": [
+          0.4,
+          0.3,
+          0.55,
+          0.25,
+          0.2,
+          0.4,
+          0.4,
+          0.4,
+          0.25,
+          0.45
+        ],
+        "rates_b": [
+          0.2,
+          0.3,
+          0.1,
+          0.2,
+          0.15,
+          0.15,
+          0.25,
+          0.1,
+          0.25,
+          0.1
+        ]
+      },
+      "reaching->drawer": {
+        "mean_a": 0.36,
+        "mean_b": 0.275,
+        "rate_change": -0.085,
+        "n_windows_a": 10,
+        "n_windows_b": 10,
+        "successes_b_gt_mean_a": 1,
+        "binomial_p_value": 0.021484,
+        "shift_detected_p05": true,
+        "rates_a": [
+          0.4,
+          0.3,
+          0.55,
+          0.25,
+          0.2,
+          0.4,
+          0.4,
+          0.4,
+          0.25,
+          0.45
+        ],
+        "rates_b": [
+          0.25,
+          0.5,
+          0.2,
+          0.2,
+          0.3,
+          0.35,
+          0.35,
+          0.1,
+          0.3,
+          0.2
+        ]
+      },
+      "reaching->pouring": {
+        "mean_a": 0.36,
+        "mean_b": 0.245,
+        "rate_change": -0.115,
+        "n_windows_a": 10,
+        "n_windows_b": 10,
+        "successes_b_gt_mean_a": 0,
+        "binomial_p_value": 0.001953,
+        "shift_detected_p05": true,
+        "rates_a": [
+          0.4,
+          0.3,
+          0.55,
+          0.25,
+          0.2,
+          0.4,
+          0.4,
+          0.4,
+          0.25,
+          0.45
+        ],
+        "rates_b": [
+          0.25,
+          0.25,
+          0.25,
+          0.3,
+          0.25,
+          0.35,
+          0.2,
+          0.25,
+          0.15,
+          0.2
+        ]
+      },
+      "stacking->drawer": {
+        "mean_a": 0.145,
+        "mean_b": 0.275,
+        "rate_change": 0.13,
+        "n_windows_a": 10,
+        "n_windows_b": 10,
+        "successes_b_gt_mean_a": 9,
+        "binomial_p_value": 0.021484,
+        "shift_detected_p05": true,
+        "rates_a": [
+          0.15,
+          0.2,
+          0.15,
+          0.15,
+          0.15,
+          0.2,
+          0.0,
+          0.2,
+          0.1,
+          0.15
+        ],
+        "rates_b": [
+          0.25,
+          0.5,
+          0.2,
+          0.2,
+          0.3,
+          0.35,
+          0.35,
+          0.1,
+          0.3,
+          0.2
+        ]
+      },
+      "stacking->pouring": {
+        "mean_a": 0.145,
+        "mean_b": 0.245,
+        "rate_change": 0.1,
+        "n_windows_a": 10,
+        "n_windows_b": 10,
+        "successes_b_gt_mean_a": 10,
+        "binomial_p_value": 0.001953,
+        "shift_detected_p05": true,
+        "rates_a": [
+          0.15,
+          0.2,
+          0.15,
+          0.15,
+          0.15,
+          0.2,
+          0.0,
+          0.2,
+          0.1,
+          0.15
+        ],
+        "rates_b": [
+          0.25,
+          0.25,
+          0.25,
+          0.3,
+          0.25,
+          0.35,
+          0.2,
+          0.25,
+          0.15,
+          0.2
+        ]
+      },
+      "drawer->pouring": {
+        "mean_a": 0.205,
+        "mean_b": 0.245,
+        "rate_change": 0.04,
+        "n_windows_a": 10,
+        "n_windows_b": 10,
+        "successes_b_gt_mean_a": 7,
+        "binomial_p_value": 0.34375,
+        "shift_detected_p05": false,
+        "rates_a": [
+          0.3,
+          0.15,
+          0.25,
+          0.2,
+          0.0,
+          0.2,
+          0.3,
+          0.15,
+          0.2,
+          0.3
+        ],
+        "rates_b": [
+          0.25,
+          0.25,
+          0.25,
+          0.3,
+          0.25,
+          0.35,
+          0.2,
+          0.25,
+          0.15,
+          0.2
+        ]
+      }
+    },
+    "n_pairs_shift_detected": 5,
+    "total_pairs": 6
+  },
+  "key_findings": [
+    "Violation patterns differ systematically by task type (distinct fingerprints)",
+    "With non-overlapping windows, shift detection p-values are honest (not inflated)",
+    "Shift detected in 5/6 task pairs (p < 0.05)",
+    "SafeContract doubles as a lightweight runtime monitor with valid statistics"
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "experiment": "Corrected GT consecutive velocity analysis",
+  "v_max": 0.1,
+  "total_steps": 12971,
+  "n_episodes": 50,
+  "per_dim_violation_rate": {
+    "x": 0.0648,
+    "y": 0.0629,
+    "z": 0.1002,
+    "roll": 0.0002,
+    "pitch": 0.0001,
+    "yaw": 0.0,
+    "gripper": 0.0165
+  },
+  "overall_any_dim_violation_rate": 0.2117,
+  "note": "CORRECTED: computed on consecutive timesteps within episodes, not random samples"
+}
