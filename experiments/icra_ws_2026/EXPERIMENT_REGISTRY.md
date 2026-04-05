@@ -536,3 +536,25 @@ Last audited: 2026-04-01.
 These experiments were created during the overhaul sprint and initially bypassed the /experiment registry.
 Registered retroactively. Future experiments should use /experiment register BEFORE running.
 Lesson: integrate experiment registration into the workflow, not as an afterthought.
+
+### EXP-CL: ACT Closed-Loop on ALOHA Sim (Day 4)
+- **Script**: `experiments/closed_loop_eval.py`
+- **Results**: `results/closed_loop_eval_50ep.json`
+- **Parameters**:
+  - model: ACT (lerobot/act_aloha_sim_transfer_cube_human, 51.6M params)
+  - env: ALOHA sim transfer cube (gym_aloha/AlohaTransferCube-v0)
+  - bounds: training-data mean +/- 4*std per joint (14 dims)
+  - v_max: 0.05 rad/step
+  - n_episodes: 50 per condition
+  - seed: 42
+  - device: cpu
+  - normalization: manual MEAN_STD from checkpoint safetensors
+- **Key metrics**:
+  - Without SafeContract: 58% success (29/50)
+  - With SafeContract: 60% success (30/50)
+  - Fisher's exact p=1.0 (no significant difference)
+  - Violations caught: 3,949
+  - Actions modified: 3,891
+- **Paper**: Section 4.X (EXP-CL), answers "does monitoring degrade task success?"
+- **Status**: VALIDATED - numbers match JSON, methodology sound (same episodes, deterministic init)
+- **Issues**: v_max=0.05 not 0.1 (stricter than other experiments). Bounds are data-driven not [-1,1].
