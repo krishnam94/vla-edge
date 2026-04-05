@@ -7,8 +7,6 @@
 \usepackage{booktabs}
 \usepackage{subcaption}
 
-\newtheorem{property}{Property}
-
 \begin{document}
 
 \title{SafeContract: Composable Action-Space Monitors\\for VLA Deployment}
@@ -21,15 +19,13 @@ kayjee1994@gmail.com}}
 \maketitle
 
 \begin{abstract}
-Vision-Language-Action (VLA) models predict robot actions from images and instructions, but no standardized action-space monitoring exists for their deployment.
-We introduce \texttt{SafeContract}, a design-by-contract~\cite{meyer1992} monitoring toolkit that wraps any VLA policy with composable action-space contracts via a Python decorator.
-We show that the monitoring signal from a lightweight action-space contract reveals task-specific behavioral patterns and detects distribution shift.
-Bounds enforcement is a byproduct; the primary value is observability.
-Controlled ablations demonstrate zero false positives on clean policies while catching all violations on drifting and jerky policies.
-Across all 130 LIBERO tasks, each task produces a distinct \emph{violation fingerprint} across joint dimensions, with bounds violation rates varying from 2\% to 41\% and velocity violations dominating at 72.4\%.
-Cross-model experiments reveal architecture-specific signatures: ACT produces 0\% open-loop violations but 3{,}949 in closed-loop from compounding errors, Diffusion policies show 100\% mismatch violations, and SmolVLA's 98\% velocity rate is 6$\times$ higher than ground-truth (16\%).
-The full decorator adds ${\sim}$13\,$\mu$s overhead, requiring no QP solver, VLM, or model retraining.
-We release the toolkit as open source.\footnote{Code: \url{https://github.com/krishnam94/vla-edge}}
+Vision-Language-Action (VLA) models predict robot actions end-to-end, yet no standardized action-space monitoring exists for their deployment.
+We introduce \texttt{SafeContract}, a design-by-contract~\cite{meyer1992} toolkit that adds composable action-space monitoring to any VLA policy via a one-line Python decorator.
+Our key finding is that velocity violations persist even after correct normalization: at a conservative threshold, 98\% of SmolVLA steps violate on at least one joint versus 16\% for expert demonstrations, a 6$\times$ gap that normalization alone cannot close.
+Across all 130 LIBERO tasks, each task produces a distinct \emph{violation fingerprint}, with violation rates spanning 2\% to 41\% and velocity violations dominating at 72.4\%, confirming task-dependent behavioral patterns.
+Cross-architecture experiments reveal characteristic signatures: SmolVLA produces jerky, high-velocity actions; ACT is smooth in open loop but accumulates 3{,}949 violations in closed loop from compounding error; Diffusion policies stay bounded but exhibit normalization sensitivity.
+Closed-loop evaluation on ACT (50 episodes) shows no task degradation with monitoring active (58\% vs.\ 60\%, $p{=}1.0$).
+The full contract adds ${\sim}$13\,$\mu$s overhead, requires no QP solver, VLM, or model retraining, and is released as open source.\footnote{Code: \url{https://github.com/krishnam94/vla-edge}}
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -55,7 +51,7 @@ We show this record is rich: different tasks produce distinct violation fingerpr
 
 We introduce \texttt{SafeContract} with three contributions:
 \begin{enumerate}
-    \item A composable action-space monitoring toolkit via a \texttt{@safety\_contract} Python decorator on any VLA \texttt{predict()} method (Properties~\ref{prop:composition}--\ref{prop:shift}).
+    \item A composable action-space monitoring toolkit via a \texttt{@safety\_contract} Python decorator on any VLA \texttt{predict()} method (Sec.~\ref{sec:enforcement}).
     \item Bounds enforcement as a byproduct: zero false positives on clean policies, full violation detection on corrupted ones (Sec.~\ref{sec:ablation}).
     \item Violation fingerprinting: 130 LIBERO tasks produce task-specific joint-violation signatures enabling distribution shift detection (Sec.~\ref{sec:fingerprint}).
 \end{enumerate}
@@ -86,34 +82,19 @@ def predict(self, image, instruction):
 
 Three modes are supported: \texttt{clip} (silently enforce), \texttt{warn} (log violations), and \texttt{raise} (halt on violation). All violations are logged with timestep, dimension, magnitude, and severity.
 
-\subsection{Composition Properties}
+\subsection{Composition and Deployment}
 
-\begin{property}[Composition via Intersection]
-\label{prop:composition}
-For hyperrectangular contracts $C_1 = (\mathbf{l}_1, \mathbf{u}_1)$, $C_2 = (\mathbf{l}_2, \mathbf{u}_2)$, sequential clipping equals intersection clipping:
+\noindent\textbf{Composition.}
+For hyperrectangular contracts $C_1, C_2$, sequential clipping equals intersection clipping:
 $\text{clip}(\text{clip}(\mathbf{a}, C_1), C_2) = \text{clip}(\mathbf{a}, C_1 \cap C_2)$.
-Stacking \texttt{@safety\_contract} decorators is order-independent for per-joint bounds; velocity composition requires merging into a single contract with $v_{\max} = \min_i(v_{\max,i})$.
-\end{property}
+Stacking \texttt{@safety\_contract} decorators is order-independent for per-joint bounds; velocity composition uses $v_{\max} = \min_i(v_{\max,i})$.
 
-\textit{Proof.} Follows from idempotence and commutativity of per-dimension $\min$/$\max$. Verified empirically on 200 random-walk sequences (1{,}482 violations). \hfill $\square$
-
-\begin{property}[Feasibility from Safe States]
-\label{prop:deadlock}
-Let $\mathbf{a}_{t-1}$ satisfy contract $C$ with $v_{\max} > 0$. The feasible set is non-empty, since the ``hold position'' action $\mathbf{a}_t = \mathbf{a}_{t-1}$ satisfies both bounds and velocity constraints.
-\end{property}
-
-\begin{property}[Shift Detection Bound]
-\label{prop:shift}
-For a stationary policy $\pi$ and fixed contract $C$, let each step produce an independent Bernoulli violation indicator with true rate $r^*$. By Hoeffding's inequality~\cite{hoeffding1963}, the empirical rate $\hat{r}_w$ over $w$ steps satisfies
-\begin{equation}
-\Pr\!\bigl(|\hat{r}_w - r^*| > \epsilon\bigr) \;\le\; 2\exp\!\bigl(-2w\epsilon^2\bigr).
-\label{eq:hoeffding}
-\end{equation}
-At confidence $1{-}\alpha = 0.95$: $w \ge 738$ for $\epsilon = 0.05$, or $w \ge 185$ for $\epsilon = 0.1$.
-\end{property}
-
-\noindent\textit{Caveat.}
-VLA actions exhibit temporal autocorrelation, so the effective sample size may be smaller than $w$. For $\beta$-mixing processes the bound degrades by a factor depending on the mixing rate~\cite{yu1994}. In practice, concentration holds well empirically (Sec.~\ref{sec:fingerprint}).
+\noindent\textbf{Deployment scenario.}
+A deployment engineer integrating SmolVLA onto a new robot arm runs SafeContract in \texttt{warn} mode during commissioning.
+The violation log immediately flags 86\% bounds violations on position dimensions, revealing a normalization mismatch before any motor receives commands.
+After fixing normalization, the log still shows 16-98\% velocity violations depending on the task, concentrated on the z-axis (vertical motions).
+The engineer tightens $v_{\max}$ for z and monitors the violation fingerprint across task types to identify which manipulation scenarios need attention.
+This workflow - detect, diagnose, calibrate - is the primary value of action-space monitoring.
 
 \section{Related Work}
 
@@ -216,7 +197,7 @@ Fingerprints are stable across 5 seeds (CV $< 0.15$ for 3 of 4 tasks).
 
 \textbf{Shift detection.}
 Non-overlapping windows of 20 steps yield $p < 0.05$ for five of six task pairs ($p < 0.002$ for three; drawer vs.\ pouring not significant at $p = 0.34$).
-Note: the binomial test here operates on 10 independent \emph{window-level} violation rates (each aggregating 20 steps), not on per-step Bernoulli trials; the Hoeffding bound in Property~\ref{prop:shift} applies to per-step concentration and would require larger $w$ for the same $\epsilon$.
+Note: the binomial test operates on 10 independent \emph{window-level} violation rates (each aggregating 20 steps), not on per-step Bernoulli trials. By Hoeffding's inequality~\cite{hoeffding1963}, per-step concentration requires $w \ge 738$ steps for $\epsilon{=}0.05$ at 95\% confidence; VLA temporal autocorrelation~\cite{yu1994} may increase this in practice.
 Nearest-centroid classification achieves 100\% accuracy across 40 trials.
 
 \begin{figure}[t]
@@ -267,13 +248,20 @@ CL violations & -- & 3{,}949 & -- \\
 
 \section{Discussion}
 
-SafeContract provides deployment observability for VLA action spaces: one-line adoption, composable per-joint bounds (Property~\ref{prop:composition}), ${\sim}$13\,$\mu$s overhead.
+SafeContract provides deployment observability for VLA action spaces: one-line adoption, composable per-joint bounds, ${\sim}$13\,$\mu$s overhead.
 The central finding is that action-space monitoring produces structured behavioral telemetry.
 Different tasks produce distinct violation fingerprints, and violation rate changes detect distribution shift.
 
 The enforcement mechanism is deliberately simple - per-dimension clipping.
 The ablation confirms it adds no distortion to safe policies while catching all violations in corrupted ones.
 Enforcement is a byproduct; the value is in the monitoring signal.
+
+\textbf{Why this matters.}
+Action-space monitoring addresses four concrete deployment needs:
+(1)~\emph{Initial deployment} - catches normalization bugs silently before motors receive commands (our 86\% bounds violation was invisible without it).
+(2)~\emph{Model updates} - a change in the violation fingerprint after swapping checkpoints signals behavioral regression before task failure occurs.
+(3)~\emph{Fleet monitoring} - tracking violation rate trends across robots in a fleet surfaces hardware drift or environment changes.
+(4)~\emph{Failure diagnosis} - per-joint violation logs pinpoint which degree of freedom is problematic, replacing ``the robot failed'' with ``joint 3 exceeded velocity limits on 94\% of steps.''
 
 \textbf{Normalization vs.\ monitoring.}
 Normalization eliminates most bounds violations.
