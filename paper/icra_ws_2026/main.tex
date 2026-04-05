@@ -222,6 +222,29 @@ SmolVLA inference (M3 CPU) & 16{,}839{,}000 \\
 The 12.6\,$\mu$s includes input conversion, per-joint clipping, velocity clamping, re-clipping, and violation logging.
 Even on edge hardware where VLA inference is 100-200\,ms, the overhead remains negligible ($<$0.01\%).
 
+\subsection{Safety-Fidelity Tradeoff (EXP-D)}
+
+Tighter contracts catch more violations but clip actions more aggressively. We sweep 5 strictness levels on 200 synthetic sequences:
+
+\begin{table}[h]
+\centering
+\caption{Safety-fidelity Pareto frontier. Practitioners choose the operating point for their risk tolerance.}
+\label{tab:pareto}
+\begin{tabular}{lcccc}
+\toprule
+Strictness & Bounds & $v_{\max}$ & Violations & Mean Clip \\
+\midrule
+Very loose & $\pm 3.0$ & 1.0 & 948 & 0.03 \\
+Loose & $\pm 2.0$ & 0.5 & 1{,}404 & 0.13 \\
+Moderate & $\pm 1.0$ & 0.1 & 2{,}019 & 0.45 \\
+Tight & $\pm 0.5$ & 0.05 & 2{,}388 & 0.75 \\
+Very tight & $\pm 0.3$ & 0.02 & 2{,}561 & 0.91 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+This provides a concrete deployment guide: for a typical $[-1, 1]$ action space, the ``moderate'' operating point catches 2{,}019 violations while correcting actions by less than half a unit on average.
+
 \subsection{Controlled Ablation (EXP-G)}
 \label{sec:ablation}
 
@@ -281,6 +304,10 @@ This validates Property~\ref{prop:shift}: violation rate change signals non-stat
     \label{fig:fingerprint}
 \end{figure}
 
+\textbf{Result 3: Fingerprint-based task classification.}
+Using cosine similarity between live violation vectors and stored reference fingerprints, a nearest-centroid classifier achieves 100\% task identification accuracy across 40 trials (10 per task, with Gaussian noise $\sigma=0.05$ added to fingerprints).
+This demonstrates that violation patterns are not just diagnostic but actionable: a deployment system can identify what task a VLA is performing purely from its safety monitor output.
+
 \textbf{Caveat.}
 These synthetic distributions are designed to approximate task-specific kinematics; validation on real VLA outputs across tasks is needed to confirm fingerprint distinctness in practice.
 
@@ -298,10 +325,28 @@ SafeContract's violation logs instead create a structured behavioral profile of 
 Different tasks produce distinct joint-violation fingerprints, and violation rate changes detect distribution shift with high statistical significance.
 This positions safety monitors as a low-cost interpretability tool: no gradient access, no activation probing, just the pattern of constraint boundary interactions.
 
+\textbf{Cross-architecture applicability.}
+SafeContract's decorator pattern is architecture-agnostic by design.
+We verified this on ground-truth actions from three architectures and datasets:
+SmolVLA on LIBERO (flow matching, 6-DOF, 0\% bounds violations but 126 velocity violations across 500 samples),
+ACT on ALOHA (transformer chunking, 14-DOF, 10 velocity violations),
+and Diffusion Policy on PushT (DDPM, 2-DOF, 100\% OOB due to pixel-space actions at [44, 453] with default [-1, 1] bounds).
+The PushT case illustrates a second normalization mismatch scenario: the policy outputs pixel coordinates, not normalized actions.
+SafeContract detects this immediately from the violation pattern, regardless of architecture.
+
 \textbf{Normalization vs.\ monitoring.}
 Action normalization (mapping model outputs to the target robot's action space) eliminates most bounds violations.
 SafeContract is complementary, not redundant: it provides velocity enforcement (a physical hardware constraint that normalization cannot address), violation traceability for debugging, and distribution shift detection.
 When normalization is correctly applied, SafeContract's bounds checks become a safety net; the velocity monitoring, logging, and fingerprinting remain the primary value.
+
+\textbf{Generalization to real robots.}
+Per-joint bounds and velocity limits are physically grounded constraints that apply to every robot.
+The decorator wraps any Python \texttt{predict()} method, regardless of model internals.
+The primary value in real deployment is threefold:
+(1)~catching integration bugs during initial deployment (the first indication of a normalization mismatch is currently physical damage),
+(2)~monitoring model updates for regression (violation fingerprint changes signal behavioral drift),
+and (3)~providing an audit trail for safety certification.
+The monitoring signal is most informative during deployment transitions; in steady-state operation with correct normalization, violation rates approach zero and the safety net becomes a passive guarantee.
 
 \textbf{Limitations.}
 (1)~EXP-G and EXP-H use synthetic task distributions; real VLA violation patterns may differ.
