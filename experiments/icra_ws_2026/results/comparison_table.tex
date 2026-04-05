@@ -1,0 +1,130 @@
+% ============================================================================
+% AEGIS Formal Comparison for SafeContract Paper
+% Generated for ICRA Workshop 2026 submission
+% ============================================================================
+
+% ============================================================================
+% TASK 1: Formal Equivalence Proof - Box-Constraint CBF-QP = Clipping
+% ============================================================================
+
+% Include this in the paper body or appendix as needed.
+
+% --- Proof: Box-Constraint QP Reduces to Clipping ---
+%
+% \begin{proposition}[Box-Constraint QP Equivalence]
+% \label{prop:qp-clip}
+% For hyperrectangular (box) constraints $\mathcal{C} = \{\mathbf{a} \in \mathbb{R}^d : \mathbf{l} \leq \mathbf{a} \leq \mathbf{u}\}$,
+% the CBF-QP that AEGIS solves:
+% \begin{equation}
+%   \mathbf{a}_{\mathrm{safe}} = \arg\min_{\mathbf{a}' \in \mathcal{C}} \|\mathbf{a}' - \mathbf{a}\|_2^2
+%   \quad \text{s.t.} \quad l_i \leq a'_i \leq u_i, \;\; \forall\, i \in \{1, \ldots, d\}
+% \end{equation}
+% has the closed-form solution $\mathbf{a}_{\mathrm{safe}} = \mathrm{clip}(\mathbf{a}, \mathbf{l}, \mathbf{u})$.
+% \end{proposition}
+%
+% \begin{proof}
+% The objective $\|\mathbf{a}' - \mathbf{a}\|_2^2 = \sum_{i=1}^{d}(a'_i - a_i)^2$ is separable
+% across dimensions, and the box constraints are likewise separable. Therefore the
+% $d$-dimensional QP decomposes into $d$ independent scalar problems:
+% \begin{equation}
+%   a_{\mathrm{safe},i} = \arg\min_{l_i \leq a'_i \leq u_i} (a'_i - a_i)^2, \quad i = 1, \ldots, d.
+% \end{equation}
+% Each scalar problem minimizes a strictly convex quadratic on a closed interval $[l_i, u_i]$.
+% The unconstrained minimizer is $a'_i = a_i$. By projection onto the interval:
+% \begin{equation}
+%   a_{\mathrm{safe},i} = \max\bigl(l_i,\; \min(a_i,\; u_i)\bigr) = \mathrm{clip}(a_i,\; l_i,\; u_i).
+% \end{equation}
+% Therefore $\mathbf{a}_{\mathrm{safe}} = \mathrm{clip}(\mathbf{a},\; \mathbf{l},\; \mathbf{u})$.
+% \end{proof}
+%
+% \textbf{Implication.} For box constraints, SafeContract's clipping produces outputs
+% \emph{mathematically identical} to AEGIS's CBF-QP solution. The distinction is in
+% scope and overhead: AEGIS handles arbitrary CBF constraints (obstacle avoidance,
+% scene-aware safety) at the cost of a VLM + depth sensor + QP solver (${\sim}360\,\mu$s),
+% while SafeContract handles action-space constraints requiring no external perception
+% (${\sim}13\,\mu$s). The approaches are complementary.
+
+
+% ============================================================================
+% TASK 2: Capability Comparison Table
+% ============================================================================
+%
+% Sources:
+%   SafeContract - this paper
+%   AEGIS/VLSA  - Hu et al., arXiv:2512.11891, 2024
+%   Sentinel    - Dalal et al., arXiv:2506.01909, 2025
+%   SafeVLA     - PKU-Alignment Team, arXiv:2503.03480, 2025
+%   SafeDec     - Kapoor et al., arXiv:2509.01728, 2025
+%
+% Cell verification notes (inline):
+%   - AEGIS requires VLM: Yes, uses VLM for scene understanding to define CBFs
+%   - AEGIS requires depth: Yes, uses depth sensing for obstacle distance CBFs
+%   - Sentinel requires VLM: Yes, uses VLM monitoring as one of two detection channels
+%   - Sentinel detects but does not prevent: confirmed in paper ("detection" framework)
+%   - SafeVLA requires retraining: Yes, constrained RL fine-tuning
+%   - SafeDec requires logit access: Yes, operates on token logits during decoding
+%   - SafeDec requires dynamics model: Yes, uses dynamics model for STL constraint evaluation
+%   - SafeContract advantages: no external sensors, lowest overhead, violation fingerprinting,
+%     shift detection, composable bounds, architecture-agnostic, no retraining
+%   - AEGIS/Sentinel advantages: scene-aware safety (obstacle avoidance), richer constraint types
+
+\begin{table}[t]
+\centering
+\caption{Capability comparison of inference-time VLA safety methods.
+\textbf{Bold} marks SafeContract advantages; \underline{underline} marks
+where competing methods offer capabilities SafeContract does not.}
+\label{tab:comparison}
+\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{@{}lccccc@{}}
+\toprule
+\textbf{Feature} & \textbf{SafeContract} & \textbf{AEGIS} & \textbf{Sentinel} & \textbf{SafeVLA} & \textbf{SafeDec} \\
+ & (Ours) & \cite{aegis} & \cite{sentinel} & \cite{safevla} & \cite{safedec} \\
+\midrule
+\multicolumn{6}{@{}l}{\textit{Requirements}} \\
+\quad Requires retraining     & \textbf{No}  & No            & No            & Yes           & No \\
+\quad Requires VLM            & \textbf{No}  & Yes           & Yes           & No            & No \\
+\quad Requires depth sensor   & \textbf{No}  & Yes           & No            & No            & No \\
+\quad Requires logit access   & \textbf{No}  & No            & No            & No            & Yes \\
+\quad Requires dynamics model & \textbf{No}  & No            & No            & No            & Yes \\
+\quad Architecture-agnostic   & \textbf{Yes} & Yes           & Yes           & No            & No \\
+\midrule
+\multicolumn{6}{@{}l}{\textit{Overhead}} \\
+\quad Latency                 & \textbf{${\sim}$13\,$\mu$s} & ${\sim}$360\,$\mu$s & VLM call & N/A$^\dagger$ & decode-time \\
+\midrule
+\multicolumn{6}{@{}l}{\textit{Safety capabilities}} \\
+\quad Detects violations      & \textbf{Yes} & No            & Yes           & No            & No \\
+\quad Prevents violations     & \textbf{Yes} & Yes           & No            & Yes           & Yes \\
+\quad Violation fingerprinting & \textbf{Yes} & No           & No            & No            & No \\
+\quad Distribution shift det. & \textbf{Yes} & No            & Partial$^*$   & No            & No \\
+\midrule
+\multicolumn{6}{@{}l}{\textit{Constraint expressiveness}} \\
+\quad Composable constraints  & Bounds only  & No            & N/A           & No            & \underline{Via STL} \\
+\quad \underline{Scene-aware} & No           & \underline{Yes} & \underline{Partial$^*$} & \underline{Yes} & No \\
+\bottomrule
+\end{tabular}
+
+\vspace{2pt}
+{\footnotesize
+$^\dagger$SafeVLA overhead is absorbed into training; no separate inference cost.\\
+$^*$Sentinel uses VLM scene queries for detection but does not enforce constraints;
+shift detection is implicit via temporal consistency (STAC) rather than explicit statistical testing.
+}
+\end{table}
+
+
+% ============================================================================
+% TASK 3: Comparison Paragraph (for Related Work or Discussion section)
+% ============================================================================
+%
+% For box constraints, SafeContract's clipping produces outputs mathematically
+% identical to AEGIS's CBF-QP solution, because the QP for hyperrectangular
+% constraints has a closed-form clip solution (Proposition~\ref{prop:qp-clip}).
+% The difference is scope: AEGIS handles arbitrary CBF constraints - obstacle
+% avoidance, scene-aware safety - at the cost of a VLM, depth sensor, and QP
+% solver (${\sim}360\,\mu$s). SafeContract handles action-space constraints only,
+% requiring no external perception (${\sim}13\,\mu$s). Where AEGIS and Sentinel
+% offer scene-level reasoning that SafeContract cannot, SafeContract provides
+% violation fingerprinting and statistical shift detection that neither offers.
+% The approaches are complementary: SafeContract enforces fast action-space bounds
+% while AEGIS or Sentinel can layer scene-aware constraints on top.

@@ -1,0 +1,92 @@
+% ============================================================================
+% Formal Equivalence Proof: Box-Constraint CBF-QP = Clipping
+% For SafeContract paper (ICRA Workshop 2026)
+% ============================================================================
+%
+% This can be included as an appendix or inlined in the experiments section.
+% The main paper already states the result at line 199 of main_full_6page.tex;
+% this file provides the full formal treatment.
+
+\begin{proposition}[Box-Constraint QP Equivalence]
+\label{prop:qp-clip}
+Let $\mathcal{C} = \{\mathbf{a} \in \mathbb{R}^d : l_i \leq a_i \leq u_i,\; \forall\, i\}$ be a hyperrectangular constraint set. The safety-filter QP
+\begin{equation}
+  \mathbf{a}_{\mathrm{safe}} = \arg\min_{\mathbf{a}' \in \mathcal{C}} \|\mathbf{a}' - \mathbf{a}\|_2^2
+\end{equation}
+has the closed-form solution
+\begin{equation}
+  \mathbf{a}_{\mathrm{safe}} = \mathrm{clip}(\mathbf{a},\; \mathbf{l},\; \mathbf{u}).
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+The objective decomposes as
+\[
+  \|\mathbf{a}' - \mathbf{a}\|_2^2 = \sum_{i=1}^{d} (a'_i - a_i)^2,
+\]
+and the constraint set $\mathcal{C}$ is the Cartesian product $[l_1, u_1] \times \cdots \times [l_d, u_d]$.
+Both the objective and the feasible set are separable across dimensions, so the
+$d$-dimensional QP decomposes into $d$ independent scalar optimization problems:
+\begin{equation}
+  a_{\mathrm{safe},i} = \arg\min_{a'_i \in [l_i, u_i]} (a'_i - a_i)^2, \quad i = 1, \ldots, d.
+  \label{eq:scalar-qp}
+\end{equation}
+
+Each scalar problem~\eqref{eq:scalar-qp} minimizes a strictly convex quadratic
+over a closed interval. The unconstrained minimizer is $a'_i = a_i$. Three cases arise:
+
+\begin{enumerate}
+  \item If $a_i \in [l_i, u_i]$: the unconstrained minimizer is feasible, so $a_{\mathrm{safe},i} = a_i$.
+  \item If $a_i < l_i$: the objective is strictly increasing on $[l_i, u_i]$, so the minimum is at $a_{\mathrm{safe},i} = l_i$.
+  \item If $a_i > u_i$: the objective is strictly decreasing on $[l_i, u_i]$, so the minimum is at $a_{\mathrm{safe},i} = u_i$.
+\end{enumerate}
+
+These three cases are exactly the definition of the clipping function:
+\begin{equation}
+  a_{\mathrm{safe},i} = \max\bigl(l_i,\; \min(a_i,\; u_i)\bigr) = \mathrm{clip}(a_i,\; l_i,\; u_i).
+\end{equation}
+
+Combining across all dimensions:
+\begin{equation}
+  \mathbf{a}_{\mathrm{safe}} = \mathrm{clip}(\mathbf{a},\; \mathbf{l},\; \mathbf{u}). \qedhere
+\end{equation}
+\end{proof}
+
+\paragraph{Implication for SafeContract vs.\ AEGIS.}
+AEGIS~\cite{aegis} solves a CBF-based QP at each timestep to project unsafe actions
+onto a safe set defined by control barrier functions. When the safe set is a
+hyperrectangle (box constraints on joint positions, velocities, or end-effector
+coordinates), Proposition~\ref{prop:qp-clip} shows that the QP solution reduces
+to element-wise clipping. SafeContract's \texttt{enforce()} operation performs
+exactly this clipping. Therefore:
+
+\begin{itemize}
+  \item \textbf{For box constraints}, SafeContract and AEGIS produce \emph{identical}
+        safe actions, but SafeContract does so in ${\sim}13\,\mu$s without a QP solver,
+        VLM, or depth sensor, compared to AEGIS's ${\sim}360\,\mu$s with full
+        perception stack.
+  \item \textbf{For non-box constraints} (e.g., obstacle avoidance CBFs, workspace
+        polytopes, nonlinear barrier functions), AEGIS handles constraint geometries
+        that SafeContract cannot express. SafeContract is limited to axis-aligned
+        hyperrectangular constraints.
+  \item \textbf{The approaches are complementary}: SafeContract provides fast
+        action-space enforcement plus violation analytics (fingerprinting, shift
+        detection), while AEGIS provides scene-aware spatial safety. A deployment
+        could layer both - SafeContract for microsecond action-space bounds, AEGIS
+        for obstacle avoidance when scene perception is available.
+\end{itemize}
+
+\paragraph{Comparison paragraph (for Related Work / Discussion).}
+% Copy this into the paper body:
+%
+% For box constraints, SafeContract's clipping produces outputs mathematically
+% identical to AEGIS's CBF-QP solution, because the QP for hyperrectangular
+% constraints has a closed-form clip solution (Proposition~\ref{prop:qp-clip}).
+% The difference is scope: AEGIS handles arbitrary CBF constraints - obstacle
+% avoidance, scene-aware safety - at the cost of a VLM, depth sensor, and QP
+% solver (${\sim}360\,\mu$s). SafeContract handles action-space constraints only,
+% requiring no external perception (${\sim}13\,\mu$s). Where AEGIS and Sentinel
+% offer scene-level reasoning that SafeContract cannot, SafeContract provides
+% violation fingerprinting and statistical shift detection that neither offers.
+% The approaches are complementary: SafeContract enforces fast action-space bounds
+% while AEGIS or Sentinel can layer scene-aware constraints on top.
