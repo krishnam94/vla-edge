@@ -96,6 +96,19 @@ When re-running an experiment with modifications:
 5. **Paper references** must always point to the latest VALIDATED version
 6. **Git commits** should reference the experiment version: "EXP-NORM v2: fix consecutive velocity"
 
+## Pre-Submission Verification Checklist
+
+Before submitting any paper, run this checklist:
+
+1. **References**: Verify EACH reference individually - author name, title, venue, arxiv ID against actual paper
+2. **Figures**: For EACH figure, verify the data matches the cited experiment JSON exactly
+3. **Tables**: For EACH table, cross-check every number against its source JSON
+4. **Text-figure consistency**: Every number mentioned in text must match the corresponding figure/table
+5. **Figure captions**: Check for overclaiming (e.g., "All 6 dims" when only 5 exceed bounds)
+6. **Metric definitions**: For each metric, verify it measures what the text claims (e.g., "velocity" must be consecutive steps)
+7. **Task counts**: Verify the number of tasks/samples claimed matches the actual data
+8. **p-values**: Verify statistical tests match the described methodology (e.g., binomial vs proportion, overlapping vs non-overlapping)
+
 ## Instinct Integration
 
 These instincts should fire during experiment work:

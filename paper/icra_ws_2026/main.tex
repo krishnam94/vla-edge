@@ -142,7 +142,7 @@ We run SmolVLA on 100 consecutive LIBERO observations. \textbf{Result}: 100\% of
 \textbf{Normalization analysis.}
 SmolVLA was trained on SO-100 data.
 After correct MEAN\_STD unnormalization, position bounds violations drop from \textbf{86\% to 0\%}: every bounds violation was a normalization artifact.
-However, velocity violations persist: \textbf{16\%} of expert demonstration steps and \textbf{98\%} of SmolVLA outputs exceed $v_{\max}{=}0.1$ on at least one joint. The 6$\times$ gap quantifies how much jerkier the learned policy is than training data.
+However, velocity violations persist: at a conservative $v_{\max}{=}0.1$ rad/step, \textbf{16\%} of expert and \textbf{98\%} of SmolVLA consecutive steps violate on at least one joint. The \textbf{6$\times$ gap} is the robust finding; the absolute rates depend on $v_{\max}$ choice.
 Bounds enforcement catches integration bugs; velocity monitoring catches physical concerns normalization cannot address.
 
 \begin{figure}[t]
