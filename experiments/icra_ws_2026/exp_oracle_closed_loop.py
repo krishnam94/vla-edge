@@ -141,9 +141,7 @@ class ConditionResult:
         self.total_actions_modified = sum(e.actions_modified for e in self.episodes)
         self.total_actions = sum(e.total_actions for e in self.episodes)
         self.pct_modified = (
-            self.total_actions_modified / self.total_actions * 100
-            if self.total_actions > 0
-            else 0.0
+            self.total_actions_modified / self.total_actions * 100 if self.total_actions > 0 else 0.0
         )
 
 
@@ -197,9 +195,7 @@ def create_libero_env(suite_name: str, task_id: int):
     suite = bench[suite_name]()
     task = suite.get_task(task_id)
 
-    task_bddl_file = os.path.join(
-        get_libero_path("bddl_files"), task.problem_folder, task.bddl_file
-    )
+    task_bddl_file = os.path.join(get_libero_path("bddl_files"), task.problem_folder, task.bddl_file)
 
     env = OffScreenRenderEnv(
         bddl_file_name=task_bddl_file,
@@ -237,7 +233,10 @@ def load_gt_episodes(n_episodes: int) -> list[np.ndarray]:
     for i, ep in enumerate(episodes):
         logger.info(
             "  Episode %d: shape=%s, range=[%.4f, %.4f]",
-            i, ep.shape, ep.min(), ep.max(),
+            i,
+            ep.shape,
+            ep.min(),
+            ep.max(),
         )
 
     return episodes
@@ -266,14 +265,14 @@ def run_oracle_episode(
     Returns:
         EpisodeResult with success, violations, modifications, etc.
     """
-    raw_obs = env.reset()
+    env.reset()
 
     # Set deterministic init state
     if init_states is not None:
-        raw_obs = env.set_init_state(init_states[init_state_id % len(init_states)])
+        env.set_init_state(init_states[init_state_id % len(init_states)])
         # Let objects settle
         for _ in range(5):
-            raw_obs, _, _, _ = env.step(np.zeros(ACTION_DIM))
+            env.step(np.zeros(ACTION_DIM))
 
     total_reward = 0.0
     total_bounds_v = 0
@@ -296,18 +295,14 @@ def run_oracle_episode(
             noisy_action = gt_action.copy()
 
         # Count violations on noisy action (pre-safety)
-        bv, vv = count_step_violations(
-            noisy_action, last_noisy_action, BOUNDS[0], BOUNDS[1], V_MAX
-        )
+        bv, vv = count_step_violations(noisy_action, last_noisy_action, BOUNDS[0], BOUNDS[1], V_MAX)
         total_bounds_v += bv
         total_vel_v += vv
         last_noisy_action = noisy_action.copy()
 
         # Apply SafeContract if enabled
         if use_safety:
-            safe_action = apply_safecontract(
-                noisy_action, last_safe_action, BOUNDS[0], BOUNDS[1], V_MAX
-            )
+            safe_action = apply_safecontract(noisy_action, last_safe_action, BOUNDS[0], BOUNDS[1], V_MAX)
             clip_mag = np.abs(noisy_action - safe_action)
             if np.any(clip_mag > 1e-6):
                 actions_modified += 1
@@ -321,7 +316,7 @@ def run_oracle_episode(
         action_unnorm = unnormalize_action(action_to_step)
 
         # Step environment
-        raw_obs, reward, done, info = env.step(action_unnorm)
+        _obs, reward, done, _info = env.step(action_unnorm)
         total_reward += reward
 
         # Check success
@@ -336,9 +331,7 @@ def run_oracle_episode(
                 velocity_violations=total_vel_v,
                 actions_modified=actions_modified,
                 total_actions=t + 1,
-                mean_clip_magnitude=(
-                    float(np.mean(clip_magnitudes)) if clip_magnitudes else 0.0
-                ),
+                mean_clip_magnitude=(float(np.mean(clip_magnitudes)) if clip_magnitudes else 0.0),
                 max_action_magnitude=float(np.max(np.abs(action_unnorm))),
             )
 
@@ -352,9 +345,7 @@ def run_oracle_episode(
         velocity_violations=total_vel_v,
         actions_modified=actions_modified,
         total_actions=n_steps,
-        mean_clip_magnitude=(
-            float(np.mean(clip_magnitudes)) if clip_magnitudes else 0.0
-        ),
+        mean_clip_magnitude=(float(np.mean(clip_magnitudes)) if clip_magnitudes else 0.0),
         max_action_magnitude=0.0,
     )
 
@@ -383,8 +374,6 @@ def main(
         noise_levels = [0.0]
         n_episodes = 1
 
-    rng = np.random.default_rng(SEED)
-
     logger.info("=" * 70)
     logger.info("Oracle Closed-Loop Experiment: GT Replay + SafeContract")
     logger.info("=" * 70)
@@ -398,18 +387,14 @@ def main(
 
     # Create environment
     logger.info("Creating LIBERO environment...")
-    env, suite, task = create_libero_env(suite_name, task_id)
+    env, _suite, task = create_libero_env(suite_name, task_id)
     task_description = task.language
     logger.info("Task: '%s'", task_description)
 
     # Load init states for deterministic resets
     from libero.libero import get_libero_path
 
-    init_states_path = (
-        Path(get_libero_path("init_states"))
-        / task.problem_folder
-        / task.init_states_file
-    )
+    init_states_path = Path(get_libero_path("init_states")) / task.problem_folder / task.init_states_file
     init_states = torch.load(init_states_path, weights_only=False)
     logger.info("Loaded %d init states", len(init_states))
 
@@ -548,15 +533,9 @@ def main(
         findings["gt_replay_mean_reward"] = round(sigma_0_off.mean_reward, 3)
         findings["gt_replay_viable"] = sigma_0_off.success_rate > 0
     if sigma_0_on and sigma_0_off:
-        findings["safety_degrades_clean_gt"] = (
-            sigma_0_on.success_rate < sigma_0_off.success_rate
-        )
-        findings["clean_success_delta"] = round(
-            sigma_0_on.success_rate - sigma_0_off.success_rate, 3
-        )
-        findings["clean_reward_delta"] = round(
-            sigma_0_on.mean_reward - sigma_0_off.mean_reward, 3
-        )
+        findings["safety_degrades_clean_gt"] = sigma_0_on.success_rate < sigma_0_off.success_rate
+        findings["clean_success_delta"] = round(sigma_0_on.success_rate - sigma_0_off.success_rate, 3)
+        findings["clean_reward_delta"] = round(sigma_0_on.mean_reward - sigma_0_off.mean_reward, 3)
 
     # Check if SafeContract preserves success across noise levels
     preserves_success = []
@@ -566,8 +545,7 @@ def main(
         on_key = f"sigma={sigma}_safety=on"
         if off_key in all_conditions and on_key in all_conditions:
             preserves_success.append(
-                all_conditions[on_key].success_rate
-                >= all_conditions[off_key].success_rate
+                all_conditions[on_key].success_rate >= all_conditions[off_key].success_rate
             )
             preserves_reward.append(
                 all_conditions[on_key].mean_reward
@@ -656,27 +634,35 @@ def main(
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description="Oracle closed-loop: GT action replay with SafeContract"
-    )
+    parser = argparse.ArgumentParser(description="Oracle closed-loop: GT action replay with SafeContract")
     parser.add_argument(
-        "--n-episodes", type=int, default=8,
+        "--n-episodes",
+        type=int,
+        default=8,
         help="Number of GT episodes to replay per condition",
     )
     parser.add_argument(
-        "--noise-levels", type=float, nargs="+", default=None,
+        "--noise-levels",
+        type=float,
+        nargs="+",
+        default=None,
         help="Noise sigma values (default: 0.0 0.05 0.1 0.2 0.5)",
     )
     parser.add_argument(
-        "--suite", type=str, default="libero_object",
+        "--suite",
+        type=str,
+        default="libero_object",
         help="LIBERO suite name",
     )
     parser.add_argument(
-        "--task-id", type=int, default=0,
+        "--task-id",
+        type=int,
+        default=0,
         help="LIBERO task ID",
     )
     parser.add_argument(
-        "--sanity", action="store_true",
+        "--sanity",
+        action="store_true",
         help="Quick sanity check: 1 episode, sigma=0 only",
     )
     args = parser.parse_args()
