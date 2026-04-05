@@ -27,7 +27,7 @@ We show that the monitoring signal from a lightweight action-space contract reve
 Bounds enforcement is a byproduct; the primary value is observability.
 Controlled ablations demonstrate zero false positives on clean policies while catching all violations on drifting and jerky policies.
 Across 130 LIBERO tasks (40 standard + 90 diverse), each task produces a distinct \emph{violation fingerprint} across joint dimensions, with bounds violation rates varying from 4\% to 37\% and velocity violations dominating at 72.4\% of all violations.
-Changes in violation rate detect task switches with $p < 0.005$ across all tested pairs.
+Changes in violation rate detect task switches with $p < 0.05$ for five of six tested pairs using non-overlapping windows ($p < 0.002$ for three pairs; the closest pair, drawer vs.\ pouring, is not significant at $p = 0.34$).
 These findings position action-space monitors as deployment observability tools: violation patterns expose what a VLA ``thinks'' about its action space without requiring model internals.
 The full decorator adds ${\sim}$13\,$\mu$s overhead per action, requiring no QP solver, VLM, or model retraining.
 We release the toolkit as open source.\footnote{Code: \url{https://github.com/krishnam94/vla-edge}}
@@ -267,7 +267,7 @@ Each task produces a unique joint-violation fingerprint (Fig.~\ref{fig:fingerpri
 Fingerprints are stable across 5 seeds (CV $< 0.15$ for 3 of 4 tasks).
 
 \textbf{Shift detection.}
-Concatenating two task sequences and computing violation rate in a sliding window of 20 steps, a binomial test yields $p < 0.05$ for all six task pairs ($p < 0.001$ for five of six).
+Concatenating two task sequences and computing violation rate in non-overlapping windows of 20 steps (10 windows per task), a binomial test yields $p < 0.05$ for five of six task pairs ($p < 0.002$ for three pairs; drawer vs.\ pouring is not significant at $p = 0.34$, as these tasks produce similar violation rates).
 
 \textbf{Task classification.}
 Using cosine similarity between live violation vectors and stored fingerprints, a nearest-centroid classifier achieves 100\% accuracy across 40 trials.
