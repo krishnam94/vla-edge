@@ -291,6 +291,11 @@ SafeContract's violation logs instead create a structured behavioral profile of 
 Different tasks produce distinct joint-violation fingerprints, and violation rate changes detect distribution shift with high statistical significance.
 This positions safety monitors as a low-cost interpretability tool: no gradient access, no activation probing, just the pattern of constraint boundary interactions.
 
+\textbf{Normalization vs.\ monitoring.}
+Action normalization (mapping model outputs to the target robot's action space) eliminates most bounds violations.
+SafeContract is complementary, not redundant: it provides velocity enforcement (a physical hardware constraint that normalization cannot address), violation traceability for debugging, and distribution shift detection.
+When normalization is correctly applied, SafeContract's bounds checks become a safety net; the velocity monitoring, logging, and fingerprinting remain the primary value.
+
 \textbf{Limitations.}
 (1)~EXP-G and EXP-H use synthetic task distributions; real VLA violation patterns may differ.
 (2)~No closed-loop evaluation: aggressive clipping could degrade task success. This is the most important next step.
@@ -320,7 +325,7 @@ Closed-loop LIBERO evaluation with task success rates.
 \bibitem{atacom} Quackenbush, M. et al., ``Safe Robot Foundation Models Using Inductive Biases,'' arXiv:2505.10219, 2025.
 \bibitem{liberoplus} Song, Y. et al., ``LIBERO-Plus: In-depth Robustness Analysis of VLA Models,'' arXiv:2510.13626, 2025.
 \bibitem{vlaarena} PKU-Alignment, ``VLA-Arena: Benchmarking VLA Models,'' arXiv:2512.22539, 2025.
-\bibitem{abc} Gupta, A. et al., ``Agent Behavioral Contracts for AI Systems,'' arXiv:2602.22302, 2026.
+\bibitem{abc} Bhardwaj, V.P., ``Agent Behavioral Contracts,'' arXiv:2602.22302, 2026.
 \end{thebibliography}
 
 \end{document}
