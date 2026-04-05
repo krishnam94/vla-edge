@@ -237,32 +237,31 @@ Cosine distance between suite fingerprints is 0.054, confirming task-dependent p
 \begin{figure}[t]
     \centering
     \includegraphics[width=\columnwidth]{figures/fig_130tasks.pdf}
-    \caption{Bounds violation rates across 90 LIBERO-90 tasks (sorted). Violation rates range from 4\% (drawer manipulation) to 37\% (mug placement), demonstrating task-dependent monitoring signals.}
+    \caption{Bounds violation rates across 94 LIBERO tasks (90 diverse + 4 standard suites, sorted). Rates range from 4\% to 37\%, with standard suite tasks (colored) distributed across the spectrum.}
     \label{fig:130tasks}
 \end{figure}
 
 \textbf{Cross-architecture comparison.}
 
-\begin{table}[h]
+\begin{table}[t]
 \centering
-\caption{Violation profiles across three VLA architectures. SafeContract reveals fundamentally different behaviors without model internals.}
+\caption{Violation profiles across three VLA architectures.}
 \label{tab:crossarch}
-\small
-\begin{tabular}{lccc}
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lrrr}
 \toprule
- & SmolVLA & ACT & Diffusion \\
- & (flow match) & (transformer) & (DDPM) \\
+ & \textbf{SmolVLA} & \textbf{ACT} & \textbf{Diffusion} \\
 \midrule
+Architecture & flow match & transformer & DDPM \\
 Dataset & LIBERO & ALOHA & PushT \\
-Action dim & 6 & 14 & 2 \\
-Open-loop bounds & 86\%$\to$0\% & 0\% & 0\% / 100\%$^*$ \\
-Open-loop velocity & \textbf{98\%} & \textbf{0\%} & 12\% \\
+Bounds (open) & 86\%$\to$0\% & 0\% & 0\%$^*$ \\
+Velocity (open) & \textbf{98\%} & \textbf{0\%} & 12\% \\
 GT velocity & 16\% & 0\% & 0\% \\
-Closed-loop success & -- & 58\%/60\% & -- \\
+CL success & -- & 58/60\% & -- \\
 CL violations & -- & 3{,}949 & -- \\
-Key insight & 6$\times$ jerkier & errors compound & bounds by design \\
 \bottomrule
-\multicolumn{4}{l}{\footnotesize $^*$100\% if normalization mismatch (pixel vs [-1,1])}
+\multicolumn{4}{l}{\scriptsize $^*$100\% under normalization mismatch}
 \end{tabular}
 \end{table}
 
