@@ -149,6 +149,33 @@ SABER~\cite{saber} demonstrates black-box adversarial attacks on VLAs; SafeContr
 
 SafeContract differs from all the above: (i)~architecture-agnostic; (ii)~explicit composition; (iii)~pure clipping (${\sim}$13\,$\mu$s); (iv)~violation logging as deployment observability.
 
+\textbf{QP equivalence.}
+For box constraints $\mathcal{C} = \{\mathbf{a} : \mathbf{l} \leq \mathbf{a} \leq \mathbf{u}\}$, the CBF-QP that AEGIS solves ($\arg\min_{\mathbf{a}' \in \mathcal{C}} \|\mathbf{a}' - \mathbf{a}\|^2$) decomposes into $d$ independent scalar projections, each yielding $\text{clip}(a_i, l_i, u_i)$.
+SafeContract's clipping is therefore mathematically identical to AEGIS's QP solution for box constraints.
+The distinction is scope: AEGIS handles arbitrary CBF constraints via VLM scene understanding (${\sim}$360\,$\mu$s); SafeContract handles action-space constraints only (${\sim}$13\,$\mu$s), requiring no external perception.
+
+\begin{table}[h]
+\centering
+\caption{Capability comparison. SafeContract is the only method that monitors and enforces without model internals, external sensors, or retraining.}
+\label{tab:comparison_methods}
+\small
+\begin{tabular}{lccccc}
+\toprule
+ & \rotatebox{70}{SafeContract} & \rotatebox{70}{AEGIS} & \rotatebox{70}{Sentinel} & \rotatebox{70}{SafeVLA} & \rotatebox{70}{SafeDec} \\
+\midrule
+No retraining    & \textbf{Yes} & Yes & Yes & No  & Yes \\
+No ext.\ sensors & \textbf{Yes} & No  & No  & Yes & Yes \\
+No model access  & \textbf{Yes} & Yes & Yes & No  & No  \\
+Arch-agnostic    & \textbf{Yes} & Yes & Yes & No  & No  \\
+Detects viol.    & \textbf{Yes} & No  & Yes & No  & No  \\
+Prevents viol.   & \textbf{Yes} & Yes & No  & Yes & Yes \\
+Fingerprinting   & \textbf{Yes} & No  & No  & No  & No  \\
+Shift detection  & \textbf{Yes} & No  & No  & No  & No  \\
+Scene-aware      & No           & \underline{Yes} & \underline{Yes} & \underline{Yes} & No  \\
+\bottomrule
+\end{tabular}
+\end{table}
+
 \section{Experiments}
 
 Platform: Apple M3, CPU, Python 3.12. Full contract overhead: 15.6\,$\pm$\,3.8\,$\mu$s (5{,}000 iterations), representing 0.000075\% of SmolVLA inference time. Tighter contracts catch more violations with proportionally more clipping; at the moderate operating point ($\pm 1.0$ bounds, $v_{\max} = 0.1$), mean correction is 0.45 units per action.

@@ -69,7 +69,7 @@ policy.reset()
 with torch.inference_mode():
     action_raw = policy.select_action(obs_dict)
 
-action_raw = action_raw.numpy() if isinstance(action_raw, torch.Tensor) else action_raw
+action_raw = action_raw.cpu().numpy() if isinstance(action_raw, torch.Tensor) else action_raw
 print("\nApproach 1 (with normalization):")
 print("  Raw model output:", action_raw.flatten()[:7])
 print("  Output range:", action_raw.min(), action_raw.max())
@@ -89,7 +89,7 @@ policy.reset()
 with torch.inference_mode():
     action_raw2 = policy.select_action(obs_dict2)
 
-action_raw2 = action_raw2.numpy() if isinstance(action_raw2, torch.Tensor) else action_raw2
+action_raw2 = action_raw2.cpu().numpy() if isinstance(action_raw2, torch.Tensor) else action_raw2
 print("\nApproach 2 (WITHOUT normalization - raw input):")
 print("  Raw model output:", action_raw2.flatten()[:7])
 print("  Output range:", action_raw2.min(), action_raw2.max())
@@ -111,7 +111,7 @@ for i in range(5):
     }
     with torch.inference_mode():
         action = policy.select_action(obs_dict)
-    action = action.numpy().flatten() if isinstance(action, torch.Tensor) else action.flatten()
+    action = action.cpu().numpy().flatten() if isinstance(action, torch.Tensor) else action.flatten()
     action_clipped = np.clip(action, -1.0, 1.0).astype(np.float32)
     obs, reward, term, trunc, info = env.step(action_clipped)
     print(f"  Step {i}: action_range=[{action.min():.3f},{action.max():.3f}] reward={reward} qpos_first3={qpos[:3].round(3)}")
