@@ -85,11 +85,14 @@ Single source of truth for research direction, paper plans, and process.
 2. **Must survive**: "Is this just gluing two papers?" test
 3. **Must have**: counterintuitive finding or formal contribution, not just combination
 
-### How experiments are verified
-1. **`/verify-experiments`** runs after EVERY experiment (mandatory, Lesson 007)
-2. Checks: caching artifacts, sample size, normalization mismatches, statistical validity
-3. Any SUSPICIOUS result must be investigated before citing in paper
-4. Better to have no number than a wrong number
+### How experiments are managed
+1. **`/experiment register`** after creating any new experiment (adds to EXPERIMENT_REGISTRY.md)
+2. **`/experiment validate`** runs after EVERY experiment (mandatory, extends /verify-experiments)
+3. Checks: caching artifacts, sample size, normalization (Lesson 010), all-X claims (Lesson: verify-all-claims)
+4. **`/experiment link`** connects results to specific paper claims
+5. **`/experiment audit`** before submission - cross-references ALL paper numbers against JSONs
+6. Any SUSPICIOUS result must be investigated before citing in paper
+7. Better to have no number than a wrong number
 
 ### How ideas become papers
 1. Generate (specialist agents) -> Kill (novelty critic) -> Frame (paper planner) -> Execute (experiments)
