@@ -137,10 +137,17 @@ Safety Chip~\cite{safetychip} uses LTL monitors for plan-level constraints.
 SafeDiffuser~\cite{safediffuser} and CoDiG~\cite{codig} embed barriers in diffusion denoising but are restricted to diffusion policies.
 ATACOM~\cite{atacom} projects onto constraint manifolds for pi0 and Octo but provides no composition guarantees and requires scene perception.
 Recent work on Agent Behavioral Contracts~\cite{abc} brings design-by-contract to AI agents but targets discrete LLM decisions, not continuous robot action spaces; SafeContract handles geometric composition over continuous hyperrectangular constraints.
-SafeContract differs from all the above: (i)~architecture-agnostic; (ii)~explicit composition properties; (iii)~pure clipping (${\sim}$13\,$\mu$s); (iv)~violation logging as a monitoring signal.
+\textbf{Runtime monitoring.}
+Sentinel~\cite{sentinel} combines STAC (temporal consistency) with VLM monitoring to detect failures in generative policies, catching 18\% more failures than either component alone.
+However, Sentinel \emph{detects} but does not \emph{prevent} unsafe actions, and requires an additional VLM call for scene understanding.
+SafeContract both detects and prevents, using constraint boundary interactions (${\sim}$13\,$\mu$s) instead of a separate monitor model.
 
-\textbf{Robustness benchmarks.}
-LIBERO-Plus~\cite{liberoplus} and VLA-Arena~\cite{vlaarena} diagnose VLA brittleness; SafeContract prevents the physical consequences at runtime and provides violation data to aid diagnosis.
+SafeContract differs from all the above: (i)~architecture-agnostic; (ii)~explicit composition properties; (iii)~pure clipping (${\sim}$13\,$\mu$s); (iv)~violation logging doubles as behavioral telemetry.
+
+\textbf{Robustness and adversarial attacks.}
+LIBERO-Plus~\cite{liberoplus} and VLA-Arena~\cite{vlaarena} diagnose VLA brittleness.
+SABER~\cite{saber} demonstrates black-box adversarial attacks on VLAs through instruction perturbation, causing constraint violations and extended execution.
+SafeContract provides defense-in-depth: even under adversarial input corruption, output actions remain bounded because enforcement operates at the action boundary, independent of input provenance.
 
 \section{Experiments}
 
@@ -326,6 +333,8 @@ Closed-loop LIBERO evaluation with task success rates.
 \bibitem{liberoplus} Song, Y. et al., ``LIBERO-Plus: In-depth Robustness Analysis of VLA Models,'' arXiv:2510.13626, 2025.
 \bibitem{vlaarena} PKU-Alignment, ``VLA-Arena: Benchmarking VLA Models,'' arXiv:2512.22539, 2025.
 \bibitem{abc} Bhardwaj, V.P., ``Agent Behavioral Contracts,'' arXiv:2602.22302, 2026.
+\bibitem{sentinel} Hu, H. et al., ``Sentinel: Runtime Monitoring of Generative Policies via STAC,'' CoRL 2024, arXiv:2410.04640.
+\bibitem{saber} SABER, ``Black-Box Adversarial Attacks on VLAs via Instruction Perturbation,'' arXiv:2603.24935, 2026.
 \end{thebibliography}
 
 \end{document}
