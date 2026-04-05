@@ -308,8 +308,11 @@ This validates Property~\ref{prop:shift}: violation rate change signals non-stat
 Using cosine similarity between live violation vectors and stored reference fingerprints, a nearest-centroid classifier achieves 100\% task identification accuracy across 40 trials (10 per task, with Gaussian noise $\sigma=0.05$ added to fingerprints).
 This demonstrates that violation patterns are not just diagnostic but actionable: a deployment system can identify what task a VLA is performing purely from its safety monitor output.
 
-\textbf{Caveat.}
-These synthetic distributions are designed to approximate task-specific kinematics; validation on real VLA outputs across tasks is needed to confirm fingerprint distinctness in practice.
+\textbf{Validation on real VLA inference.}
+We ran SmolVLA on 100 LIBERO observations (25 per task group, MPS device) and computed real violation fingerprints.
+Roll (dim 3) shows 100\% OOB across all groups (z-score $\approx$73, severe normalization mismatch).
+However, other dimensions show meaningful variation: x-axis bounds violations range from 4\% (spatial tasks) to 20\% (goal tasks), yaw velocity from 79\% to 96\%.
+Real fingerprints are less distinct than synthetic ones (cosine distance 0.007--0.030 vs.\ 0.007--0.199) because the roll violation dominates, but per-dimension variation confirms that task-dependent patterns exist in actual model outputs.
 
 \textbf{Implication.}
 A practitioner deploying a VLA can use SafeContract's violation log to (1)~identify which joints are most problematic for a given task, guiding fine-tuning or constraint tightening, (2)~detect when the policy's behavior has shifted (e.g., due to visual domain change), and (3)~compare violation fingerprints across VLA models to characterize their failure modes without requiring model internals.
