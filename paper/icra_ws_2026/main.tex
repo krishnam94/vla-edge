@@ -26,7 +26,7 @@ We introduce \texttt{SafeContract}, a design-by-contract~\cite{meyer1992} monito
 We show that the monitoring signal from a lightweight action-space contract reveals task-specific behavioral patterns and detects distribution shift.
 Bounds enforcement is a byproduct; the primary value is observability.
 Controlled ablations demonstrate zero false positives on clean policies while catching all violations on drifting and jerky policies.
-Across 94 LIBERO tasks, each task produces a distinct \emph{violation fingerprint} across joint dimensions, with bounds violation rates varying from 4\% to 37\% and velocity violations dominating at 72.4\%.
+Across all 130 LIBERO tasks, each task produces a distinct \emph{violation fingerprint} across joint dimensions, with bounds violation rates varying from 2\% to 41\% and velocity violations dominating at 72.4\%.
 Cross-model experiments reveal architecture-specific signatures: ACT produces 0\% open-loop violations but 3{,}949 in closed-loop from compounding errors, Diffusion policies show 100\% mismatch violations, and SmolVLA's 98\% velocity rate is 6$\times$ higher than ground-truth (16\%).
 The full decorator adds ${\sim}$13\,$\mu$s overhead, requiring no QP solver, VLM, or model retraining.
 We release the toolkit as open source.\footnote{Code: \url{https://github.com/krishnam94/vla-edge}}
@@ -57,7 +57,7 @@ We introduce \texttt{SafeContract} with three contributions:
 \begin{enumerate}
     \item A composable action-space monitoring toolkit via a \texttt{@safety\_contract} Python decorator on any VLA \texttt{predict()} method (Properties~\ref{prop:composition}--\ref{prop:shift}).
     \item Bounds enforcement as a byproduct: zero false positives on clean policies, full violation detection on corrupted ones (Sec.~\ref{sec:ablation}).
-    \item Violation fingerprinting: 94 LIBERO tasks produce task-specific joint-violation signatures enabling distribution shift detection (Sec.~\ref{sec:fingerprint}).
+    \item Violation fingerprinting: 130 LIBERO tasks produce task-specific joint-violation signatures enabling distribution shift detection (Sec.~\ref{sec:fingerprint}).
 \end{enumerate}
 
 \section{Method}
@@ -226,9 +226,9 @@ Nearest-centroid classification achieves 100\% accuracy across 40 trials.
     \label{fig:fingerprint}
 \end{figure}
 
-\textbf{94 LIBERO tasks.}
-We ran SmolVLA on 94 tasks (4 standard suites + 90 diverse from LIBERO-90).
-Bounds violation rates vary from 4\% to 37\%; velocity violations dominate at 72.4\%.
+\textbf{130 LIBERO tasks.}
+We ran SmolVLA on all 130 LIBERO tasks (40 standard + 90 diverse).
+Bounds violation rates vary from 2\% to 41\% (Fig.~\ref{fig:130tasks}); velocity violations dominate at 72.4\%.
 Rotational axes are most violated (pitch 30.6\%, roll 26.6\%) while lateral motions are least affected (yaw 9.3\%, y 9.7\%).
 After correct unnormalization, bounds violations drop to 0\%, but velocity fingerprints persist by suite:
 \emph{spatial} (x=83\%, z=85\%), \emph{object} (y=85\%), \emph{goal} (z=78\%), \emph{10-task} (gripper=46\%).
@@ -237,7 +237,7 @@ Cosine distance between suite fingerprints is 0.054, confirming task-dependent p
 \begin{figure}[t]
     \centering
     \includegraphics[width=\columnwidth]{figures/fig_130tasks.pdf}
-    \caption{Bounds violation rates across 90 LIBERO tasks (sorted). Simple drawer tasks (4\%) to complex mug placement (37\%). Color gradient indicates violation severity.}
+    \caption{Bounds violation rates across all 130 LIBERO tasks (40 standard + 90 diverse, sorted). Rates range from 2\% to 41\%, demonstrating wide task-dependent variation.}
     \label{fig:130tasks}
 \end{figure}
 
