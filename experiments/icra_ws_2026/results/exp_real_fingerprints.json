@@ -1,0 +1,382 @@
+{
+  "experiment": "Real Violation Fingerprints - SmolVLA on LIBERO task suites",
+  "model": "lerobot/smolvla_base (SmolVLA 450M)",
+  "dataset": "HuggingFaceVLA/smol-libero",
+  "device": "mps",
+  "n_per_suite": 25,
+  "total_inferences": 100,
+  "avg_latency_ms": 717.9,
+  "cold_start_ms": 11797.0,
+  "safety_bounds": {
+    "method": "GT mean +/- 3*std (data-driven)",
+    "bounds_lo": [
+      -0.8844,
+      -1.2538,
+      -1.4519,
+      -0.0909,
+      -0.152,
+      -0.1368
+    ],
+    "bounds_hi": [
+      0.9004,
+      1.4243,
+      1.3719,
+      0.0903,
+      0.1582,
+      0.1364
+    ],
+    "vel_thresholds_95pctl": [
+      0.5116,
+      0.5333,
+      0.7152,
+      0.0686,
+      0.1039,
+      0.0794
+    ],
+    "gt_mean": [
+      0.008,
+      0.0852,
+      -0.04,
+      -0.0003,
+      0.0031,
+      -0.0002
+    ],
+    "gt_std": [
+      0.2975,
+      0.4463,
+      0.4706,
+      0.0302,
+      0.0517,
+      0.0455
+    ]
+  },
+  "suites": {
+    "libero_spatial": {
+      "n_observations": 25,
+      "action_shape": [
+        25,
+        6
+      ],
+      "avg_latency_ms": 1048.6,
+      "fingerprint": {
+        "bounds_per_dim": [
+          0.04,
+          0.0,
+          0.0,
+          1.0,
+          0.72,
+          0.52
+        ],
+        "velocity_per_dim": [
+          0.2083,
+          0.0417,
+          0.0,
+          0.5833,
+          0.875,
+          0.9583
+        ],
+        "deviation_z_per_dim": [
+          0.3712,
+          0.2945,
+          1.4366,
+          73.7681,
+          1.9555,
+          4.2394
+        ],
+        "magnitude_per_dim": [
+          0.34790000319480896,
+          0.26919999718666077,
+          0.6450999975204468,
+          2.2311999797821045,
+          0.34200000762939453,
+          0.5684000253677368
+        ],
+        "action_mean_per_dim": [
+          -0.10249999910593033,
+          0.21660000085830688,
+          0.6360999941825867,
+          2.22760009765625,
+          -0.09799999743700027,
+          0.19280000030994415
+        ],
+        "action_std_per_dim": [
+          0.33250001072883606,
+          0.1597999930381775,
+          0.10750000178813934,
+          0.12800000607967377,
+          0.3276999890804291,
+          0.5347999930381775
+        ],
+        "overall_violation_rate": 1.0,
+        "overall_bounds_rate": 0.38,
+        "overall_velocity_rate": 0.4444
+      },
+      "prediction_error": {
+        "l1_mean": 0.7545,
+        "l1_per_dim": [
+          0.43779999017715454,
+          0.48829999566078186,
+          0.7767999768257141,
+          2.2255001068115234,
+          0.2874999940395355,
+          0.31139999628067017
+        ]
+      }
+    },
+    "libero_object": {
+      "n_observations": 25,
+      "action_shape": [
+        25,
+        6
+      ],
+      "avg_latency_ms": 604.6,
+      "fingerprint": {
+        "bounds_per_dim": [
+          0.12,
+          0.0,
+          0.0,
+          1.0,
+          0.56,
+          0.76
+        ],
+        "velocity_per_dim": [
+          0.4583,
+          0.0417,
+          0.0,
+          0.875,
+          0.7917,
+          0.875
+        ],
+        "deviation_z_per_dim": [
+          1.3252,
+          0.6162,
+          1.5722,
+          70.7047,
+          3.2852,
+          4.3446
+        ],
+        "magnitude_per_dim": [
+          0.6502000093460083,
+          0.41100001335144043,
+          0.7249000072479248,
+          2.150700092315674,
+          0.45680001378059387,
+          0.35190001130104065
+        ],
+        "action_mean_per_dim": [
+          -0.3862000107765198,
+          0.3603000044822693,
+          0.699999988079071,
+          2.134999990463257,
+          0.17299999296665192,
+          0.19760000705718994
+        ],
+        "action_std_per_dim": [
+          0.5230000019073486,
+          0.19779999554157257,
+          0.18850000202655792,
+          0.2590000033378601,
+          0.4228000044822693,
+          0.29120001196861267
+        ],
+        "overall_violation_rate": 1.0,
+        "overall_bounds_rate": 0.4067,
+        "overall_velocity_rate": 0.5069
+      },
+      "prediction_error": {
+        "l1_mean": 0.7585,
+        "l1_per_dim": [
+          0.5548999905586243,
+          0.5073000192642212,
+          0.7592999935150146,
+          2.1314001083374023,
+          0.3077999949455261,
+          0.2903999984264374
+        ]
+      }
+    },
+    "libero_goal": {
+      "n_observations": 25,
+      "action_shape": [
+        25,
+        6
+      ],
+      "avg_latency_ms": 606.5,
+      "fingerprint": {
+        "bounds_per_dim": [
+          0.2,
+          0.0,
+          0.0,
+          1.0,
+          0.68,
+          0.64
+        ],
+        "velocity_per_dim": [
+          0.4167,
+          0.0833,
+          0.0,
+          0.8333,
+          0.875,
+          0.7917
+        ],
+        "deviation_z_per_dim": [
+          1.1954,
+          0.366,
+          1.4335,
+          73.2494,
+          0.2632,
+          4.0596
+        ],
+        "magnitude_per_dim": [
+          0.570900022983551,
+          0.30079999566078186,
+          0.6466000080108643,
+          2.219899892807007,
+          0.39160001277923584,
+          0.38670000433921814
+        ],
+        "action_mean_per_dim": [
+          -0.3476000130176544,
+          0.24860000610351562,
+          0.6347000002861023,
+          2.211899995803833,
+          -0.010499999858438969,
+          0.18459999561309814
+        ],
+        "action_std_per_dim": [
+          0.4528999924659729,
+          0.16940000653266907,
+          0.12380000203847885,
+          0.1882999986410141,
+          0.39149999618530273,
+          0.33980000019073486
+        ],
+        "overall_violation_rate": 1.0,
+        "overall_bounds_rate": 0.42,
+        "overall_velocity_rate": 0.5
+      },
+      "prediction_error": {
+        "l1_mean": 0.7728,
+        "l1_per_dim": [
+          0.5159000158309937,
+          0.5386999845504761,
+          0.7778000235557556,
+          2.204900026321411,
+          0.313400000333786,
+          0.28630000352859497
+        ]
+      }
+    },
+    "libero_10": {
+      "n_observations": 25,
+      "action_shape": [
+        25,
+        6
+      ],
+      "avg_latency_ms": 612.0,
+      "fingerprint": {
+        "bounds_per_dim": [
+          0.12,
+          0.0,
+          0.0,
+          1.0,
+          0.6,
+          0.56
+        ],
+        "velocity_per_dim": [
+          0.25,
+          0.0,
+          0.0,
+          0.6667,
+          0.7083,
+          0.9167
+        ],
+        "deviation_z_per_dim": [
+          0.6624,
+          0.5187,
+          1.5772,
+          72.0144,
+          1.0345,
+          7.5383
+        ],
+        "magnitude_per_dim": [
+          0.4927000105381012,
+          0.37599998712539673,
+          0.7123000025749207,
+          2.178100109100342,
+          0.2808000147342682,
+          0.7060999870300293
+        ],
+        "action_mean_per_dim": [
+          -0.1890999972820282,
+          0.3167000114917755,
+          0.7023000121116638,
+          2.1745998859405518,
+          0.05660000070929527,
+          0.34299999475479126
+        ],
+        "action_std_per_dim": [
+          0.45489999651908875,
+          0.20260000228881836,
+          0.11869999766349792,
+          0.12399999797344208,
+          0.2750000059604645,
+          0.6172000169754028
+        ],
+        "overall_violation_rate": 1.0,
+        "overall_bounds_rate": 0.38,
+        "overall_velocity_rate": 0.4236
+      },
+      "prediction_error": {
+        "l1_mean": 0.7517,
+        "l1_per_dim": [
+          0.5005999803543091,
+          0.42160001397132874,
+          0.7944999933242798,
+          2.1686999797821045,
+          0.22020000219345093,
+          0.40470001101493835
+        ]
+      }
+    }
+  },
+  "fingerprint_distinctness": {
+    "pairwise_distances": {
+      "libero_spatial_vs_libero_object": {
+        "cosine": 0.0004,
+        "l2": 3.554
+      },
+      "libero_spatial_vs_libero_goal": {
+        "cosine": 0.0004,
+        "l2": 2.0281
+      },
+      "libero_spatial_vs_libero_10": {
+        "cosine": 0.0012,
+        "l2": 3.8841
+      },
+      "libero_object_vs_libero_goal": {
+        "cosine": 0.001,
+        "l2": 3.9846
+      },
+      "libero_object_vs_libero_10": {
+        "cosine": 0.0015,
+        "l2": 4.2133
+      },
+      "libero_goal_vs_libero_10": {
+        "cosine": 0.0013,
+        "l2": 3.848
+      }
+    },
+    "avg_cosine_distance": 0.001,
+    "avg_l2_distance": 3.5854,
+    "fingerprint_dims": 24,
+    "components": "bounds_per_dim(6) + velocity_per_dim(6) + deviation_z(6) + magnitude(6)"
+  },
+  "key_findings": [
+    "Fingerprints show moderate variation in absolute terms (avg L2: 3.585) despite low cosine distance (0.001), indicating scale differences",
+    "Highest violation rate: libero_spatial (100.0%), lowest: libero_spatial (100.0%)",
+    "Most out-of-distribution dims: libero_spatial_roll (z=73.8), libero_goal_roll (z=73.2), libero_10_roll (z=72.0)",
+    "Prediction error (L1) ranges from 0.7517 to 0.7728 across suites"
+  ],
+  "timestamp": "2026-04-05T07:30:41Z"
+}
