@@ -216,6 +216,7 @@ Fingerprints are stable across 5 seeds (CV $< 0.15$ for 3 of 4 tasks).
 
 \textbf{Shift detection.}
 Non-overlapping windows of 20 steps yield $p < 0.05$ for five of six task pairs ($p < 0.002$ for three; drawer vs.\ pouring not significant at $p = 0.34$).
+Note: the binomial test here operates on 10 independent \emph{window-level} violation rates (each aggregating 20 steps), not on per-step Bernoulli trials; the Hoeffding bound in Property~\ref{prop:shift} applies to per-step concentration and would require larger $w$ for the same $\epsilon$.
 Nearest-centroid classification achieves 100\% accuracy across 40 trials.
 
 \begin{figure}[t]
