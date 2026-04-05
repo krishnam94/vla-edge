@@ -111,6 +111,12 @@ benefit on realistic data. Motor controllers absorb clipping discontinuities. Al
 with experiments before committing to a paper direction. "Novel" is not enough - it must also
 matter in practice.
 
+### Key lesson (Lesson 013)
+Process rules exist for a reason. The register-before-run instinct was violated THREE
+times despite being documented. Each time it was "we're moving fast" or "I'll register
+later." The user should NEVER have to remind about process compliance. If an instinct
+exists, it must be followed WITHOUT exception. Speed does not justify skipping process.
+
 ### Key lesson (Lesson 012)
 Question every metric definition BEFORE celebrating results. EXP-NORM reported "98%
 velocity violations persist after normalization" but was computing velocity between
