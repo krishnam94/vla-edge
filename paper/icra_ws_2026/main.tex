@@ -253,8 +253,15 @@ Velocity violations scale from 527 to 13{,}916.
 SafeContract eliminates 100\% of violations at \emph{every} noise level (post-contract violations = 0).
 Actions modified range from 50.6\% (clean) to 100\% ($\sigma{=}1.0$).
 
-The 527 velocity violations on clean data ($\sigma{=}0$) are expected: LIBERO demonstrations include fast gripper snaps (velocity up to 2.0/step) that exceed our conservative $v_{\max}{=}0.1$.
+The 527 velocity violations on clean data ($\sigma{=}0$) are expected: LIBERO demonstrations include fast gripper snaps (velocity up to 2.0/step) that exceed our conservative $v_{\max}{=}0.1$ (Fig.~\ref{fig:noise}).
 This is by design: even expert demonstrations benefit from velocity monitoring in safety-critical deployment.
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\columnwidth]{figures/fig5_noise_sensitivity.pdf}
+    \caption{Noise sensitivity. Left: violations scale monotonically with noise. Right: SafeContract modifies only what is needed (50.6\% at $\sigma{=}0$ to 100\% at $\sigma{=}1.0$). Post-contract violations are zero at ALL noise levels.}
+    \label{fig:noise}
+\end{figure}
 
 \subsection{Controlled Ablation (EXP-G)}
 \label{sec:ablation}

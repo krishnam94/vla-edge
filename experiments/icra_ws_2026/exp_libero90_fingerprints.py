@@ -185,11 +185,15 @@ def main():
                 # Inference
                 t_step = time.perf_counter()
                 with torch.inference_mode():
-                    action_dict = policy.select_action(observation)
+                    action_out = policy.select_action(observation)
                 elapsed = (time.perf_counter() - t_step) * 1000
                 step_timings.append(elapsed)
 
-                action = action_dict["action"].squeeze().cpu().numpy()
+                # select_action returns a tensor (1, 7) not a dict
+                if isinstance(action_out, dict):
+                    action = action_out["action"].squeeze().cpu().numpy()
+                else:
+                    action = action_out.squeeze().cpu().numpy()
                 actions_collected.append(action.copy())
 
                 # Step env

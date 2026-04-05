@@ -1,0 +1,484 @@
+{
+  "experiment": "SmolVLA fingerprints on all 90 LIBERO-90 tasks",
+  "model": "HuggingFaceVLA/smolvla_libero",
+  "device": "mps",
+  "n_steps_per_task": 10,
+  "action_bounds": [
+    -1.0,
+    1.0
+  ],
+  "velocity_threshold": 0.15,
+  "aggregate": {
+    "n_tasks_completed": 0,
+    "n_tasks_skipped": 90,
+    "n_steps_per_task": 10,
+    "total_inferences": 0,
+    "avg_latency_ms": 0,
+    "bounds_violation_rate": {
+      "mean_per_dim": [],
+      "std_per_dim": [],
+      "overall_mean": 0,
+      "overall_std": 0
+    },
+    "velocity_violation_rate": {
+      "mean_per_dim": [],
+      "std_per_dim": [],
+      "overall_mean": 0,
+      "overall_std": 0
+    }
+  },
+  "tasks": {},
+  "skipped_tasks": [
+    {
+      "task_id": 0,
+      "task_name": "KITCHEN_SCENE10_close_the_top_drawer_of_the_cabinet",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 1,
+      "task_name": "KITCHEN_SCENE10_close_the_top_drawer_of_the_cabinet_and_put_the_black_bowl_on_top_of_it",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 2,
+      "task_name": "KITCHEN_SCENE10_put_the_black_bowl_in_the_top_drawer_of_the_cabinet",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 3,
+      "task_name": "KITCHEN_SCENE10_put_the_butter_at_the_back_in_the_top_drawer_of_the_cabinet_and_close_it",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 4,
+      "task_name": "KITCHEN_SCENE10_put_the_butter_at_the_front_in_the_top_drawer_of_the_cabinet_and_close_it",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 5,
+      "task_name": "KITCHEN_SCENE10_put_the_chocolate_pudding_in_the_top_drawer_of_the_cabinet_and_close_it",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 6,
+      "task_name": "KITCHEN_SCENE1_open_the_bottom_drawer_of_the_cabinet",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 7,
+      "task_name": "KITCHEN_SCENE1_open_the_top_drawer_of_the_cabinet",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 8,
+      "task_name": "KITCHEN_SCENE1_open_the_top_drawer_of_the_cabinet_and_put_the_bowl_in_it",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 9,
+      "task_name": "KITCHEN_SCENE1_put_the_black_bowl_on_the_plate",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 10,
+      "task_name": "KITCHEN_SCENE1_put_the_black_bowl_on_top_of_the_cabinet",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 11,
+      "task_name": "KITCHEN_SCENE2_open_the_top_drawer_of_the_cabinet",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 12,
+      "task_name": "KITCHEN_SCENE2_put_the_black_bowl_at_the_back_on_the_plate",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 13,
+      "task_name": "KITCHEN_SCENE2_put_the_black_bowl_at_the_front_on_the_plate",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 14,
+      "task_name": "KITCHEN_SCENE2_put_the_middle_black_bowl_on_the_plate",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 15,
+      "task_name": "KITCHEN_SCENE2_put_the_middle_black_bowl_on_top_of_the_cabinet",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 16,
+      "task_name": "KITCHEN_SCENE2_stack_the_black_bowl_at_the_front_on_the_black_bowl_in_the_middle",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 17,
+      "task_name": "KITCHEN_SCENE2_stack_the_middle_black_bowl_on_the_back_black_bowl",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 18,
+      "task_name": "KITCHEN_SCENE3_put_the_frying_pan_on_the_stove",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 19,
+      "task_name": "KITCHEN_SCENE3_put_the_moka_pot_on_the_stove",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 20,
+      "task_name": "KITCHEN_SCENE3_turn_on_the_stove",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 21,
+      "task_name": "KITCHEN_SCENE3_turn_on_the_stove_and_put_the_frying_pan_on_it",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 22,
+      "task_name": "KITCHEN_SCENE4_close_the_bottom_drawer_of_the_cabinet",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 23,
+      "task_name": "KITCHEN_SCENE4_close_the_bottom_drawer_of_the_cabinet_and_open_the_top_drawer",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 24,
+      "task_name": "KITCHEN_SCENE4_put_the_black_bowl_in_the_bottom_drawer_of_the_cabinet",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 25,
+      "task_name": "KITCHEN_SCENE4_put_the_black_bowl_on_top_of_the_cabinet",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 26,
+      "task_name": "KITCHEN_SCENE4_put_the_wine_bottle_in_the_bottom_drawer_of_the_cabinet",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 27,
+      "task_name": "KITCHEN_SCENE4_put_the_wine_bottle_on_the_wine_rack",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 28,
+      "task_name": "KITCHEN_SCENE5_close_the_top_drawer_of_the_cabinet",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 29,
+      "task_name": "KITCHEN_SCENE5_put_the_black_bowl_in_the_top_drawer_of_the_cabinet",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 30,
+      "task_name": "KITCHEN_SCENE5_put_the_black_bowl_on_the_plate",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 31,
+      "task_name": "KITCHEN_SCENE5_put_the_black_bowl_on_top_of_the_cabinet",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 32,
+      "task_name": "KITCHEN_SCENE5_put_the_ketchup_in_the_top_drawer_of_the_cabinet",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 33,
+      "task_name": "KITCHEN_SCENE6_close_the_microwave",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 34,
+      "task_name": "KITCHEN_SCENE6_put_the_yellow_and_white_mug_to_the_front_of_the_white_mug",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 35,
+      "task_name": "KITCHEN_SCENE7_open_the_microwave",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 36,
+      "task_name": "KITCHEN_SCENE7_put_the_white_bowl_on_the_plate",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 37,
+      "task_name": "KITCHEN_SCENE7_put_the_white_bowl_to_the_right_of_the_plate",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 38,
+      "task_name": "KITCHEN_SCENE8_put_the_right_moka_pot_on_the_stove",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 39,
+      "task_name": "KITCHEN_SCENE8_turn_off_the_stove",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 40,
+      "task_name": "KITCHEN_SCENE9_put_the_frying_pan_on_the_cabinet_shelf",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 41,
+      "task_name": "KITCHEN_SCENE9_put_the_frying_pan_on_top_of_the_cabinet",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 42,
+      "task_name": "KITCHEN_SCENE9_put_the_frying_pan_under_the_cabinet_shelf",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 43,
+      "task_name": "KITCHEN_SCENE9_put_the_white_bowl_on_top_of_the_cabinet",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 44,
+      "task_name": "KITCHEN_SCENE9_turn_on_the_stove",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 45,
+      "task_name": "KITCHEN_SCENE9_turn_on_the_stove_and_put_the_frying_pan_on_it",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 46,
+      "task_name": "LIVING_ROOM_SCENE1_pick_up_the_alphabet_soup_and_put_it_in_the_basket",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 47,
+      "task_name": "LIVING_ROOM_SCENE1_pick_up_the_cream_cheese_box_and_put_it_in_the_basket",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 48,
+      "task_name": "LIVING_ROOM_SCENE1_pick_up_the_ketchup_and_put_it_in_the_basket",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 49,
+      "task_name": "LIVING_ROOM_SCENE1_pick_up_the_tomato_sauce_and_put_it_in_the_basket",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 50,
+      "task_name": "LIVING_ROOM_SCENE2_pick_up_the_alphabet_soup_and_put_it_in_the_basket",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 51,
+      "task_name": "LIVING_ROOM_SCENE2_pick_up_the_butter_and_put_it_in_the_basket",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 52,
+      "task_name": "LIVING_ROOM_SCENE2_pick_up_the_milk_and_put_it_in_the_basket",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 53,
+      "task_name": "LIVING_ROOM_SCENE2_pick_up_the_orange_juice_and_put_it_in_the_basket",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 54,
+      "task_name": "LIVING_ROOM_SCENE2_pick_up_the_tomato_sauce_and_put_it_in_the_basket",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 55,
+      "task_name": "LIVING_ROOM_SCENE3_pick_up_the_alphabet_soup_and_put_it_in_the_tray",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 56,
+      "task_name": "LIVING_ROOM_SCENE3_pick_up_the_butter_and_put_it_in_the_tray",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 57,
+      "task_name": "LIVING_ROOM_SCENE3_pick_up_the_cream_cheese_and_put_it_in_the_tray",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 58,
+      "task_name": "LIVING_ROOM_SCENE3_pick_up_the_ketchup_and_put_it_in_the_tray",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 59,
+      "task_name": "LIVING_ROOM_SCENE3_pick_up_the_tomato_sauce_and_put_it_in_the_tray",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 60,
+      "task_name": "LIVING_ROOM_SCENE4_pick_up_the_black_bowl_on_the_left_and_put_it_in_the_tray",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 61,
+      "task_name": "LIVING_ROOM_SCENE4_pick_up_the_chocolate_pudding_and_put_it_in_the_tray",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 62,
+      "task_name": "LIVING_ROOM_SCENE4_pick_up_the_salad_dressing_and_put_it_in_the_tray",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 63,
+      "task_name": "LIVING_ROOM_SCENE4_stack_the_left_bowl_on_the_right_bowl_and_place_them_in_the_tray",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 64,
+      "task_name": "LIVING_ROOM_SCENE4_stack_the_right_bowl_on_the_left_bowl_and_place_them_in_the_tray",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 65,
+      "task_name": "LIVING_ROOM_SCENE5_put_the_red_mug_on_the_left_plate",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 66,
+      "task_name": "LIVING_ROOM_SCENE5_put_the_red_mug_on_the_right_plate",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 67,
+      "task_name": "LIVING_ROOM_SCENE5_put_the_white_mug_on_the_left_plate",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 68,
+      "task_name": "LIVING_ROOM_SCENE5_put_the_yellow_and_white_mug_on_the_right_plate",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 69,
+      "task_name": "LIVING_ROOM_SCENE6_put_the_chocolate_pudding_to_the_left_of_the_plate",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 70,
+      "task_name": "LIVING_ROOM_SCENE6_put_the_chocolate_pudding_to_the_right_of_the_plate",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 71,
+      "task_name": "LIVING_ROOM_SCENE6_put_the_red_mug_on_the_plate",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 72,
+      "task_name": "LIVING_ROOM_SCENE6_put_the_white_mug_on_the_plate",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 73,
+      "task_name": "STUDY_SCENE1_pick_up_the_book_and_place_it_in_the_front_compartment_of_the_caddy",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 74,
+      "task_name": "STUDY_SCENE1_pick_up_the_book_and_place_it_in_the_left_compartment_of_the_caddy",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 75,
+      "task_name": "STUDY_SCENE1_pick_up_the_book_and_place_it_in_the_right_compartment_of_the_caddy",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 76,
+      "task_name": "STUDY_SCENE1_pick_up_the_yellow_and_white_mug_and_place_it_to_the_right_of_the_caddy",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 77,
+      "task_name": "STUDY_SCENE2_pick_up_the_book_and_place_it_in_the_back_compartment_of_the_caddy",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 78,
+      "task_name": "STUDY_SCENE2_pick_up_the_book_and_place_it_in_the_front_compartment_of_the_caddy",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 79,
+      "task_name": "STUDY_SCENE2_pick_up_the_book_and_place_it_in_the_left_compartment_of_the_caddy",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 80,
+      "task_name": "STUDY_SCENE2_pick_up_the_book_and_place_it_in_the_right_compartment_of_the_caddy",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 81,
+      "task_name": "STUDY_SCENE3_pick_up_the_book_and_place_it_in_the_front_compartment_of_the_caddy",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 82,
+      "task_name": "STUDY_SCENE3_pick_up_the_book_and_place_it_in_the_left_compartment_of_the_caddy",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 83,
+      "task_name": "STUDY_SCENE3_pick_up_the_book_and_place_it_in_the_right_compartment_of_the_caddy",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 84,
+      "task_name": "STUDY_SCENE3_pick_up_the_red_mug_and_place_it_to_the_right_of_the_caddy",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 85,
+      "task_name": "STUDY_SCENE3_pick_up_the_white_mug_and_place_it_to_the_right_of_the_caddy",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 86,
+      "task_name": "STUDY_SCENE4_pick_up_the_book_in_the_middle_and_place_it_on_the_cabinet_shelf",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 87,
+      "task_name": "STUDY_SCENE4_pick_up_the_book_on_the_left_and_place_it_on_top_of_the_shelf",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 88,
+      "task_name": "STUDY_SCENE4_pick_up_the_book_on_the_right_and_place_it_on_the_cabinet_shelf",
+      "error": "too many indices for tensor of dimension 2"
+    },
+    {
+      "task_id": 89,
+      "task_name": "STUDY_SCENE4_pick_up_the_book_on_the_right_and_place_it_under_the_cabinet_shelf",
+      "error": "too many indices for tensor of dimension 2"
+    }
+  ],
+  "timestamp": "2026-04-05T08:04:13Z"
+}
