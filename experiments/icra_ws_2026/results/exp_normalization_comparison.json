@@ -1,0 +1,273 @@
+{
+  "experiment": "Normalization comparison: raw vs unnormalized SmolVLA on LIBERO",
+  "model": "HuggingFaceVLA/smolvla_libero",
+  "dataset": "HuggingFaceVLA/smol-libero",
+  "n_samples": 50,
+  "device": "mps",
+  "v_max": 0.1,
+  "normalization_stats": {
+    "mean": [
+      0.007000000216066837,
+      0.0835999995470047,
+      -0.039500001817941666,
+      0.0005000000237487257,
+      0.0031999999191612005,
+      -0.00139999995008111,
+      0.006399999838322401
+    ],
+    "std": [
+      0.2962999939918518,
+      0.44620001316070557,
+      0.4706000089645386,
+      0.03099999949336052,
+      0.04830000177025795,
+      0.043299999088048935,
+      1.0
+    ]
+  },
+  "condition_1_raw": {
+    "bounds_per_dim": {
+      "x": 0.54,
+      "y": 0.24,
+      "z": 0.12,
+      "roll": 0.4,
+      "pitch": 0.22,
+      "yaw": 0.06,
+      "gripper": 0.72
+    },
+    "velocity_per_dim": {
+      "x": 0.8776,
+      "y": 0.9388,
+      "z": 0.8776,
+      "roll": 0.8776,
+      "pitch": 0.9388,
+      "yaw": 0.9184,
+      "gripper": 0.3469
+    },
+    "overall_bounds_rate": 0.96,
+    "overall_velocity_rate": 1.0,
+    "total_bounds_violations": 115,
+    "total_velocity_violations": 283,
+    "total_violations": 398,
+    "action_range": [
+      -2.9214,
+      2.9752
+    ],
+    "per_dim_range": {
+      "x": [
+        -2.0802,
+        0.0073
+      ],
+      "y": [
+        -0.8952,
+        1.7935
+      ],
+      "z": [
+        -1.3019,
+        1.6692
+      ],
+      "roll": [
+        -2.9214,
+        1.5253
+      ],
+      "pitch": [
+        -1.5902,
+        2.9752
+      ],
+      "yaw": [
+        -1.7252,
+        0.7612
+      ],
+      "gripper": [
+        -0.9713,
+        1.067
+      ]
+    }
+  },
+  "condition_2_unnormalized": {
+    "bounds_per_dim": {
+      "x": 0.0,
+      "y": 0.0,
+      "z": 0.0,
+      "roll": 0.0,
+      "pitch": 0.0,
+      "yaw": 0.0,
+      "gripper": 0.72
+    },
+    "velocity_per_dim": {
+      "x": 0.6327,
+      "y": 0.8571,
+      "z": 0.7959,
+      "roll": 0.0,
+      "pitch": 0.102,
+      "yaw": 0.0,
+      "gripper": 0.3469
+    },
+    "overall_bounds_rate": 0.72,
+    "overall_velocity_rate": 1.0,
+    "total_bounds_violations": 36,
+    "total_velocity_violations": 134,
+    "total_violations": 170,
+    "action_range": [
+      -0.9649,
+      1.0734
+    ],
+    "per_dim_range": {
+      "x": [
+        -0.6094,
+        0.0092
+      ],
+      "y": [
+        -0.3159,
+        0.8839
+      ],
+      "z": [
+        -0.6522,
+        0.746
+      ],
+      "roll": [
+        -0.0901,
+        0.0478
+      ],
+      "pitch": [
+        -0.0736,
+        0.1469
+      ],
+      "yaw": [
+        -0.0761,
+        0.0316
+      ],
+      "gripper": [
+        -0.9649,
+        1.0734
+      ]
+    }
+  },
+  "position_only_6d": {
+    "condition_1_raw": {
+      "bounds_per_dim": {
+        "x": 0.54,
+        "y": 0.24,
+        "z": 0.12,
+        "roll": 0.4,
+        "pitch": 0.22,
+        "yaw": 0.06
+      },
+      "velocity_per_dim": {
+        "x": 0.8776,
+        "y": 0.9388,
+        "z": 0.8776,
+        "roll": 0.8776,
+        "pitch": 0.9388,
+        "yaw": 0.9184
+      },
+      "overall_bounds_rate": 0.86,
+      "overall_velocity_rate": 1.0,
+      "total_bounds_violations": 79,
+      "total_velocity_violations": 266,
+      "total_violations": 345,
+      "action_range": [
+        -2.9214,
+        2.9752
+      ],
+      "per_dim_range": {
+        "x": [
+          -2.0802,
+          0.0073
+        ],
+        "y": [
+          -0.8952,
+          1.7935
+        ],
+        "z": [
+          -1.3019,
+          1.6692
+        ],
+        "roll": [
+          -2.9214,
+          1.5253
+        ],
+        "pitch": [
+          -1.5902,
+          2.9752
+        ],
+        "yaw": [
+          -1.7252,
+          0.7612
+        ]
+      }
+    },
+    "condition_2_unnormalized": {
+      "bounds_per_dim": {
+        "x": 0.0,
+        "y": 0.0,
+        "z": 0.0,
+        "roll": 0.0,
+        "pitch": 0.0,
+        "yaw": 0.0
+      },
+      "velocity_per_dim": {
+        "x": 0.6327,
+        "y": 0.8571,
+        "z": 0.7959,
+        "roll": 0.0,
+        "pitch": 0.102,
+        "yaw": 0.0
+      },
+      "overall_bounds_rate": 0.0,
+      "overall_velocity_rate": 0.9796,
+      "total_bounds_violations": 0,
+      "total_velocity_violations": 117,
+      "total_violations": 117,
+      "action_range": [
+        -0.6522,
+        0.8839
+      ],
+      "per_dim_range": {
+        "x": [
+          -0.6094,
+          0.0092
+        ],
+        "y": [
+          -0.3159,
+          0.8839
+        ],
+        "z": [
+          -0.6522,
+          0.746
+        ],
+        "roll": [
+          -0.0901,
+          0.0478
+        ],
+        "pitch": [
+          -0.0736,
+          0.1469
+        ],
+        "yaw": [
+          -0.0761,
+          0.0316
+        ]
+      }
+    },
+    "bounds_drop_pp": 86.0,
+    "note": "Excludes gripper (dim 6, std=1.0) for cleaner comparison"
+  },
+  "comparison": {
+    "bounds_rate_raw_pct": 96.0,
+    "bounds_rate_unnorm_pct": 72.0,
+    "bounds_drop_pp": 24.0,
+    "velocity_rate_raw_pct": 100.0,
+    "velocity_rate_unnorm_pct": 100.0,
+    "velocity_persists": true,
+    "position_6d_bounds_raw_pct": 86.0,
+    "position_6d_bounds_unnorm_pct": 0.0,
+    "position_6d_bounds_drop_pp": 86.0,
+    "position_6d_velocity_raw_pct": 100.0,
+    "position_6d_velocity_unnorm_pct": 98.0
+  },
+  "key_result": "After correct normalization, position bounds violations drop from 86% to 0%, but velocity violations persist at 98% - proving that velocity monitoring provides value beyond normalization.",
+  "avg_latency_ms": 656.7,
+  "cold_start_ms": 19149.6,
+  "timestamp": "2026-04-05T19:39:49Z"
+}
