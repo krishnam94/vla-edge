@@ -276,7 +276,39 @@
       0.15,
       0.1,
       0.1
-    ]
+    ],
+    "all_pairs": {
+      "reaching->stacking": {
+        "mean_a": 0.341,
+        "mean_b": 0.158,
+        "p": 1.5777218104420236e-30
+      },
+      "reaching->drawer": {
+        "mean_a": 0.341,
+        "mean_b": 0.284,
+        "p": 0.00018314322488235366
+      },
+      "reaching->pouring": {
+        "mean_a": 0.341,
+        "mean_b": 0.218,
+        "p": 2.630866896130179e-25
+      },
+      "stacking->drawer": {
+        "mean_a": 0.169,
+        "mean_b": 0.275,
+        "p": 8.284451872080075e-14
+      },
+      "stacking->pouring": {
+        "mean_a": 0.169,
+        "mean_b": 0.21,
+        "p": 1.6673626494501009e-06
+      },
+      "drawer->pouring": {
+        "mean_a": 0.189,
+        "mean_b": 0.19,
+        "p": 0.0035176417229701587
+      }
+    }
   },
   "key_findings": [
     "Violation patterns differ systematically by task type (distinct fingerprints)",

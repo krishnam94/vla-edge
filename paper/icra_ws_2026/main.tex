@@ -23,11 +23,11 @@ kayjee1994@gmail.com}}
 \maketitle
 
 \begin{abstract}
-Vision-Language-Action (VLA) models predict robot actions from images and instructions, but no runtime safety layer exists for their outputs.
+Vision-Language-Action (VLA) models predict robot actions from images and instructions, but no composable, architecture-agnostic runtime safety framework exists for their outputs.
 We introduce \texttt{SafeContract}, a design-by-contract framework that wraps any VLA policy with composable safety constraints via a Python decorator.
 We show that a lightweight safety contract not only prevents unsafe actions but reveals systematic violation patterns that characterize model behavior and detect distribution shift.
 Controlled ablations demonstrate zero false positives on clean policies while catching all violations on drifting and jerky policies.
-More significantly, each manipulation task produces a distinct \emph{violation fingerprint} across joint dimensions, and changes in violation rate detect task switches with $p < 0.0001$.
+More significantly, each manipulation task produces a distinct \emph{violation fingerprint} across joint dimensions, and changes in violation rate detect task switches with $p < 0.05$ across all tested pairs.
 These findings suggest that action-space monitors double as interpretability tools: violation patterns expose what a VLA ``thinks'' about its action space without requiring model internals.
 The full decorator adds ${\sim}$13\,$\mu$s overhead per action, requiring no QP solver, VLM, or model retraining.
 We release the framework as an open-source toolkit.\footnote{Code: \url{https://github.com/krishnam94/vla-edge}}
@@ -49,7 +49,7 @@ LeRobot's~\cite{lerobot} \texttt{EEBoundsAndSafety} processor is the only existi
 In practice, action space mismatches between training and deployment are common: multiple GitHub issues across OpenVLA and LeRobot document cases where wrong-scale commands reached hardware.\footnote{Representative issues: OpenVLA \#150 (action scale mismatch), LeRobot \#819 (no Jetson safety), \#3146 (no export pipeline for safe deployment).}
 
 We demonstrate the problem empirically.
-Running SmolVLA~\cite{smolvla} on 100 consecutive LIBERO~\cite{libero} observations, \textbf{every observation produces at least one action dimension outside $[-1, 1]$}, with values reaching 3.70.
+Running SmolVLA~\cite{smolvla} on 100 consecutive LIBERO~\cite{libero} observations, \textbf{every observation produces at least one action dimension outside $[-1, 1]$}, with values reaching 3.70 (primarily due to normalization mismatch between training and evaluation action spaces; see Sec.~\ref{sec:exp_a}).
 This primarily reflects a normalization mismatch (SmolVLA was trained on SO-100 data), but this is precisely the class of deployment error that needs catching: the mismatch is invisible without runtime validation.
 
 Beyond enforcement, we observe that violation patterns carry information.
@@ -117,10 +117,10 @@ Let $\mathbf{a}_{t-1}$ satisfy contract $C$ with $v_{\max} > 0$. Then the feasib
 
 \textit{Proof.} Since $\mathbf{a}_{t-1} \in [\mathbf{l}, \mathbf{u}]$ and $\|\mathbf{a}_{t-1} - \mathbf{a}_{t-1}\|_\infty = 0 \leq v_{\max}$, the ``hold position'' action is always feasible. \hfill $\square$
 
-\begin{property}[Violation Rate Concentration]
+\noindent\textbf{Observation (Violation Rate Concentration).}
 \label{prop:shift}
 For a stationary policy $\pi$ and fixed contract $C$, the per-step violation rate $r_t = \mathbb{E}[\mathbf{1}[\pi(\mathbf{o}_t) \notin C]]$ converges to a constant $r^*$. A sustained deviation $|\hat{r}_w - r^*| > \epsilon$ over a window $w$ signals non-stationarity (distribution shift or task change) in the policy's output distribution.
-\end{property}
+
 
 This is an empirical observation, not a formal guarantee. We validate it experimentally in Section~\ref{sec:fingerprint}.
 
@@ -218,7 +218,7 @@ Even on edge hardware where VLA inference is 100-200\,ms, the overhead remains n
 \subsection{Controlled Ablation (EXP-G)}
 \label{sec:ablation}
 
-To establish monitor precision, we test three synthetic policy types on 200-step sequences (7-DOF, bounds $[-1, 1]$, $v_{\max} = 0.1$):
+To establish monitor precision, we test three synthetic policy types on 100-step sequences (7-DOF, bounds $[-1, 1]$, $v_{\max} = 0.1$):
 
 \begin{table}[h]
 \centering
@@ -259,12 +259,12 @@ Each task runs for 200 steps with bounds $[-1, 1]$ and $v_{\max} = 0.1$. We reco
 \textbf{Result 1: Distinct violation fingerprints.}
 Each task produces a unique distribution of violations across joints and violation types (Fig.~\ref{fig:fingerprint}).
 Reaching shows broad shoulder/elbow OOB; stacking shows tight wrist velocity violations; drawer shows a single-joint OOB spike; pouring shows isolated pitch velocity violations.
-These fingerprints are stable across random seeds.
+These fingerprints are stable across 5 random seeds (mean coefficient of variation $<$0.33 for all tasks).
 
 \textbf{Result 2: Shift detection via violation rate.}
-We concatenate two task sequences (e.g., reaching then stacking, 200 steps each) and compute violation rate in a sliding window of 20 steps.
+We concatenate two task sequences (e.g., reaching then stacking, 100 steps each) and compute violation rate in a sliding window of 20 steps.
 The violation rate changes abruptly at the task boundary.
-A two-sample proportion test between the pre- and post-switch windows yields $p < 0.0001$ for all six task-pair combinations.
+A binomial test on each of the six task-pair combinations yields $p < 0.05$ for all pairs ($p < 0.001$ for five of six; the closest pair, drawer vs.\ pouring, yields $p = 0.004$).
 This validates Property~\ref{prop:shift}: violation rate change signals non-stationarity.
 
 \begin{figure}[t]
@@ -273,6 +273,9 @@ This validates Property~\ref{prop:shift}: violation rate change signals non-stat
     \caption{Violation fingerprints across four manipulation tasks. Each task produces a distinct pattern of joint violations, enabling task identification and distribution shift detection from safety monitor logs alone.}
     \label{fig:fingerprint}
 \end{figure}
+
+\textbf{Caveat.}
+These synthetic distributions are designed to approximate task-specific kinematics; validation on real VLA outputs across tasks is needed to confirm fingerprint distinctness in practice.
 
 \textbf{Implication.}
 A practitioner deploying a VLA can use SafeContract's violation log to (1)~identify which joints are most problematic for a given task, guiding fine-tuning or constraint tightening, (2)~detect when the policy's behavior has shifted (e.g., due to visual domain change), and (3)~compare violation fingerprints across VLA models to characterize their failure modes without requiring model internals.
