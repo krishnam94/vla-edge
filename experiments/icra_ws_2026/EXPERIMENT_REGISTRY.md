@@ -631,3 +631,31 @@ Lesson: integrate experiment registration into the workflow, not as an afterthou
 - **Parameters**: physical bounds (ALOHA joints), v_max=0.1, 50 samples, seed=42, device=cpu
 - **Key metrics**: Bounds=0%, velocity=0% (smooth specialist model)
 - **Status**: VALIDATED
+
+---
+
+## REGISTERED DURING OVERHAUL (retroactive - should have been BEFORE running per instinct)
+
+### EXP-PUSHT-CL: Diffusion Policy Closed-Loop on PushT
+- **Script**: TBD (agent writing)
+- **Results**: TBD
+- **Hypothesis**: SafeContract does not degrade Diffusion Policy task success on PushT
+- **Design review**:
+  - Metric: task success rate (push T-block to target). Binary per episode.
+  - Actions: 2D (x,y). May be pixel [0,512] or normalized [-1,1] - MUST verify before claiming
+  - Sampling: same episodes for both conditions (with/without SafeContract)
+  - Baseline: reasonable bounds + v_max for PushT action space
+  - Expected: success rate similar between conditions (like ACT result)
+- **Status**: RUNNING
+
+### EXP-SMOLVLA-DEBUG: SmolVLA Closed-Loop Root Cause Analysis
+- **Script**: diagnostic, not an experiment
+- **Results**: TBD
+- **Hypothesis**: 0% success is caused by missing state normalization or wrong action format
+- **Design review**:
+  - Check: state normalization (MEAN_STD on observation.state?)
+  - Check: image preprocessing (ImageNet normalization?)
+  - Check: action format (delta vs absolute?)
+  - Check: camera key mapping
+  - Compare model output to GT for same observation
+- **Status**: INVESTIGATING
