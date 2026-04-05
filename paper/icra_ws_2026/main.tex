@@ -238,6 +238,16 @@ Standard practice treats safety enforcement as a binary gate.
 SafeContract's violation logs instead create a structured behavioral profile: different tasks produce distinct fingerprints, and violation rate changes detect distribution shift with high statistical significance.
 This positions safety monitors as a low-cost interpretability tool requiring no gradient access or activation probing.
 
+\textbf{Normalization vs.\ monitoring.}
+Action normalization (mapping model outputs to the target robot's action space) eliminates most bounds violations.
+SafeContract is complementary: it provides velocity enforcement (a physical hardware constraint normalization cannot address), violation traceability for debugging, and distribution shift detection.
+When normalization is correct, SafeContract's bounds checks become a passive safety net; the velocity monitoring, logging, and fingerprinting remain the primary value.
+
+\textbf{Safety-fidelity tradeoff.}
+Tighter contracts catch more violations but clip more aggressively.
+On 200 synthetic sequences, violations range from 948 (very loose: $\pm 3.0$, $v_{\max}{=}1.0$, mean clip 0.03) to 2{,}561 (very tight: $\pm 0.3$, $v_{\max}{=}0.02$, mean clip 0.91).
+At the moderate operating point ($\pm 1.0$, $v_{\max}{=}0.1$), SafeContract catches 2{,}019 violations while correcting actions by less than half a unit on average.
+
 \textbf{Behavioral telemetry for VLAs.}
 SafeContract's violation logs constitute a form of \emph{behavioral telemetry} for VLA deployment, analogous to behavioral analytics (UEBA) in cybersecurity or statistical process control (SPC) in manufacturing.
 Baseline violation rates characterize normal policy behavior; deviations signal anomalies such as distribution shift, model regression, or integration errors.
