@@ -1,0 +1,2519 @@
+{
+  "experiment": "Temporal Violation Evolution",
+  "description": "Tracks per-step violation status across episode phases to show how violation patterns evolve over time within an episode.",
+  "config": {
+    "model_id": "HuggingFaceVLA/smolvla_libero",
+    "device": "mps",
+    "episode_steps": 50,
+    "sliding_window": 10,
+    "action_range": [
+      -1.0,
+      1.0
+    ],
+    "velocity_max": 0.15
+  },
+  "tasks": {
+    "pick_up_alphabet_soup": {
+      "suite": "libero_object",
+      "task_id": 0,
+      "task_description": "pick up the alphabet soup and place it in the basket",
+      "per_step": [
+        {
+          "bounds_violated": false,
+          "velocity_violated": false,
+          "bounds_dims": [],
+          "velocity_dims": [],
+          "action_min": -0.9527807235717773,
+          "action_max": 0.2954486906528473,
+          "action_norm": 1.2152204513549805,
+          "max_velocity": 0.0,
+          "step": 0,
+          "any_violation": false
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            4,
+            6
+          ],
+          "velocity_dims": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "action_min": -1.7919355630874634,
+          "action_max": 1.0397194623947144,
+          "action_norm": 2.510247230529785,
+          "max_velocity": 1.9925001859664917,
+          "step": 1,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            1,
+            3,
+            6
+          ],
+          "velocity_dims": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "action_min": -0.8525183796882629,
+          "action_max": 1.8245432376861572,
+          "action_norm": 2.6980655193328857,
+          "max_velocity": 1.3540763854980469,
+          "step": 2,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": false,
+          "velocity_violated": true,
+          "bounds_dims": [],
+          "velocity_dims": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "action_min": -0.9640506505966187,
+          "action_max": 0.2948324680328369,
+          "action_norm": 1.457930088043213,
+          "max_velocity": 2.652853012084961,
+          "step": 3,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": false,
+          "velocity_violated": true,
+          "bounds_dims": [],
+          "velocity_dims": [
+            0,
+            1,
+            2,
+            4,
+            5,
+            6
+          ],
+          "action_min": -0.6088972091674805,
+          "action_max": 0.5348833799362183,
+          "action_norm": 1.0911320447921753,
+          "max_velocity": 0.7562512755393982,
+          "step": 4,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            3,
+            6
+          ],
+          "velocity_dims": [
+            0,
+            1,
+            3,
+            4,
+            5,
+            6
+          ],
+          "action_min": -0.5693552494049072,
+          "action_max": 1.4054124355316162,
+          "action_norm": 1.9930821657180786,
+          "max_velocity": 1.4458855390548706,
+          "step": 5,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            4,
+            6
+          ],
+          "velocity_dims": [
+            3,
+            4
+          ],
+          "action_min": -1.0489411354064941,
+          "action_max": 1.0402766466140747,
+          "action_norm": 1.8663215637207031,
+          "max_velocity": 0.8879770636558533,
+          "step": 6,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            1,
+            4,
+            6
+          ],
+          "velocity_dims": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "action_min": -2.1325197219848633,
+          "action_max": 1.543276071548462,
+          "action_norm": 2.921497106552124,
+          "max_velocity": 1.0835785865783691,
+          "step": 7,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            1,
+            3,
+            6
+          ],
+          "velocity_dims": [
+            0,
+            2,
+            3,
+            4,
+            5
+          ],
+          "action_min": -0.6790419220924377,
+          "action_max": 2.017465353012085,
+          "action_norm": 2.845334053039551,
+          "max_velocity": 1.6500287055969238,
+          "step": 8,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            3
+          ],
+          "velocity_dims": [
+            0,
+            1,
+            2,
+            3,
+            5,
+            6
+          ],
+          "action_min": -0.9223957657814026,
+          "action_max": 2.55637264251709,
+          "action_norm": 2.8786826133728027,
+          "max_velocity": 2.0191893577575684,
+          "step": 9,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            1,
+            4,
+            5,
+            6
+          ],
+          "velocity_dims": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "action_min": -2.012824773788452,
+          "action_max": 1.3029273748397827,
+          "action_norm": 2.8457272052764893,
+          "max_velocity": 2.6220450401306152,
+          "step": 10,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            1,
+            4,
+            5,
+            6
+          ],
+          "velocity_dims": [
+            0,
+            1,
+            4,
+            5
+          ],
+          "action_min": -1.7115525007247925,
+          "action_max": 1.1274365186691284,
+          "action_norm": 2.6611485481262207,
+          "max_velocity": 0.6944482326507568,
+          "step": 11,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            1
+          ],
+          "velocity_dims": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "action_min": -1.3054295778274536,
+          "action_max": 0.5223478674888611,
+          "action_norm": 1.8681368827819824,
+          "max_velocity": 2.432866096496582,
+          "step": 12,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            2,
+            6
+          ],
+          "velocity_dims": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "action_min": -1.1020054817199707,
+          "action_max": 1.0218850374221802,
+          "action_norm": 1.8605077266693115,
+          "max_velocity": 1.9975626468658447,
+          "step": 13,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            4
+          ],
+          "velocity_dims": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "action_min": -1.0264511108398438,
+          "action_max": 0.0030353711917996407,
+          "action_norm": 1.6024303436279297,
+          "max_velocity": 1.938819169998169,
+          "step": 14,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            3,
+            6
+          ],
+          "velocity_dims": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "action_min": -0.4536409378051758,
+          "action_max": 2.3730013370513916,
+          "action_norm": 2.7312240600585938,
+          "max_velocity": 2.428980588912964,
+          "step": 15,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            1,
+            3,
+            6
+          ],
+          "velocity_dims": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "action_min": -0.20505933463573456,
+          "action_max": 1.4451391696929932,
+          "action_norm": 2.391395092010498,
+          "max_velocity": 0.9278621673583984,
+          "step": 16,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            2,
+            3,
+            4,
+            6
+          ],
+          "velocity_dims": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "action_min": -1.030946969985962,
+          "action_max": 2.8743231296539307,
+          "action_norm": 3.5211007595062256,
+          "max_velocity": 1.5616626739501953,
+          "step": 17,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            1,
+            6
+          ],
+          "velocity_dims": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "action_min": -0.018117057159543037,
+          "action_max": 1.849302887916565,
+          "action_norm": 2.270092487335205,
+          "max_velocity": 2.8924400806427,
+          "step": 18,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            3,
+            4,
+            6
+          ],
+          "velocity_dims": [
+            0,
+            1,
+            3,
+            4
+          ],
+          "action_min": 0.030921902507543564,
+          "action_max": 1.4088659286499023,
+          "action_norm": 2.142341136932373,
+          "max_velocity": 1.4269829988479614,
+          "step": 19,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            6
+          ],
+          "velocity_dims": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "action_min": -0.5453655123710632,
+          "action_max": 1.0294718742370605,
+          "action_norm": 1.5918984413146973,
+          "max_velocity": 1.5802814960479736,
+          "step": 20,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            3,
+            6
+          ],
+          "velocity_dims": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "action_min": -0.535369873046875,
+          "action_max": 1.891013503074646,
+          "action_norm": 2.298077344894409,
+          "max_velocity": 1.9372364282608032,
+          "step": 21,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            5
+          ],
+          "velocity_dims": [
+            0,
+            1,
+            2,
+            3,
+            5,
+            6
+          ],
+          "action_min": -1.1932717561721802,
+          "action_max": 0.39103764295578003,
+          "action_norm": 1.9592065811157227,
+          "max_velocity": 2.0249075889587402,
+          "step": 22,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            6
+          ],
+          "velocity_dims": [
+            0,
+            1,
+            2,
+            4,
+            5,
+            6
+          ],
+          "action_min": -0.08402376621961594,
+          "action_max": 1.0289373397827148,
+          "action_norm": 1.4403223991394043,
+          "max_velocity": 1.9493770599365234,
+          "step": 23,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            1,
+            6
+          ],
+          "velocity_dims": [
+            0,
+            1,
+            2,
+            4,
+            5
+          ],
+          "action_min": -0.3871724307537079,
+          "action_max": 1.2550431489944458,
+          "action_norm": 1.673996090888977,
+          "max_velocity": 1.1242679357528687,
+          "step": 24,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            3,
+            4,
+            5
+          ],
+          "velocity_dims": [
+            1,
+            3,
+            4,
+            5,
+            6
+          ],
+          "action_min": -1.566607117652893,
+          "action_max": 3.588218927383423,
+          "action_norm": 4.110297679901123,
+          "max_velocity": 3.6207082271575928,
+          "step": 25,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            5
+          ],
+          "velocity_dims": [
+            0,
+            3,
+            4,
+            5,
+            6
+          ],
+          "action_min": -0.9358816146850586,
+          "action_max": 1.1034917831420898,
+          "action_norm": 1.5999618768692017,
+          "max_velocity": 3.4676268100738525,
+          "step": 26,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            1,
+            3,
+            6
+          ],
+          "velocity_dims": [
+            0,
+            1,
+            2,
+            3,
+            5,
+            6
+          ],
+          "action_min": -0.14627230167388916,
+          "action_max": 1.5486611127853394,
+          "action_norm": 2.4051172733306885,
+          "max_velocity": 2.034320116043091,
+          "step": 27,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            6
+          ],
+          "velocity_dims": [
+            0,
+            1,
+            3,
+            4,
+            5
+          ],
+          "action_min": -0.16731026768684387,
+          "action_max": 1.022437334060669,
+          "action_norm": 1.1741114854812622,
+          "max_velocity": 1.506500244140625,
+          "step": 28,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            0,
+            3,
+            5,
+            6
+          ],
+          "velocity_dims": [
+            0,
+            3,
+            4,
+            5
+          ],
+          "action_min": -1.8578808307647705,
+          "action_max": 1.8013288974761963,
+          "action_norm": 3.0460567474365234,
+          "max_velocity": 1.9834275245666504,
+          "step": 29,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            3,
+            4
+          ],
+          "velocity_dims": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "action_min": -3.066688060760498,
+          "action_max": 1.3971316814422607,
+          "action_norm": 3.6392858028411865,
+          "max_velocity": 2.579695224761963,
+          "step": 30,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            4,
+            6
+          ],
+          "velocity_dims": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "action_min": -1.2281990051269531,
+          "action_max": 1.0234856605529785,
+          "action_norm": 1.87156081199646,
+          "max_velocity": 1.9502429962158203,
+          "step": 31,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            6
+          ],
+          "velocity_dims": [
+            0,
+            1,
+            2,
+            4,
+            5
+          ],
+          "action_min": -0.6820371747016907,
+          "action_max": 1.0114232301712036,
+          "action_norm": 1.54920494556427,
+          "max_velocity": 2.0118911266326904,
+          "step": 32,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            0,
+            1,
+            6
+          ],
+          "velocity_dims": [
+            0,
+            1,
+            2,
+            4,
+            5
+          ],
+          "action_min": -0.4797351658344269,
+          "action_max": 1.3245153427124023,
+          "action_norm": 2.096776247024536,
+          "max_velocity": 1.1177388429641724,
+          "step": 33,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            4
+          ],
+          "velocity_dims": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "action_min": -1.607596755027771,
+          "action_max": 0.3478664755821228,
+          "action_norm": 2.2161142826080322,
+          "max_velocity": 2.075394630432129,
+          "step": 34,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            3,
+            4,
+            6
+          ],
+          "velocity_dims": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "action_min": -0.7527289986610413,
+          "action_max": 3.175734758377075,
+          "action_norm": 3.782366991043091,
+          "max_velocity": 3.083684206008911,
+          "step": 35,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            4,
+            6
+          ],
+          "velocity_dims": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "action_min": -2.1786932945251465,
+          "action_max": 1.0511943101882935,
+          "action_norm": 2.680047035217285,
+          "max_velocity": 3.4666898250579834,
+          "step": 36,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": false,
+          "velocity_violated": true,
+          "bounds_dims": [],
+          "velocity_dims": [
+            0,
+            1,
+            2,
+            4,
+            6
+          ],
+          "action_min": -0.9615043997764587,
+          "action_max": 0.7645220756530762,
+          "action_norm": 1.453173041343689,
+          "max_velocity": 2.0126986503601074,
+          "step": 37,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            1,
+            6
+          ],
+          "velocity_dims": [
+            0,
+            1,
+            2,
+            3,
+            5,
+            6
+          ],
+          "action_min": -0.5046996474266052,
+          "action_max": 1.840968132019043,
+          "action_norm": 2.207348585128784,
+          "max_velocity": 2.493924856185913,
+          "step": 38,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            0,
+            4
+          ],
+          "velocity_dims": [
+            0,
+            1,
+            2,
+            4,
+            5,
+            6
+          ],
+          "action_min": -0.9050115942955017,
+          "action_max": 1.0990979671478271,
+          "action_norm": 1.8419958353042603,
+          "max_velocity": 2.4173593521118164,
+          "step": 39,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            0,
+            4,
+            6
+          ],
+          "velocity_dims": [
+            0,
+            1,
+            3,
+            4,
+            5,
+            6
+          ],
+          "action_min": -1.3011993169784546,
+          "action_max": 1.7169677019119263,
+          "action_norm": 2.5398740768432617,
+          "max_velocity": 2.311091184616089,
+          "step": 40,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            6
+          ],
+          "velocity_dims": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "action_min": -0.2529755234718323,
+          "action_max": 1.0485291481018066,
+          "action_norm": 1.1610510349273682,
+          "max_velocity": 1.6894643306732178,
+          "step": 41,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": false,
+          "velocity_violated": true,
+          "bounds_dims": [],
+          "velocity_dims": [
+            1,
+            2,
+            4,
+            5,
+            6
+          ],
+          "action_min": -0.9469079971313477,
+          "action_max": 0.492533802986145,
+          "action_norm": 1.1656792163848877,
+          "max_velocity": 1.9954371452331543,
+          "step": 42,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            1,
+            6
+          ],
+          "velocity_dims": [
+            0,
+            1,
+            2,
+            6
+          ],
+          "action_min": -0.12200295925140381,
+          "action_max": 1.611207365989685,
+          "action_norm": 2.1620945930480957,
+          "max_velocity": 2.0328376293182373,
+          "step": 43,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            1,
+            6
+          ],
+          "velocity_dims": [
+            0,
+            1,
+            2,
+            4
+          ],
+          "action_min": -0.31646034121513367,
+          "action_max": 1.2164487838745117,
+          "action_norm": 1.6448655128479004,
+          "max_velocity": 1.0247604846954346,
+          "step": 44,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            1,
+            3,
+            5,
+            6
+          ],
+          "velocity_dims": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "action_min": -1.2646015882492065,
+          "action_max": 1.5737996101379395,
+          "action_norm": 2.8516361713409424,
+          "max_velocity": 1.5411909818649292,
+          "step": 45,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": false,
+          "velocity_violated": true,
+          "bounds_dims": [],
+          "velocity_dims": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "action_min": -0.9444753527641296,
+          "action_max": 0.2446989119052887,
+          "action_norm": 1.2673274278640747,
+          "max_velocity": 1.9827840328216553,
+          "step": 46,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            1,
+            3
+          ],
+          "velocity_dims": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "action_min": -1.7293809652328491,
+          "action_max": 1.4942331314086914,
+          "action_norm": 2.583102226257324,
+          "max_velocity": 1.9740798473358154,
+          "step": 47,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            3,
+            6
+          ],
+          "velocity_dims": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "action_min": -0.8331781029701233,
+          "action_max": 2.0902605056762695,
+          "action_norm": 2.6729907989501953,
+          "max_velocity": 2.1901276111602783,
+          "step": 48,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            2,
+            3
+          ],
+          "velocity_dims": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5,
+            6
+          ],
+          "action_min": -1.1141467094421387,
+          "action_max": 1.1971044540405273,
+          "action_norm": 1.9617364406585693,
+          "max_velocity": 1.9840667247772217,
+          "step": 49,
+          "any_violation": true
+        }
+      ],
+      "sliding_window": {
+        "window_size": 10,
+        "any_violation_rate": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          0.9,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "bounds_violation_rate": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          0.7,
+          0.8,
+          0.8,
+          0.8,
+          0.9,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          0.9,
+          0.9,
+          0.9,
+          0.9,
+          0.9,
+          0.8,
+          0.8,
+          0.8,
+          0.8,
+          0.7,
+          0.8,
+          0.8,
+          0.8
+        ],
+        "velocity_violation_rate": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          0.9,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "summary": {
+        "total_steps": 50,
+        "total_violations": 49,
+        "total_bounds_violations": 44,
+        "total_velocity_violations": 49,
+        "violation_rate": 0.98,
+        "elapsed_seconds": 55.8
+      }
+    },
+    "open_middle_drawer": {
+      "suite": "libero_goal",
+      "task_id": 0,
+      "task_description": "open the middle drawer of the cabinet",
+      "per_step": [
+        {
+          "bounds_violated": true,
+          "velocity_violated": false,
+          "bounds_dims": [
+            3,
+            4,
+            5
+          ],
+          "velocity_dims": [],
+          "action_min": -2.9643595218658447,
+          "action_max": 1.7922847270965576,
+          "action_norm": 4.062713623046875,
+          "max_velocity": 0.0,
+          "step": 0,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            0,
+            3,
+            4
+          ],
+          "velocity_dims": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "action_min": -2.1580870151519775,
+          "action_max": 2.0438199043273926,
+          "action_norm": 3.5125536918640137,
+          "max_velocity": 1.3679924011230469,
+          "step": 1,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            3,
+            4,
+            5
+          ],
+          "velocity_dims": [
+            0,
+            2,
+            3,
+            4,
+            5
+          ],
+          "action_min": -3.8824424743652344,
+          "action_max": 2.3855173587799072,
+          "action_norm": 5.246306896209717,
+          "max_velocity": 1.7373651266098022,
+          "step": 2,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            0,
+            3,
+            5
+          ],
+          "velocity_dims": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "action_min": -2.1658153533935547,
+          "action_max": 1.7794995307922363,
+          "action_norm": 3.2648162841796875,
+          "max_velocity": 2.4601268768310547,
+          "step": 3,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            3,
+            5
+          ],
+          "velocity_dims": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "action_min": -1.2115565538406372,
+          "action_max": 1.6124873161315918,
+          "action_norm": 2.464653730392456,
+          "max_velocity": 0.9542587995529175,
+          "step": 4,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            3,
+            4,
+            5
+          ],
+          "velocity_dims": [
+            0,
+            1,
+            3,
+            4,
+            5
+          ],
+          "action_min": -2.267223358154297,
+          "action_max": 2.5805182456970215,
+          "action_norm": 3.998366355895996,
+          "max_velocity": 2.1074647903442383,
+          "step": 5,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            0,
+            3
+          ],
+          "velocity_dims": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "action_min": -1.0648294687271118,
+          "action_max": 1.1317470073699951,
+          "action_norm": 2.400345802307129,
+          "max_velocity": 1.6914992332458496,
+          "step": 6,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            3,
+            4,
+            5
+          ],
+          "velocity_dims": [
+            0,
+            1,
+            3,
+            4,
+            5
+          ],
+          "action_min": -1.7440966367721558,
+          "action_max": 1.7968124151229858,
+          "action_norm": 3.085136890411377,
+          "max_velocity": 0.9077933430671692,
+          "step": 7,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            3,
+            5
+          ],
+          "velocity_dims": [
+            1,
+            3,
+            4
+          ],
+          "action_min": -2.726344585418701,
+          "action_max": 1.7780060768127441,
+          "action_norm": 3.483624219894409,
+          "max_velocity": 0.9822479486465454,
+          "step": 8,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            3,
+            4,
+            5
+          ],
+          "velocity_dims": [
+            0,
+            1,
+            3,
+            4
+          ],
+          "action_min": -4.31156587600708,
+          "action_max": 1.9125458002090454,
+          "action_norm": 5.223212718963623,
+          "max_velocity": 1.585221290588379,
+          "step": 9,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            3,
+            5
+          ],
+          "velocity_dims": [
+            0,
+            2,
+            3,
+            4,
+            5
+          ],
+          "action_min": -2.545180320739746,
+          "action_max": 3.661757707595825,
+          "action_norm": 4.650564670562744,
+          "max_velocity": 1.766385555267334,
+          "step": 10,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            3,
+            4,
+            5
+          ],
+          "velocity_dims": [
+            1,
+            3,
+            4,
+            5
+          ],
+          "action_min": -2.057238817214966,
+          "action_max": 1.6879963874816895,
+          "action_norm": 3.3179242610931396,
+          "max_velocity": 1.9737613201141357,
+          "step": 11,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            0,
+            3,
+            4,
+            5
+          ],
+          "velocity_dims": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "action_min": -2.682210922241211,
+          "action_max": 2.5877482891082764,
+          "action_norm": 4.616230487823486,
+          "max_velocity": 0.9876790046691895,
+          "step": 12,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": false,
+          "velocity_violated": true,
+          "bounds_dims": [],
+          "velocity_dims": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "action_min": -0.9338799118995667,
+          "action_max": 0.4678492546081543,
+          "action_norm": 1.3336737155914307,
+          "max_velocity": 2.4134573936462402,
+          "step": 13,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            3,
+            4,
+            5
+          ],
+          "velocity_dims": [
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "action_min": -2.1064555644989014,
+          "action_max": 1.6456937789916992,
+          "action_norm": 3.365546464920044,
+          "max_velocity": 1.5597676038742065,
+          "step": 14,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            3,
+            4,
+            5
+          ],
+          "velocity_dims": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "action_min": -1.8294998407363892,
+          "action_max": 1.6278735399246216,
+          "action_norm": 3.218151807785034,
+          "max_velocity": 0.5970495343208313,
+          "step": 15,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            3,
+            4,
+            5
+          ],
+          "velocity_dims": [
+            0,
+            2,
+            4,
+            5
+          ],
+          "action_min": -1.8449671268463135,
+          "action_max": 2.5816714763641357,
+          "action_norm": 3.8331973552703857,
+          "max_velocity": 0.9537979364395142,
+          "step": 16,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            0,
+            3,
+            4,
+            5
+          ],
+          "velocity_dims": [
+            0,
+            3,
+            4,
+            5
+          ],
+          "action_min": -1.666509985923767,
+          "action_max": 2.1401169300079346,
+          "action_norm": 3.32700777053833,
+          "max_velocity": 0.8739792704582214,
+          "step": 17,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            3,
+            5
+          ],
+          "velocity_dims": [
+            0,
+            2,
+            3,
+            4,
+            5
+          ],
+          "action_min": -2.2708587646484375,
+          "action_max": 2.8026130199432373,
+          "action_norm": 3.874295949935913,
+          "max_velocity": 2.11154842376709,
+          "step": 18,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            0,
+            3,
+            4
+          ],
+          "velocity_dims": [
+            0,
+            2,
+            3,
+            4,
+            5
+          ],
+          "action_min": -1.4493275880813599,
+          "action_max": 1.5683557987213135,
+          "action_norm": 2.78839373588562,
+          "max_velocity": 1.9279820919036865,
+          "step": 19,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            1,
+            5
+          ],
+          "velocity_dims": [
+            0,
+            1,
+            3,
+            4,
+            5
+          ],
+          "action_min": -1.164663553237915,
+          "action_max": 1.2019842863082886,
+          "action_norm": 2.2425758838653564,
+          "max_velocity": 1.4172039031982422,
+          "step": 20,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            0,
+            3,
+            4,
+            5
+          ],
+          "velocity_dims": [
+            0,
+            1,
+            3,
+            4,
+            5
+          ],
+          "action_min": -2.1458182334899902,
+          "action_max": 2.955885648727417,
+          "action_norm": 4.23921012878418,
+          "max_velocity": 3.2677178382873535,
+          "step": 21,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            0,
+            3,
+            5
+          ],
+          "velocity_dims": [
+            0,
+            3,
+            4,
+            5
+          ],
+          "action_min": -2.8081095218658447,
+          "action_max": 1.652618646621704,
+          "action_norm": 3.723762035369873,
+          "max_velocity": 2.2271525859832764,
+          "step": 22,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            3,
+            4,
+            5
+          ],
+          "velocity_dims": [
+            0,
+            1,
+            3,
+            4,
+            5
+          ],
+          "action_min": -4.227157115936279,
+          "action_max": 2.1868255138397217,
+          "action_norm": 5.095070838928223,
+          "max_velocity": 1.4190475940704346,
+          "step": 23,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            3,
+            5
+          ],
+          "velocity_dims": [
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "action_min": -2.250324010848999,
+          "action_max": 2.6917409896850586,
+          "action_norm": 3.7438244819641113,
+          "max_velocity": 1.9768331050872803,
+          "step": 24,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            3
+          ],
+          "velocity_dims": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "action_min": -2.020545482635498,
+          "action_max": 0.9990768432617188,
+          "action_norm": 2.8660495281219482,
+          "max_velocity": 1.6926641464233398,
+          "step": 25,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            3,
+            5
+          ],
+          "velocity_dims": [
+            0,
+            1,
+            3,
+            4,
+            5
+          ],
+          "action_min": -3.635770559310913,
+          "action_max": 1.2822182178497314,
+          "action_norm": 4.214021682739258,
+          "max_velocity": 1.615225076675415,
+          "step": 26,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            0,
+            3,
+            4,
+            5
+          ],
+          "velocity_dims": [
+            0,
+            2,
+            3,
+            4,
+            5
+          ],
+          "action_min": -2.0127737522125244,
+          "action_max": 2.306840181350708,
+          "action_norm": 3.723393678665161,
+          "max_velocity": 1.6229968070983887,
+          "step": 27,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            0,
+            3,
+            4
+          ],
+          "velocity_dims": [
+            0,
+            2,
+            3,
+            4
+          ],
+          "action_min": -1.702734112739563,
+          "action_max": 1.8265745639801025,
+          "action_norm": 3.159950017929077,
+          "max_velocity": 1.1116554737091064,
+          "step": 28,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            3,
+            5
+          ],
+          "velocity_dims": [
+            0,
+            2,
+            4,
+            5
+          ],
+          "action_min": -1.7811086177825928,
+          "action_max": 2.346923589706421,
+          "action_norm": 3.2730579376220703,
+          "max_velocity": 1.3884875774383545,
+          "step": 29,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            3,
+            4,
+            5
+          ],
+          "velocity_dims": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "action_min": -2.421685218811035,
+          "action_max": 2.2986013889312744,
+          "action_norm": 3.9240918159484863,
+          "max_velocity": 1.5279628038406372,
+          "step": 30,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            3,
+            5
+          ],
+          "velocity_dims": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "action_min": -1.4100505113601685,
+          "action_max": 2.4676239490509033,
+          "action_norm": 3.153541326522827,
+          "max_velocity": 1.0572457313537598,
+          "step": 31,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            0,
+            3,
+            4,
+            5
+          ],
+          "velocity_dims": [
+            0,
+            3,
+            4,
+            5
+          ],
+          "action_min": -1.8998290300369263,
+          "action_max": 2.0143332481384277,
+          "action_norm": 3.5112733840942383,
+          "max_velocity": 1.3719031810760498,
+          "step": 32,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            0,
+            3,
+            4,
+            5
+          ],
+          "velocity_dims": [
+            0,
+            2,
+            3,
+            4,
+            5
+          ],
+          "action_min": -2.6773574352264404,
+          "action_max": 2.011941909790039,
+          "action_norm": 4.0966796875,
+          "max_velocity": 0.7775284051895142,
+          "step": 33,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            3,
+            5
+          ],
+          "velocity_dims": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "action_min": -2.849189281463623,
+          "action_max": 2.4939725399017334,
+          "action_norm": 3.972400188446045,
+          "max_velocity": 1.9116978645324707,
+          "step": 34,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            3,
+            4,
+            5
+          ],
+          "velocity_dims": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "action_min": -1.7201967239379883,
+          "action_max": 1.948373794555664,
+          "action_norm": 3.5966222286224365,
+          "max_velocity": 2.178227186203003,
+          "step": 35,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            3,
+            4,
+            5
+          ],
+          "velocity_dims": [
+            0,
+            1,
+            3,
+            4,
+            5
+          ],
+          "action_min": -3.2367653846740723,
+          "action_max": 2.2881722450256348,
+          "action_norm": 4.273271560668945,
+          "max_velocity": 1.516568660736084,
+          "step": 36,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            0,
+            3
+          ],
+          "velocity_dims": [
+            0,
+            1,
+            4,
+            5
+          ],
+          "action_min": -3.262404203414917,
+          "action_max": 1.0359259843826294,
+          "action_norm": 3.657176971435547,
+          "max_velocity": 1.62278151512146,
+          "step": 37,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            3,
+            4,
+            5
+          ],
+          "velocity_dims": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "action_min": -2.4216809272766113,
+          "action_max": 2.3822274208068848,
+          "action_norm": 3.7962207794189453,
+          "max_velocity": 1.71683669090271,
+          "step": 38,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            3,
+            5
+          ],
+          "velocity_dims": [
+            0,
+            1,
+            2,
+            4
+          ],
+          "action_min": -2.437300205230713,
+          "action_max": 2.3781795501708984,
+          "action_norm": 3.723634958267212,
+          "max_velocity": 0.6628958582878113,
+          "step": 39,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            0,
+            3,
+            4
+          ],
+          "velocity_dims": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "action_min": -3.3782804012298584,
+          "action_max": 1.857582926750183,
+          "action_norm": 4.199822902679443,
+          "max_velocity": 1.7284338474273682,
+          "step": 40,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            0,
+            3,
+            4,
+            5
+          ],
+          "velocity_dims": [
+            0,
+            1,
+            3,
+            5
+          ],
+          "action_min": -3.948765516281128,
+          "action_max": 1.9487500190734863,
+          "action_norm": 5.097109794616699,
+          "max_velocity": 1.299004316329956,
+          "step": 41,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            0,
+            3,
+            4
+          ],
+          "velocity_dims": [
+            1,
+            3,
+            4,
+            5
+          ],
+          "action_min": -3.0506577491760254,
+          "action_max": 1.628075122833252,
+          "action_norm": 3.8698976039886475,
+          "max_velocity": 1.2789207696914673,
+          "step": 42,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            0,
+            3,
+            4,
+            5
+          ],
+          "velocity_dims": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "action_min": -2.339763641357422,
+          "action_max": 1.7255959510803223,
+          "action_norm": 3.8090953826904297,
+          "max_velocity": 1.4202313423156738,
+          "step": 43,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            0,
+            3,
+            4,
+            5
+          ],
+          "velocity_dims": [
+            0,
+            1,
+            2,
+            4
+          ],
+          "action_min": -2.2649142742156982,
+          "action_max": 1.667659878730774,
+          "action_norm": 3.613124132156372,
+          "max_velocity": 1.6021456718444824,
+          "step": 44,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            3,
+            4,
+            5
+          ],
+          "velocity_dims": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "action_min": -1.857836365699768,
+          "action_max": 2.911090135574341,
+          "action_norm": 4.539757251739502,
+          "max_velocity": 1.578397512435913,
+          "step": 45,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            0,
+            3,
+            5
+          ],
+          "velocity_dims": [
+            0,
+            1,
+            2,
+            3,
+            4,
+            5
+          ],
+          "action_min": -2.826507806777954,
+          "action_max": 1.233657956123352,
+          "action_norm": 3.5671746730804443,
+          "max_velocity": 1.9556103944778442,
+          "step": 46,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            3,
+            5
+          ],
+          "velocity_dims": [
+            0,
+            1,
+            3,
+            4,
+            5
+          ],
+          "action_min": -2.4459524154663086,
+          "action_max": 2.869938850402832,
+          "action_norm": 3.937832832336426,
+          "max_velocity": 1.7231577634811401,
+          "step": 47,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            3,
+            4,
+            5
+          ],
+          "velocity_dims": [
+            0,
+            2,
+            3,
+            4,
+            5
+          ],
+          "action_min": -2.9831526279449463,
+          "action_max": 2.1620254516601562,
+          "action_norm": 4.445182800292969,
+          "max_velocity": 1.7262625694274902,
+          "step": 48,
+          "any_violation": true
+        },
+        {
+          "bounds_violated": true,
+          "velocity_violated": true,
+          "bounds_dims": [
+            3,
+            4,
+            5
+          ],
+          "velocity_dims": [
+            0,
+            1,
+            2,
+            3,
+            5
+          ],
+          "action_min": -2.4512741565704346,
+          "action_max": 2.5302062034606934,
+          "action_norm": 4.270653247833252,
+          "max_velocity": 1.0670642852783203,
+          "step": 49,
+          "any_violation": true
+        }
+      ],
+      "sliding_window": {
+        "window_size": 10,
+        "any_violation_rate": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "bounds_violation_rate": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          0.9,
+          0.9,
+          0.9,
+          0.9,
+          0.9,
+          0.9,
+          0.9,
+          0.9,
+          0.9,
+          0.9,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "velocity_violation_rate": [
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          null,
+          0.9,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "summary": {
+        "total_steps": 50,
+        "total_violations": 50,
+        "total_bounds_violations": 49,
+        "total_velocity_violations": 49,
+        "violation_rate": 1.0,
+        "elapsed_seconds": 53.4
+      }
+    }
+  },
+  "timestamp": "2026-04-05T07:56:41Z"
+}
