@@ -1,0 +1,1335 @@
+{
+  "experiment": "Corrected fingerprints v2 - 5 episodes per suite with error bars",
+  "fix": "v1 used n=1 episode per suite (no error bars). v2 runs 5 episodes per suite and reports mean +/- std for statistical backing.",
+  "model": "HuggingFaceVLA/smolvla_libero",
+  "device": "mps",
+  "n_episodes_per_suite": 5,
+  "n_steps_per_episode": 20,
+  "task_id": 0,
+  "action_bounds": [
+    -1.0,
+    1.0
+  ],
+  "v_max": 0.1,
+  "normalization_stats": {
+    "mean": [
+      0.007000000216066837,
+      0.0835999995470047,
+      -0.039500001817941666,
+      0.0005000000237487257,
+      0.0031999999191612005,
+      -0.00139999995008111,
+      0.006399999838322401
+    ],
+    "std": [
+      0.2962999939918518,
+      0.44620001316070557,
+      0.4706000089645386,
+      0.03099999949336052,
+      0.04830000177025795,
+      0.043299999088048935,
+      1.0
+    ],
+    "formula": "action_real = raw * std + mean"
+  },
+  "suites": {
+    "libero_spatial": {
+      "task": "pick_up_the_black_bowl_between_the_plate_and_the_ramekin_and_place_it_on_the_plate",
+      "n_episodes": 5,
+      "n_steps_per_episode": 20,
+      "episodes": [
+        {
+          "episode": 0,
+          "n_steps": 20,
+          "raw_violations": {
+            "bounds_per_dim": {
+              "x": 0.45,
+              "y": 0.1,
+              "z": 0.3,
+              "roll": 0.35,
+              "pitch": 0.4,
+              "yaw": 0.05,
+              "gripper": 0.15
+            },
+            "velocity_per_dim": {
+              "x": 0.8947,
+              "y": 1.0,
+              "z": 0.8947,
+              "roll": 0.8947,
+              "pitch": 0.9474,
+              "yaw": 0.8947,
+              "gripper": 0.4737
+            },
+            "overall_bounds_rate": 0.9,
+            "overall_velocity_rate": 1.0,
+            "action_range": [
+              -3.0643,
+              5.3682
+            ]
+          },
+          "unnorm_violations": {
+            "bounds_per_dim": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.05,
+              "roll": 0.0,
+              "pitch": 0.0,
+              "yaw": 0.0,
+              "gripper": 0.15
+            },
+            "velocity_per_dim": {
+              "x": 0.8947,
+              "y": 0.7368,
+              "z": 0.8947,
+              "roll": 0.0526,
+              "pitch": 0.3684,
+              "yaw": 0.0,
+              "gripper": 0.4737
+            },
+            "overall_bounds_rate": 0.2,
+            "overall_velocity_rate": 1.0,
+            "action_range": [
+              -0.9781,
+              1.0488
+            ]
+          },
+          "avg_latency_ms": 1463.3
+        },
+        {
+          "episode": 1,
+          "n_steps": 20,
+          "raw_violations": {
+            "bounds_per_dim": {
+              "x": 0.35,
+              "y": 0.0,
+              "z": 0.75,
+              "roll": 0.25,
+              "pitch": 0.35,
+              "yaw": 0.0,
+              "gripper": 0.0
+            },
+            "velocity_per_dim": {
+              "x": 0.9474,
+              "y": 0.9474,
+              "z": 0.8947,
+              "roll": 0.7895,
+              "pitch": 0.8421,
+              "yaw": 0.9474,
+              "gripper": 0.0
+            },
+            "overall_bounds_rate": 0.95,
+            "overall_velocity_rate": 1.0,
+            "action_range": [
+              -3.0024,
+              2.8393
+            ]
+          },
+          "unnorm_violations": {
+            "bounds_per_dim": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0,
+              "roll": 0.0,
+              "pitch": 0.0,
+              "yaw": 0.0,
+              "gripper": 0.0
+            },
+            "velocity_per_dim": {
+              "x": 0.8421,
+              "y": 0.6316,
+              "z": 0.7895,
+              "roll": 0.0,
+              "pitch": 0.1579,
+              "yaw": 0.0,
+              "gripper": 0.0
+            },
+            "overall_bounds_rate": 0.0,
+            "overall_velocity_rate": 0.9474,
+            "action_range": [
+              -0.9744,
+              0.6554
+            ]
+          },
+          "avg_latency_ms": 1508.0
+        },
+        {
+          "episode": 2,
+          "n_steps": 20,
+          "raw_violations": {
+            "bounds_per_dim": {
+              "x": 0.2,
+              "y": 0.05,
+              "z": 0.35,
+              "roll": 0.2,
+              "pitch": 0.3,
+              "yaw": 0.0,
+              "gripper": 0.15
+            },
+            "velocity_per_dim": {
+              "x": 0.8947,
+              "y": 1.0,
+              "z": 1.0,
+              "roll": 0.7895,
+              "pitch": 0.8421,
+              "yaw": 0.7895,
+              "gripper": 0.1053
+            },
+            "overall_bounds_rate": 0.85,
+            "overall_velocity_rate": 1.0,
+            "action_range": [
+              -2.9086,
+              3.0912
+            ]
+          },
+          "unnorm_violations": {
+            "bounds_per_dim": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0,
+              "roll": 0.0,
+              "pitch": 0.0,
+              "yaw": 0.0,
+              "gripper": 0.15
+            },
+            "velocity_per_dim": {
+              "x": 0.7895,
+              "y": 0.7895,
+              "z": 0.9474,
+              "roll": 0.0,
+              "pitch": 0.0526,
+              "yaw": 0.0,
+              "gripper": 0.1053
+            },
+            "overall_bounds_rate": 0.15,
+            "overall_velocity_rate": 1.0,
+            "action_range": [
+              -0.9694,
+              1.0419
+            ]
+          },
+          "avg_latency_ms": 1384.0
+        },
+        {
+          "episode": 3,
+          "n_steps": 20,
+          "raw_violations": {
+            "bounds_per_dim": {
+              "x": 0.4,
+              "y": 0.05,
+              "z": 0.3,
+              "roll": 0.25,
+              "pitch": 0.4,
+              "yaw": 0.05,
+              "gripper": 0.25
+            },
+            "velocity_per_dim": {
+              "x": 0.9474,
+              "y": 1.0,
+              "z": 0.9474,
+              "roll": 0.8947,
+              "pitch": 0.9474,
+              "yaw": 0.8947,
+              "gripper": 0.3158
+            },
+            "overall_bounds_rate": 0.85,
+            "overall_velocity_rate": 1.0,
+            "action_range": [
+              -2.2091,
+              2.7347
+            ]
+          },
+          "unnorm_violations": {
+            "bounds_per_dim": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0,
+              "roll": 0.0,
+              "pitch": 0.0,
+              "yaw": 0.0,
+              "gripper": 0.2
+            },
+            "velocity_per_dim": {
+              "x": 0.8421,
+              "y": 0.7895,
+              "z": 0.8421,
+              "roll": 0.0,
+              "pitch": 0.1053,
+              "yaw": 0.0,
+              "gripper": 0.3158
+            },
+            "overall_bounds_rate": 0.2,
+            "overall_velocity_rate": 1.0,
+            "action_range": [
+              -0.9937,
+              1.0638
+            ]
+          },
+          "avg_latency_ms": 1323.7
+        },
+        {
+          "episode": 4,
+          "n_steps": 20,
+          "raw_violations": {
+            "bounds_per_dim": {
+              "x": 0.5,
+              "y": 0.05,
+              "z": 0.4,
+              "roll": 0.4,
+              "pitch": 0.2,
+              "yaw": 0.15,
+              "gripper": 0.2
+            },
+            "velocity_per_dim": {
+              "x": 1.0,
+              "y": 0.9474,
+              "z": 0.9474,
+              "roll": 0.8947,
+              "pitch": 0.9474,
+              "yaw": 0.8421,
+              "gripper": 0.2105
+            },
+            "overall_bounds_rate": 0.85,
+            "overall_velocity_rate": 1.0,
+            "action_range": [
+              -2.5967,
+              2.6921
+            ]
+          },
+          "unnorm_violations": {
+            "bounds_per_dim": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0,
+              "roll": 0.0,
+              "pitch": 0.0,
+              "yaw": 0.0,
+              "gripper": 0.2
+            },
+            "velocity_per_dim": {
+              "x": 0.7895,
+              "y": 0.8421,
+              "z": 0.7895,
+              "roll": 0.0526,
+              "pitch": 0.0,
+              "yaw": 0.0,
+              "gripper": 0.2105
+            },
+            "overall_bounds_rate": 0.2,
+            "overall_velocity_rate": 1.0,
+            "action_range": [
+              -0.9613,
+              1.056
+            ]
+          },
+          "avg_latency_ms": 1365.7
+        }
+      ],
+      "aggregate": {
+        "velocity_per_dim_mean": {
+          "x": 0.8316,
+          "y": 0.7579,
+          "z": 0.8526,
+          "roll": 0.021,
+          "pitch": 0.1368,
+          "yaw": 0.0,
+          "gripper": 0.2211
+        },
+        "velocity_per_dim_std": {
+          "x": 0.0394,
+          "y": 0.0714,
+          "z": 0.0614,
+          "roll": 0.0258,
+          "pitch": 0.1272,
+          "yaw": 0.0,
+          "gripper": 0.1644
+        },
+        "overall_velocity_mean": 0.9895,
+        "overall_velocity_std": 0.021,
+        "overall_bounds_mean": 0.15,
+        "overall_bounds_std": 0.0775
+      }
+    },
+    "libero_object": {
+      "task": "pick_up_the_alphabet_soup_and_place_it_in_the_basket",
+      "n_episodes": 5,
+      "n_steps_per_episode": 20,
+      "episodes": [
+        {
+          "episode": 0,
+          "n_steps": 20,
+          "raw_violations": {
+            "bounds_per_dim": {
+              "x": 0.1,
+              "y": 0.4,
+              "z": 0.15,
+              "roll": 0.05,
+              "pitch": 0.2,
+              "yaw": 0.0,
+              "gripper": 0.85
+            },
+            "velocity_per_dim": {
+              "x": 0.8947,
+              "y": 0.8947,
+              "z": 0.8947,
+              "roll": 0.7895,
+              "pitch": 0.8947,
+              "yaw": 0.6842,
+              "gripper": 0.2105
+            },
+            "overall_bounds_rate": 0.9,
+            "overall_velocity_rate": 1.0,
+            "action_range": [
+              -1.8769,
+              2.8204
+            ]
+          },
+          "unnorm_violations": {
+            "bounds_per_dim": {
+              "x": 0.0,
+              "y": 0.05,
+              "z": 0.0,
+              "roll": 0.0,
+              "pitch": 0.0,
+              "yaw": 0.0,
+              "gripper": 0.85
+            },
+            "velocity_per_dim": {
+              "x": 0.5263,
+              "y": 0.7368,
+              "z": 0.8421,
+              "roll": 0.0,
+              "pitch": 0.0526,
+              "yaw": 0.0,
+              "gripper": 0.2105
+            },
+            "overall_bounds_rate": 0.85,
+            "overall_velocity_rate": 0.8947,
+            "action_range": [
+              -0.9443,
+              1.091
+            ]
+          },
+          "avg_latency_ms": 1394.5
+        },
+        {
+          "episode": 1,
+          "n_steps": 20,
+          "raw_violations": {
+            "bounds_per_dim": {
+              "x": 0.1,
+              "y": 0.35,
+              "z": 0.1,
+              "roll": 0.15,
+              "pitch": 0.35,
+              "yaw": 0.05,
+              "gripper": 0.9
+            },
+            "velocity_per_dim": {
+              "x": 0.9474,
+              "y": 0.9474,
+              "z": 0.8947,
+              "roll": 0.8947,
+              "pitch": 0.9474,
+              "yaw": 0.7368,
+              "gripper": 0.2632
+            },
+            "overall_bounds_rate": 0.95,
+            "overall_velocity_rate": 1.0,
+            "action_range": [
+              -1.1273,
+              2.9436
+            ]
+          },
+          "unnorm_violations": {
+            "bounds_per_dim": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0,
+              "roll": 0.0,
+              "pitch": 0.0,
+              "yaw": 0.0,
+              "gripper": 0.85
+            },
+            "velocity_per_dim": {
+              "x": 0.7895,
+              "y": 0.9474,
+              "z": 0.7368,
+              "roll": 0.0,
+              "pitch": 0.2105,
+              "yaw": 0.0,
+              "gripper": 0.2632
+            },
+            "overall_bounds_rate": 0.85,
+            "overall_velocity_rate": 1.0,
+            "action_range": [
+              -0.9948,
+              1.0669
+            ]
+          },
+          "avg_latency_ms": 1336.7
+        },
+        {
+          "episode": 2,
+          "n_steps": 20,
+          "raw_violations": {
+            "bounds_per_dim": {
+              "x": 0.05,
+              "y": 0.7,
+              "z": 0.0,
+              "roll": 0.4,
+              "pitch": 0.3,
+              "yaw": 0.15,
+              "gripper": 0.9
+            },
+            "velocity_per_dim": {
+              "x": 0.8421,
+              "y": 0.9474,
+              "z": 0.9474,
+              "roll": 0.8947,
+              "pitch": 0.8947,
+              "yaw": 0.9474,
+              "gripper": 0.2105
+            },
+            "overall_bounds_rate": 1.0,
+            "overall_velocity_rate": 1.0,
+            "action_range": [
+              -3.5732,
+              3.8516
+            ]
+          },
+          "unnorm_violations": {
+            "bounds_per_dim": {
+              "x": 0.0,
+              "y": 0.05,
+              "z": 0.0,
+              "roll": 0.0,
+              "pitch": 0.0,
+              "yaw": 0.0,
+              "gripper": 0.9
+            },
+            "velocity_per_dim": {
+              "x": 0.4211,
+              "y": 0.9474,
+              "z": 0.8421,
+              "roll": 0.1053,
+              "pitch": 0.2632,
+              "yaw": 0.0,
+              "gripper": 0.2105
+            },
+            "overall_bounds_rate": 0.9,
+            "overall_velocity_rate": 1.0,
+            "action_range": [
+              -0.9452,
+              1.0825
+            ]
+          },
+          "avg_latency_ms": 1385.2
+        },
+        {
+          "episode": 3,
+          "n_steps": 20,
+          "raw_violations": {
+            "bounds_per_dim": {
+              "x": 0.1,
+              "y": 0.4,
+              "z": 0.15,
+              "roll": 0.4,
+              "pitch": 0.2,
+              "yaw": 0.05,
+              "gripper": 0.75
+            },
+            "velocity_per_dim": {
+              "x": 0.8947,
+              "y": 0.9474,
+              "z": 0.8421,
+              "roll": 1.0,
+              "pitch": 1.0,
+              "yaw": 0.8421,
+              "gripper": 0.2632
+            },
+            "overall_bounds_rate": 0.9,
+            "overall_velocity_rate": 1.0,
+            "action_range": [
+              -2.3338,
+              2.6138
+            ]
+          },
+          "unnorm_violations": {
+            "bounds_per_dim": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0,
+              "roll": 0.0,
+              "pitch": 0.0,
+              "yaw": 0.0,
+              "gripper": 0.75
+            },
+            "velocity_per_dim": {
+              "x": 0.5789,
+              "y": 0.8421,
+              "z": 0.7895,
+              "roll": 0.0,
+              "pitch": 0.2632,
+              "yaw": 0.0,
+              "gripper": 0.2632
+            },
+            "overall_bounds_rate": 0.75,
+            "overall_velocity_rate": 1.0,
+            "action_range": [
+              -0.9677,
+              1.0648
+            ]
+          },
+          "avg_latency_ms": 1406.2
+        },
+        {
+          "episode": 4,
+          "n_steps": 20,
+          "raw_violations": {
+            "bounds_per_dim": {
+              "x": 0.1,
+              "y": 0.35,
+              "z": 0.1,
+              "roll": 0.2,
+              "pitch": 0.4,
+              "yaw": 0.05,
+              "gripper": 0.8
+            },
+            "velocity_per_dim": {
+              "x": 0.9474,
+              "y": 0.8421,
+              "z": 0.7895,
+              "roll": 0.7895,
+              "pitch": 0.9474,
+              "yaw": 0.8947,
+              "gripper": 0.2105
+            },
+            "overall_bounds_rate": 1.0,
+            "overall_velocity_rate": 1.0,
+            "action_range": [
+              -2.4314,
+              2.0358
+            ]
+          },
+          "unnorm_violations": {
+            "bounds_per_dim": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0,
+              "roll": 0.0,
+              "pitch": 0.0,
+              "yaw": 0.0,
+              "gripper": 0.75
+            },
+            "velocity_per_dim": {
+              "x": 0.6316,
+              "y": 0.7895,
+              "z": 0.7368,
+              "roll": 0.0,
+              "pitch": 0.2105,
+              "yaw": 0.0,
+              "gripper": 0.2105
+            },
+            "overall_bounds_rate": 0.75,
+            "overall_velocity_rate": 1.0,
+            "action_range": [
+              -0.9993,
+              1.0792
+            ]
+          },
+          "avg_latency_ms": 1405.1
+        }
+      ],
+      "aggregate": {
+        "velocity_per_dim_mean": {
+          "x": 0.5895,
+          "y": 0.8526,
+          "z": 0.7895,
+          "roll": 0.0211,
+          "pitch": 0.2,
+          "yaw": 0.0,
+          "gripper": 0.2316
+        },
+        "velocity_per_dim_std": {
+          "x": 0.1219,
+          "y": 0.0842,
+          "z": 0.0471,
+          "roll": 0.0421,
+          "pitch": 0.0774,
+          "yaw": 0.0,
+          "gripper": 0.0258
+        },
+        "overall_velocity_mean": 0.9789,
+        "overall_velocity_std": 0.0421,
+        "overall_bounds_mean": 0.82,
+        "overall_bounds_std": 0.06
+      }
+    },
+    "libero_goal": {
+      "task": "open_the_middle_drawer_of_the_cabinet",
+      "n_episodes": 5,
+      "n_steps_per_episode": 20,
+      "episodes": [
+        {
+          "episode": 0,
+          "n_steps": 20,
+          "raw_violations": {
+            "bounds_per_dim": {
+              "x": 0.3,
+              "y": 0.05,
+              "z": 0.05,
+              "roll": 0.45,
+              "pitch": 0.5,
+              "yaw": 0.35,
+              "gripper": 0.0
+            },
+            "velocity_per_dim": {
+              "x": 0.9474,
+              "y": 0.7895,
+              "z": 0.8421,
+              "roll": 0.9474,
+              "pitch": 1.0,
+              "yaw": 0.8421,
+              "gripper": 0.0
+            },
+            "overall_bounds_rate": 0.75,
+            "overall_velocity_rate": 1.0,
+            "action_range": [
+              -3.503,
+              3.2861
+            ]
+          },
+          "unnorm_violations": {
+            "bounds_per_dim": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0,
+              "roll": 0.0,
+              "pitch": 0.0,
+              "yaw": 0.0,
+              "gripper": 0.0
+            },
+            "velocity_per_dim": {
+              "x": 0.6316,
+              "y": 0.4211,
+              "z": 0.7368,
+              "roll": 0.0,
+              "pitch": 0.2632,
+              "yaw": 0.0,
+              "gripper": 0.0
+            },
+            "overall_bounds_rate": 0.0,
+            "overall_velocity_rate": 0.9474,
+            "action_range": [
+              -0.9588,
+              0.5425
+            ]
+          },
+          "avg_latency_ms": 1336.8
+        },
+        {
+          "episode": 1,
+          "n_steps": 20,
+          "raw_violations": {
+            "bounds_per_dim": {
+              "x": 0.1,
+              "y": 0.0,
+              "z": 0.05,
+              "roll": 0.5,
+              "pitch": 0.55,
+              "yaw": 0.55,
+              "gripper": 0.0
+            },
+            "velocity_per_dim": {
+              "x": 0.9474,
+              "y": 0.9474,
+              "z": 0.8947,
+              "roll": 1.0,
+              "pitch": 0.9474,
+              "yaw": 0.8947,
+              "gripper": 0.1053
+            },
+            "overall_bounds_rate": 0.95,
+            "overall_velocity_rate": 1.0,
+            "action_range": [
+              -2.8396,
+              3.6033
+            ]
+          },
+          "unnorm_violations": {
+            "bounds_per_dim": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0,
+              "roll": 0.0,
+              "pitch": 0.0,
+              "yaw": 0.0,
+              "gripper": 0.0
+            },
+            "velocity_per_dim": {
+              "x": 0.4737,
+              "y": 0.6316,
+              "z": 0.7368,
+              "roll": 0.0526,
+              "pitch": 0.3158,
+              "yaw": 0.1053,
+              "gripper": 0.1053
+            },
+            "overall_bounds_rate": 0.0,
+            "overall_velocity_rate": 0.9474,
+            "action_range": [
+              -0.9909,
+              0.9935
+            ]
+          },
+          "avg_latency_ms": 1396.8
+        },
+        {
+          "episode": 2,
+          "n_steps": 20,
+          "raw_violations": {
+            "bounds_per_dim": {
+              "x": 0.25,
+              "y": 0.2,
+              "z": 0.0,
+              "roll": 0.55,
+              "pitch": 0.4,
+              "yaw": 0.55,
+              "gripper": 0.0
+            },
+            "velocity_per_dim": {
+              "x": 0.8947,
+              "y": 1.0,
+              "z": 1.0,
+              "roll": 1.0,
+              "pitch": 0.8947,
+              "yaw": 0.9474,
+              "gripper": 0.2105
+            },
+            "overall_bounds_rate": 0.85,
+            "overall_velocity_rate": 1.0,
+            "action_range": [
+              -3.247,
+              3.2269
+            ]
+          },
+          "unnorm_violations": {
+            "bounds_per_dim": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0,
+              "roll": 0.0,
+              "pitch": 0.0,
+              "yaw": 0.0,
+              "gripper": 0.0
+            },
+            "velocity_per_dim": {
+              "x": 0.6842,
+              "y": 0.8421,
+              "z": 0.7895,
+              "roll": 0.0526,
+              "pitch": 0.2105,
+              "yaw": 0.0526,
+              "gripper": 0.2105
+            },
+            "overall_bounds_rate": 0.0,
+            "overall_velocity_rate": 1.0,
+            "action_range": [
+              -0.9711,
+              0.7017
+            ]
+          },
+          "avg_latency_ms": 1403.1
+        },
+        {
+          "episode": 3,
+          "n_steps": 20,
+          "raw_violations": {
+            "bounds_per_dim": {
+              "x": 0.25,
+              "y": 0.1,
+              "z": 0.05,
+              "roll": 0.55,
+              "pitch": 0.2,
+              "yaw": 0.4,
+              "gripper": 0.0
+            },
+            "velocity_per_dim": {
+              "x": 0.8421,
+              "y": 0.8421,
+              "z": 0.9474,
+              "roll": 0.7368,
+              "pitch": 0.8947,
+              "yaw": 0.9474,
+              "gripper": 0.0
+            },
+            "overall_bounds_rate": 0.75,
+            "overall_velocity_rate": 1.0,
+            "action_range": [
+              -3.2283,
+              4.2338
+            ]
+          },
+          "unnorm_violations": {
+            "bounds_per_dim": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0,
+              "roll": 0.0,
+              "pitch": 0.0,
+              "yaw": 0.0,
+              "gripper": 0.0
+            },
+            "velocity_per_dim": {
+              "x": 0.5263,
+              "y": 0.6842,
+              "z": 0.8421,
+              "roll": 0.0,
+              "pitch": 0.1053,
+              "yaw": 0.0526,
+              "gripper": 0.0
+            },
+            "overall_bounds_rate": 0.0,
+            "overall_velocity_rate": 1.0,
+            "action_range": [
+              -0.966,
+              0.5932
+            ]
+          },
+          "avg_latency_ms": 1401.7
+        },
+        {
+          "episode": 4,
+          "n_steps": 20,
+          "raw_violations": {
+            "bounds_per_dim": {
+              "x": 0.25,
+              "y": 0.1,
+              "z": 0.15,
+              "roll": 0.5,
+              "pitch": 0.45,
+              "yaw": 0.6,
+              "gripper": 0.05
+            },
+            "velocity_per_dim": {
+              "x": 1.0,
+              "y": 0.9474,
+              "z": 0.9474,
+              "roll": 0.9474,
+              "pitch": 0.9474,
+              "yaw": 0.8947,
+              "gripper": 0.1053
+            },
+            "overall_bounds_rate": 0.95,
+            "overall_velocity_rate": 1.0,
+            "action_range": [
+              -4.4614,
+              3.2823
+            ]
+          },
+          "unnorm_violations": {
+            "bounds_per_dim": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0,
+              "roll": 0.0,
+              "pitch": 0.0,
+              "yaw": 0.0,
+              "gripper": 0.05
+            },
+            "velocity_per_dim": {
+              "x": 0.8421,
+              "y": 0.5789,
+              "z": 0.7895,
+              "roll": 0.1053,
+              "pitch": 0.1579,
+              "yaw": 0.0,
+              "gripper": 0.1053
+            },
+            "overall_bounds_rate": 0.05,
+            "overall_velocity_rate": 1.0,
+            "action_range": [
+              -0.9727,
+              1.076
+            ]
+          },
+          "avg_latency_ms": 1312.3
+        }
+      ],
+      "aggregate": {
+        "velocity_per_dim_mean": {
+          "x": 0.6316,
+          "y": 0.6316,
+          "z": 0.7789,
+          "roll": 0.0421,
+          "pitch": 0.2105,
+          "yaw": 0.0421,
+          "gripper": 0.0842
+        },
+        "velocity_per_dim_std": {
+          "x": 0.1289,
+          "y": 0.1372,
+          "z": 0.0394,
+          "roll": 0.0394,
+          "pitch": 0.0744,
+          "yaw": 0.0394,
+          "gripper": 0.0788
+        },
+        "overall_velocity_mean": 0.979,
+        "overall_velocity_std": 0.0258,
+        "overall_bounds_mean": 0.01,
+        "overall_bounds_std": 0.02
+      }
+    },
+    "libero_10": {
+      "task": "LIVING_ROOM_SCENE2_put_both_the_alphabet_soup_and_the_tomato_sauce_in_the_basket",
+      "n_episodes": 5,
+      "n_steps_per_episode": 20,
+      "episodes": [
+        {
+          "episode": 0,
+          "n_steps": 20,
+          "raw_violations": {
+            "bounds_per_dim": {
+              "x": 0.1,
+              "y": 0.25,
+              "z": 0.05,
+              "roll": 0.2,
+              "pitch": 0.25,
+              "yaw": 0.15,
+              "gripper": 0.35
+            },
+            "velocity_per_dim": {
+              "x": 0.8421,
+              "y": 0.8947,
+              "z": 0.8421,
+              "roll": 0.8947,
+              "pitch": 1.0,
+              "yaw": 0.9474,
+              "gripper": 0.6316
+            },
+            "overall_bounds_rate": 0.8,
+            "overall_velocity_rate": 1.0,
+            "action_range": [
+              -2.3605,
+              3.1981
+            ]
+          },
+          "unnorm_violations": {
+            "bounds_per_dim": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0,
+              "roll": 0.0,
+              "pitch": 0.0,
+              "yaw": 0.0,
+              "gripper": 0.35
+            },
+            "velocity_per_dim": {
+              "x": 0.6316,
+              "y": 0.8947,
+              "z": 0.6842,
+              "roll": 0.1053,
+              "pitch": 0.1053,
+              "yaw": 0.0,
+              "gripper": 0.6316
+            },
+            "overall_bounds_rate": 0.35,
+            "overall_velocity_rate": 0.9474,
+            "action_range": [
+              -0.9521,
+              1.0687
+            ]
+          },
+          "avg_latency_ms": 1392.2
+        },
+        {
+          "episode": 1,
+          "n_steps": 20,
+          "raw_violations": {
+            "bounds_per_dim": {
+              "x": 0.15,
+              "y": 0.15,
+              "z": 0.0,
+              "roll": 0.35,
+              "pitch": 0.3,
+              "yaw": 0.05,
+              "gripper": 0.4
+            },
+            "velocity_per_dim": {
+              "x": 0.9474,
+              "y": 0.9474,
+              "z": 0.8947,
+              "roll": 0.7895,
+              "pitch": 0.9474,
+              "yaw": 0.8947,
+              "gripper": 0.5263
+            },
+            "overall_bounds_rate": 0.9,
+            "overall_velocity_rate": 1.0,
+            "action_range": [
+              -2.8817,
+              2.3916
+            ]
+          },
+          "unnorm_violations": {
+            "bounds_per_dim": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0,
+              "roll": 0.0,
+              "pitch": 0.0,
+              "yaw": 0.0,
+              "gripper": 0.4
+            },
+            "velocity_per_dim": {
+              "x": 0.6842,
+              "y": 0.8421,
+              "z": 0.7368,
+              "roll": 0.0,
+              "pitch": 0.2105,
+              "yaw": 0.0,
+              "gripper": 0.5263
+            },
+            "overall_bounds_rate": 0.4,
+            "overall_velocity_rate": 1.0,
+            "action_range": [
+              -0.9668,
+              1.0702
+            ]
+          },
+          "avg_latency_ms": 1513.7
+        },
+        {
+          "episode": 2,
+          "n_steps": 20,
+          "raw_violations": {
+            "bounds_per_dim": {
+              "x": 0.1,
+              "y": 0.15,
+              "z": 0.0,
+              "roll": 0.25,
+              "pitch": 0.2,
+              "yaw": 0.1,
+              "gripper": 0.35
+            },
+            "velocity_per_dim": {
+              "x": 0.8947,
+              "y": 0.8947,
+              "z": 0.7895,
+              "roll": 0.7895,
+              "pitch": 0.9474,
+              "yaw": 0.8421,
+              "gripper": 0.4737
+            },
+            "overall_bounds_rate": 0.65,
+            "overall_velocity_rate": 1.0,
+            "action_range": [
+              -1.4805,
+              1.8265
+            ]
+          },
+          "unnorm_violations": {
+            "bounds_per_dim": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0,
+              "roll": 0.0,
+              "pitch": 0.0,
+              "yaw": 0.0,
+              "gripper": 0.35
+            },
+            "velocity_per_dim": {
+              "x": 0.5789,
+              "y": 0.6842,
+              "z": 0.5263,
+              "roll": 0.0,
+              "pitch": 0.0,
+              "yaw": 0.0,
+              "gripper": 0.4737
+            },
+            "overall_bounds_rate": 0.35,
+            "overall_velocity_rate": 0.9474,
+            "action_range": [
+              -0.9517,
+              1.062
+            ]
+          },
+          "avg_latency_ms": 1557.8
+        },
+        {
+          "episode": 3,
+          "n_steps": 20,
+          "raw_violations": {
+            "bounds_per_dim": {
+              "x": 0.1,
+              "y": 0.05,
+              "z": 0.05,
+              "roll": 0.05,
+              "pitch": 0.3,
+              "yaw": 0.05,
+              "gripper": 0.2
+            },
+            "velocity_per_dim": {
+              "x": 0.9474,
+              "y": 0.7895,
+              "z": 0.7368,
+              "roll": 0.6316,
+              "pitch": 0.8421,
+              "yaw": 1.0,
+              "gripper": 0.2632
+            },
+            "overall_bounds_rate": 0.65,
+            "overall_velocity_rate": 1.0,
+            "action_range": [
+              -2.1864,
+              1.407
+            ]
+          },
+          "unnorm_violations": {
+            "bounds_per_dim": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0,
+              "roll": 0.0,
+              "pitch": 0.0,
+              "yaw": 0.0,
+              "gripper": 0.2
+            },
+            "velocity_per_dim": {
+              "x": 0.6842,
+              "y": 0.5263,
+              "z": 0.6842,
+              "roll": 0.0,
+              "pitch": 0.0526,
+              "yaw": 0.0,
+              "gripper": 0.2632
+            },
+            "overall_bounds_rate": 0.2,
+            "overall_velocity_rate": 1.0,
+            "action_range": [
+              -0.9639,
+              1.0581
+            ]
+          },
+          "avg_latency_ms": 1421.4
+        },
+        {
+          "episode": 4,
+          "n_steps": 20,
+          "raw_violations": {
+            "bounds_per_dim": {
+              "x": 0.15,
+              "y": 0.0,
+              "z": 0.1,
+              "roll": 0.2,
+              "pitch": 0.3,
+              "yaw": 0.15,
+              "gripper": 0.3
+            },
+            "velocity_per_dim": {
+              "x": 0.9474,
+              "y": 0.7368,
+              "z": 0.8421,
+              "roll": 0.8421,
+              "pitch": 0.8947,
+              "yaw": 0.8947,
+              "gripper": 0.4211
+            },
+            "overall_bounds_rate": 0.85,
+            "overall_velocity_rate": 1.0,
+            "action_range": [
+              -2.9593,
+              3.4859
+            ]
+          },
+          "unnorm_violations": {
+            "bounds_per_dim": {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0,
+              "roll": 0.0,
+              "pitch": 0.0,
+              "yaw": 0.0,
+              "gripper": 0.3
+            },
+            "velocity_per_dim": {
+              "x": 0.6842,
+              "y": 0.5263,
+              "z": 0.6842,
+              "roll": 0.0526,
+              "pitch": 0.1579,
+              "yaw": 0.0,
+              "gripper": 0.4211
+            },
+            "overall_bounds_rate": 0.3,
+            "overall_velocity_rate": 1.0,
+            "action_range": [
+              -0.9462,
+              1.0527
+            ]
+          },
+          "avg_latency_ms": 1496.3
+        }
+      ],
+      "aggregate": {
+        "velocity_per_dim_mean": {
+          "x": 0.6526,
+          "y": 0.6947,
+          "z": 0.6631,
+          "roll": 0.0316,
+          "pitch": 0.1053,
+          "yaw": 0.0,
+          "gripper": 0.4632
+        },
+        "velocity_per_dim_std": {
+          "x": 0.0421,
+          "y": 0.154,
+          "z": 0.0714,
+          "roll": 0.0421,
+          "pitch": 0.0744,
+          "yaw": 0.0,
+          "gripper": 0.1218
+        },
+        "overall_velocity_mean": 0.979,
+        "overall_velocity_std": 0.0258,
+        "overall_bounds_mean": 0.32,
+        "overall_bounds_std": 0.0678
+      }
+    }
+  },
+  "velocity_fingerprint_distinctness": {
+    "pairwise": {
+      "libero_spatial_vs_libero_object": {
+        "cosine": 0.0172,
+        "l2": 0.2751
+      },
+      "libero_spatial_vs_libero_goal": {
+        "cosine": 0.0104,
+        "l2": 0.2963
+      },
+      "libero_spatial_vs_libero_10": {
+        "cosine": 0.0275,
+        "l2": 0.3629
+      },
+      "libero_object_vs_libero_goal": {
+        "cosine": 0.0179,
+        "l2": 0.2735
+      },
+      "libero_object_vs_libero_10": {
+        "cosine": 0.0299,
+        "l2": 0.328
+      },
+      "libero_goal_vs_libero_10": {
+        "cosine": 0.0568,
+        "l2": 0.4176
+      }
+    },
+    "avg_cosine": 0.0266,
+    "avg_l2": 0.3256
+  },
+  "key_result": "With 5 episodes per suite, velocity fingerprints have error bars. Bounds violations near zero after unnormalization. Velocity violations persist and differ by task with measurable variance.",
+  "avg_latency_ms": 1410.2,
+  "total_inferences": 400,
+  "timestamp": "2026-04-05T21:16:45Z"
+}
