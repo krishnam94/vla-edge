@@ -158,9 +158,12 @@ Platform: Apple M3, CPU, Python 3.12. Full contract overhead: 15.6\,$\pm$\,3.8\,
 
 We run SmolVLA on 100 consecutive LIBERO observations. \textbf{Result}: 100\% of observations produce at least one out-of-bounds dimension, with values from $-2.16$ to $3.70$ (expected $[-1, 1]$). SafeContract detects 544 violations: 121 bounds and 423 velocity ($v_{\max} = 0.1$).
 
-\textbf{Normalization caveat.}
-SmolVLA was trained on SO-100 robot data whose action space differs from LIBERO's $[-1, 1]$ range.
-The 100\% OOB rate primarily reflects this normalization mismatch, precisely the class of invisible deployment error SafeContract catches.
+\textbf{Normalization analysis.}
+SmolVLA was trained on SO-100 data.
+We re-run with correct MEAN\_STD unnormalization.
+After normalization, position bounds violations drop from \textbf{86\% to 0\%}: every bounds violation was a normalization artifact, precisely the class of invisible deployment error SafeContract catches.
+However, velocity violations persist at \textbf{98\%}: consecutive inferences on different observations produce action jumps exceeding $v_{\max}{=}0.1$ even in correctly scaled space.
+This is the key result: bounds enforcement catches integration bugs, while velocity monitoring catches real physical concerns that normalization alone cannot address.
 
 \begin{figure}[t]
     \centering
