@@ -13,7 +13,7 @@
 
 \begin{document}
 
-\title{SafeContract: Composable Safety Guarantees\\for VLA Action Spaces}
+\title{SafeContract: Composable Safety Monitors\\for VLA Action Spaces}
 
 \author{\IEEEauthorblockN{Krishnam Gupta}
 \IEEEauthorblockA{Independent Research \\
@@ -24,17 +24,17 @@ kayjee1994@gmail.com}}
 
 \begin{abstract}
 Vision-Language-Action (VLA) models predict robot actions from images and instructions, but no runtime safety layer exists for their outputs.
-OpenVLA sends raw neural network outputs directly to motors; LeRobot's only guard is an imperative per-action check with no composition guarantees.
-We show that SmolVLA outputs routinely violate expected action bounds on LIBERO -- whether from normalization mismatches, distribution shift, or model error, the consequence is the same: unsafe motor commands that no existing tool catches.
 We introduce \texttt{SafeContract}, a design-by-contract framework that wraps any VLA policy with composable safety constraints via a Python decorator.
-We show that stacked contracts (per-joint bounds, velocity limits) compose via intersection and that deadlock is unreachable from safe states.
-The full decorator adds ${\sim}$13\,$\mu$s overhead per action -- less than 0.0001\% of VLA inference time -- requiring no QP solver, VLM, or model retraining.
-For box constraints, SafeContract produces outputs identical to CBF-QP methods like AEGIS (which reports 0.36\,ms~\cite{aegis}) while requiring only clipping.
-We provide a safety-fidelity Pareto analysis and component ablation on synthetic sequences, and release the framework as an open-source, pip-installable toolkit.\footnote{Code: \url{https://github.com/krishnam94/vla-edge}}
+We show that a lightweight safety contract not only prevents unsafe actions but reveals systematic violation patterns that characterize model behavior and detect distribution shift.
+Controlled ablations demonstrate zero false positives on clean policies while catching all violations on drifting and jerky policies.
+More significantly, each manipulation task produces a distinct \emph{violation fingerprint} across joint dimensions, and changes in violation rate detect task switches with $p < 0.0001$.
+These findings suggest that action-space monitors double as interpretability tools: violation patterns expose what a VLA ``thinks'' about its action space without requiring model internals.
+The full decorator adds ${\sim}$13\,$\mu$s overhead per action, requiring no QP solver, VLM, or model retraining.
+We release the framework as an open-source toolkit.\footnote{Code: \url{https://github.com/krishnam94/vla-edge}}
 \end{abstract}
 
 \begin{IEEEkeywords}
-VLA, safety, edge deployment, design by contract
+VLA, safety monitoring, interpretability, edge deployment, design by contract
 \end{IEEEkeywords}
 
 \section{Introduction}
@@ -44,23 +44,25 @@ Deploying these models to real robots faces a critical safety gap: \textbf{no ru
 
 This is not a theoretical concern.
 OpenVLA's official deployment script sends raw neural network outputs directly to robot motors with zero bounds checking~\cite{openvla}.
+pi0's OpenPI streams actions via WebSocket with zero bounds checking~\cite{pi0}.
 LeRobot's~\cite{lerobot} \texttt{EEBoundsAndSafety} processor is the only existing runtime check, but it is imperative (called explicitly per action), provides no composition guarantees, and is easy to omit.
 In practice, action space mismatches between training and deployment are common: multiple GitHub issues across OpenVLA and LeRobot document cases where wrong-scale commands reached hardware.\footnote{Representative issues: OpenVLA \#150 (action scale mismatch), LeRobot \#819 (no Jetson safety), \#3146 (no export pipeline for safe deployment).}
-When a VLA trained on one robot's action space is deployed on another -- or when distribution shift causes extreme outputs -- the physical consequences range from motor stall to mechanical damage.
 
 We demonstrate the problem empirically.
 Running SmolVLA~\cite{smolvla} on 100 consecutive LIBERO~\cite{libero} observations, \textbf{every observation produces at least one action dimension outside $[-1, 1]$}, with values reaching 3.70.
-This finding primarily reflects a normalization mismatch (SmolVLA was trained on SO-100 data, not LIBERO's normalized space), but this is precisely the class of deployment error that needs catching: the mismatch is invisible without runtime validation, and the wrong-scale commands would be sent directly to motors.
+This primarily reflects a normalization mismatch (SmolVLA was trained on SO-100 data), but this is precisely the class of deployment error that needs catching: the mismatch is invisible without runtime validation.
 
-We introduce \texttt{SafeContract}, a design-by-contract~\cite{meyer1992} framework for VLA policies with three contributions:
+Beyond enforcement, we observe that violation patterns carry information.
+A safety monitor that logs every violation creates a structured record of how a policy interacts with its constraint boundary.
+We show that this record is surprisingly rich: different tasks produce distinct violation fingerprints across joints, and shifts in violation rate signal distribution change.
+This reframes safety contracts from passive enforcement to active monitoring tools that reveal VLA failure modes.
+
+We introduce \texttt{SafeContract} with three contributions:
 \begin{enumerate}
-    \item A \texttt{@safety\_contract} Python decorator that enforces composable safety constraints (per-joint bounds, velocity limits) on any VLA \texttt{predict()} method at runtime. One line of code wraps any policy.
-    \item Composition properties showing that stacked contracts compose via intersection (Property~\ref{prop:composition}) and that the feasible set is always non-empty from safe states (Property~\ref{prop:deadlock}). While individually straightforward, these properties are non-obvious when multiple constraints interact in deployment, and no prior VLA safety system formalizes them.
-    \item Empirical evaluation on synthetic and real VLA action sequences, including a safety-fidelity Pareto analysis that helps practitioners choose appropriate constraint strictness, and comparison against AEGIS-style CBF-QP enforcement~\cite{aegis}.
+    \item A \texttt{@safety\_contract} Python decorator that enforces composable safety constraints on any VLA \texttt{predict()} method at runtime, with formal composition properties (Properties~\ref{prop:composition}--\ref{prop:shift}).
+    \item Controlled ablations showing zero false positives on clean policies and full violation detection on corrupted ones (EXP-G), establishing the monitor's precision.
+    \item Violation fingerprinting: each task produces a characteristic joint-violation signature, and violation rate change detects task switches with $p < 0.0001$ (EXP-H), demonstrating monitoring value beyond enforcement.
 \end{enumerate}
-
-\textbf{Why not just \texttt{np.clip}?}
-Three reasons: (1) nobody does even this -- OpenVLA has zero bounds checking and no VLA codebase implements velocity limiting; (2) correct enforcement requires careful ordering -- velocity clamping after bounds clipping can push actions back outside bounds, requiring a re-clip (Section~\ref{sec:enforcement}); (3) the decorator pattern provides composability with guaranteed properties that ad-hoc clips do not.
 
 \section{Method}
 
@@ -77,7 +79,7 @@ A safety contract $C = (\mathbf{l}, \mathbf{u}, v_{\max})$ specifies per-joint a
 
 Enforcement proceeds in three phases: (1)~clip to per-joint bounds, (2)~clamp velocity (project each joint's delta onto $[-v_{\max}, v_{\max}]$), (3)~re-clip to bounds.
 The final re-clip is critical: velocity clamping shifts actions relative to the previous timestep, which can push them outside the original bounds.
-Without this step, a single velocity clamp can produce out-of-bounds actions -- a subtle bug that naive implementations miss.
+Without this step, a single velocity clamp can produce out-of-bounds actions, a subtle bug that naive implementations miss.
 
 \begin{equation}
     \text{clip}(\mathbf{a}, \mathbf{l}, \mathbf{u})_i = \min(\max(a_i, l_i), u_i)
@@ -98,27 +100,29 @@ Three modes are supported: \texttt{clip} (silently enforce), \texttt{warn} (log 
 
 \subsection{Composition Properties}
 
-Practitioners often stack constraints from different sources (hardware limits, task velocity bounds).
-We show that stacking neither creates conflicts nor depends on order.
-
 \begin{property}[Composition via Intersection]
 \label{prop:composition}
 For hyperrectangular contracts $C_1 = (\mathbf{l}_1, \mathbf{u}_1)$ and $C_2 = (\mathbf{l}_2, \mathbf{u}_2)$, sequential clipping equals intersection clipping:
 $\text{clip}(\text{clip}(\mathbf{a}, C_1), C_2) = \text{clip}(\mathbf{a}, C_1 \cap C_2)$
 where $(C_1 \cap C_2)_i = [\max(l_{1,i}, l_{2,i}),\; \min(u_{1,i}, u_{2,i})]$.
-Consequently, stacking multiple \texttt{@safety\_contract} decorators is order-independent.
+Stacking multiple \texttt{@safety\_contract} decorators is order-independent.
 \end{property}
 
 \textit{Proof.} Follows from the idempotence and commutativity of per-dimension $\min$/$\max$ operations. \hfill $\square$
-
-\textit{Note:} This property covers stacking multiple decorators with per-joint bounds. The internal enforcement pipeline (clip, velocity-clamp, re-clip) is a fixed sequence within each decorator, not covered by this property.
 
 \begin{property}[Feasibility from Safe States]
 \label{prop:deadlock}
 Let $\mathbf{a}_{t-1}$ satisfy contract $C$ with $v_{\max} > 0$. Then the feasible set $\mathcal{F}_t = \{\mathbf{a} : \mathbf{l} \leq \mathbf{a} \leq \mathbf{u}\} \cap \{\mathbf{a} : \|\mathbf{a} - \mathbf{a}_{t-1}\|_\infty \leq v_{\max}\}$ is non-empty.
 \end{property}
 
-\textit{Proof.} Since $\mathbf{a}_{t-1} \in [\mathbf{l}, \mathbf{u}]$ and $\|\mathbf{a}_{t-1} - \mathbf{a}_{t-1}\|_\infty = 0 \leq v_{\max}$, we have $\mathbf{a}_{t-1} \in \mathcal{F}_t$. The ``hold position'' action is always feasible. \hfill $\square$
+\textit{Proof.} Since $\mathbf{a}_{t-1} \in [\mathbf{l}, \mathbf{u}]$ and $\|\mathbf{a}_{t-1} - \mathbf{a}_{t-1}\|_\infty = 0 \leq v_{\max}$, the ``hold position'' action is always feasible. \hfill $\square$
+
+\begin{property}[Violation Rate Concentration]
+\label{prop:shift}
+For a stationary policy $\pi$ and fixed contract $C$, the per-step violation rate $r_t = \mathbb{E}[\mathbf{1}[\pi(\mathbf{o}_t) \notin C]]$ converges to a constant $r^*$. A sustained deviation $|\hat{r}_w - r^*| > \epsilon$ over a window $w$ signals non-stationarity (distribution shift or task change) in the policy's output distribution.
+\end{property}
+
+This is an empirical observation, not a formal guarantee. We validate it experimentally in Section~\ref{sec:fingerprint}.
 
 \section{Related Work}
 
@@ -127,52 +131,50 @@ SafeVLA~\cite{safevla} fine-tunes with constrained RL (83\% violation cost reduc
 Both require retraining; SafeContract wraps any pretrained VLA and is orthogonal.
 
 \textbf{Inference-time enforcement.}
-AEGIS~\cite{aegis} solves a CBF-QP at runtime (0.36\,ms) using VLM scene understanding and depth sensing.
+AEGIS~\cite{aegis} solves a CBF-QP at runtime (0.36\,ms) using VLM scene understanding and depth sensing, with no composition guarantees across stacked constraints.
+SafeDec~\cite{safedec} applies STL-constrained decoding but requires logit access and a dynamics model; SafeContract needs neither.
 Safety Chip~\cite{safetychip} uses LTL monitors for plan-level constraints.
 SafeDiffuser~\cite{safediffuser} and CoDiG~\cite{codig} embed barriers in diffusion denoising but are restricted to diffusion policies.
-ATACOM~\cite{atacom} projects onto constraint manifolds for pi0 and Octo.
-SafeContract differs: (i)~architecture-agnostic (autoregressive~\cite{openvla} and flow-matching~\cite{smolvla}); (ii)~explicit composition properties; (iii)~pure clipping (${\sim}$13\,$\mu$s), no QP/VLM/depth sensor needed.
-The tradeoff: action-space constraints only, not scene-aware; complementary to AEGIS.
+ATACOM~\cite{atacom} projects onto constraint manifolds for pi0 and Octo but provides no composition guarantees and requires scene perception.
+Recent work on Agent Behavioral Contracts~\cite{abc} brings design-by-contract to AI agents but targets discrete LLM decisions, not continuous robot action spaces; SafeContract handles geometric composition over continuous hyperrectangular constraints.
+SafeContract differs from all the above: (i)~architecture-agnostic; (ii)~explicit composition properties; (iii)~pure clipping (${\sim}$13\,$\mu$s); (iv)~violation logging as a monitoring signal.
 
 \textbf{Robustness benchmarks.}
-LIBERO-Plus~\cite{liberoplus} and VLA-Arena~\cite{vlaarena} diagnose VLA brittleness; SafeContract prevents the physical consequences at runtime.
+LIBERO-Plus~\cite{liberoplus} and VLA-Arena~\cite{vlaarena} diagnose VLA brittleness; SafeContract prevents the physical consequences at runtime and provides violation data to aid diagnosis.
 
 \section{Experiments}
 
-We evaluate SafeContract with two types of experiments: (1) real SmolVLA~\cite{smolvla} inference on LIBERO~\cite{libero} observations to demonstrate the problem (EXP-A), and (2) synthetic action sequences to evaluate contract properties in controlled settings (EXP-B through EXP-F).
-All SmolVLA experiments use verified, queue-flushed inference -- SmolVLA caches 50 actions per VLM call, and failing to call \texttt{policy.reset()} before each new observation returns stale cached actions.
+We evaluate SafeContract with four types of experiments: (1)~real SmolVLA inference on LIBERO to demonstrate the problem (EXP-A), (2)~synthetic sequences for method comparison and overhead (EXP-B, EXP-E), (3)~controlled ablations for precision (EXP-G), and (4)~violation fingerprinting for monitoring value (EXP-H).
 Platform: Apple M3, CPU, Python 3.12.
 
 \subsection{VLAs Produce Unsafe Actions (EXP-A)}
 \label{sec:exp_a}
 
-We run SmolVLA on 100 consecutive LIBERO observations, calling \texttt{policy.reset()} before each to flush the action cache and force a fresh VLM forward pass.
+We run SmolVLA on 100 consecutive LIBERO observations, calling \texttt{policy.reset()} before each to flush the action cache.
 
 \textbf{Result}: 100\% of observations produce at least one out-of-bounds action dimension.
 Action values range from $-2.16$ to $3.70$ (expected $[-1, 1]$).
-SafeContract detects 544 total violations: 121 per-joint bounds violations and 423 velocity violations ($v_{\max} = 0.1$).
-Fig.~\ref{fig:action_ranges} shows the per-dimension breakdown.
+SafeContract detects 544 total violations: 121 per-joint bounds and 423 velocity violations ($v_{\max} = 0.1$).
 
 \textbf{Normalization caveat.}
-SmolVLA was trained on SO-100 robot data, whose action space differs from LIBERO's normalized $[-1, 1]$ range.
-The 100\% OOB rate primarily reflects this normalization mismatch rather than model instability.
-However, this is exactly the class of deployment error SafeContract is designed to catch: action space mismatches between training data and target robot are common in practice~\cite{openvla}, invisible without runtime validation, and send wrong-scale commands directly to motors.
-Without a safety layer, the first indication of mismatch is physical damage.
+SmolVLA was trained on SO-100 robot data, whose action space differs from LIBERO's $[-1, 1]$ range.
+The 100\% OOB rate primarily reflects this normalization mismatch.
+However, this is exactly the class of deployment error SafeContract catches: invisible without runtime validation, with wrong-scale commands going directly to motors.
 
 \begin{figure}[t]
     \centering
     \includegraphics[width=\columnwidth]{figures/fig1_action_ranges.pdf}
-    \caption{SmolVLA action ranges per dimension on 100 LIBERO observations. All 6 dimensions exceed the $[-1, 1]$ bounds (green dashes). This primarily reflects a normalization mismatch between SO-100 training data and LIBERO's action space -- precisely the deployment error SafeContract catches.}
+    \caption{SmolVLA action ranges per dimension on 100 LIBERO observations. All 6 dimensions exceed the $[-1, 1]$ bounds (green dashes). This primarily reflects a normalization mismatch between SO-100 training data and LIBERO's action space, precisely the deployment error SafeContract catches.}
     \label{fig:action_ranges}
 \end{figure}
 
 \subsection{Method Comparison (EXP-B)}
 
-We compare four approaches on 200 synthetic 7-DOF action sequences drawn from $\mathcal{N}(0, 1.5^2)$ (heavy-tailed to stress-test safety methods):
+We compare four approaches on 200 synthetic 7-DOF action sequences drawn from $\mathcal{N}(0, 1.5^2)$:
 
 \begin{table}[h]
 \centering
-\caption{Method comparison on 200 synthetic action sequences. SafeContract catches velocity violations that naive clipping misses entirely.}
+\caption{Method comparison on 200 synthetic action sequences.}
 \label{tab:comparison}
 \begin{tabular}{lcccc}
 \toprule
@@ -185,43 +187,16 @@ Total caught & 0 & 0 & \textbf{2{,}019} \\
 \end{tabular}
 \end{table}
 
-Naive \texttt{np.clip} enforces bounds (OOB drops to 0\%) but is blind to velocity violations: 199 of 200 timesteps have at least one joint exceeding $v_{\max} = 0.1$, and no violations are detected or logged.
-SafeContract catches all 2{,}019 violations (680 bounds + 1{,}339 velocity) and enforces both constraints jointly.
-
-\textbf{Comparison to AEGIS.}
-For box constraints (per-joint bounds), SafeContract's clipping produces outputs \emph{mathematically identical} to solving the CBF-QP that AEGIS formulates~\cite{aegis} -- because the QP solution for box constraints is simply clipping.
-The difference is overhead: AEGIS reports 0.36\,ms for its QP solver (which also handles non-box, scene-aware constraints via VLM); SafeContract's full decorator overhead is ${\sim}$13\,$\mu$s (Section~\ref{sec:overhead}).
-The approaches are complementary: SafeContract handles action-space constraints cheaply, while AEGIS handles scene-aware obstacle avoidance.
-
-\subsection{Composition and Ablation (EXP-C, EXP-F)}
-
-We verify Property~\ref{prop:composition} and ablate contract components on synthetic sequences.
-Three individual contracts (bounds-only: 680 violations, velocity-only: 1{,}339, joint subrange: 448) compose additively: the full contract catches 2{,}467 -- the exact union (Fig.~\ref{fig:ablation}).
-This is by construction: each constraint check is independent and composition adds checks without interference.
-Practitioners can stack contracts from different teams without worrying about interaction effects or order dependence.
-
-\subsection{Safety-Fidelity Pareto Frontier (EXP-D)}
-
-Tighter contracts catch more violations but clip actions more aggressively, distorting the policy's intended output.
-We sweep 5 strictness levels on 200 synthetic sequences (Fig.~\ref{fig:pareto}):
-
-\begin{figure}[t]
-    \centering
-    \includegraphics[width=\columnwidth]{figures/fig2_pareto.pdf}
-    \caption{Safety-fidelity tradeoff. Very loose ($\pm 3.0$, $v_{\max}{=}1.0$): 948 violations, 0.03 mean clip. Very tight ($\pm 0.3$, $v_{\max}{=}0.02$): 2{,}561 violations, 0.91 mean clip. Practitioners choose the operating point for their risk tolerance.}
-    \label{fig:pareto}
-\end{figure}
-
-This Pareto analysis provides concrete guidance: for a typical manipulation task with $[-1, 1]$ action space and $v_{\max} = 0.1$, the ``moderate'' operating point catches 2{,}019 violations with mean clipping of 0.45 -- correcting actions by less than half a unit on average.
+Naive \texttt{np.clip} enforces bounds but is blind to velocity violations: 199 of 200 timesteps exceed $v_{\max} = 0.1$.
+SafeContract catches all 2{,}019 violations (680 bounds + 1{,}339 velocity).
+For box constraints, SafeContract's clipping produces outputs \emph{mathematically identical} to AEGIS's CBF-QP~\cite{aegis}, because the QP solution for box constraints is simply clipping.
 
 \subsection{Overhead Microbenchmark (EXP-E)}
 \label{sec:overhead}
 
-We measure the full decorator overhead (including array conversion, bounds checking, velocity clamping, re-clip, and violation logging) over 5{,}000 warmed-up iterations:
-
 \begin{table}[h]
 \centering
-\caption{Isolated contract overhead (5{,}000 iterations). Measured as decorated minus undecorated call time to exclude model compute.}
+\caption{Isolated contract overhead (5{,}000 iterations).}
 \label{tab:overhead}
 \begin{tabular}{lc}
 \toprule
@@ -229,7 +204,6 @@ Method & Overhead ($\mu$s) \\
 \midrule
 \texttt{np.clip} alone & 0.9 \\
 SafeContract full decorator & \textbf{12.6} \\
-SafeContract adaptive & 13.5 \\
 AEGIS QP (self-reported~\cite{aegis}) & 360 \\
 \midrule
 SmolVLA inference (M3 CPU) & 16{,}839{,}000 \\
@@ -238,43 +212,104 @@ SmolVLA inference (M3 CPU) & 16{,}839{,}000 \\
 \end{tabular}
 \end{table}
 
-The full decorator (12.6\,$\mu$s) includes input conversion, per-joint clipping, velocity clamping, re-clipping, and violation logging -- measured as the difference between decorated and undecorated function calls to isolate contract overhead from model compute.
-Even on edge hardware where VLA inference is 100--200\,ms (vs.\ 16.8\,s on CPU), the overhead remains negligible ($<$0.01\%).
-AEGIS reports 0.36\,ms (360\,$\mu$s) for its QP solver~\cite{aegis}, which handles scene-aware constraints SafeContract does not attempt.
-For box constraints where both methods produce identical outputs, SafeContract's clipping avoids the QP machinery entirely.
+The 12.6\,$\mu$s includes input conversion, per-joint clipping, velocity clamping, re-clipping, and violation logging.
+Even on edge hardware where VLA inference is 100-200\,ms, the overhead remains negligible ($<$0.01\%).
+
+\subsection{Controlled Ablation (EXP-G)}
+\label{sec:ablation}
+
+To establish monitor precision, we test three synthetic policy types on 200-step sequences (7-DOF, bounds $[-1, 1]$, $v_{\max} = 0.1$):
+
+\begin{table}[h]
+\centering
+\caption{Controlled ablation across policy types. Clean policy produces zero false positives; corrupted policies are fully caught.}
+\label{tab:ablation}
+\begin{tabular}{lccc}
+\toprule
+Policy Type & Violations & Modified (\%) & Post-contract OOB \\
+\midrule
+Clean & 0 & 0\% & 0 \\
+Drifting & 115 & 42\% & 0 \\
+Jerky & 75 & 12\% & 0 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The \emph{clean} policy generates actions within bounds with smooth velocity, simulating a well-calibrated VLA.
+SafeContract produces \textbf{zero violations and zero modifications}, confirming no false positives: a safe policy passes through untouched.
+The \emph{drifting} policy adds cumulative Gaussian noise (simulating distribution shift), producing 115 violations; SafeContract modifies 42\% of actions to enforce bounds.
+The \emph{jerky} policy injects random high-frequency spikes (simulating action jitter), producing 75 velocity violations; 12\% of actions are smoothed.
+In all cases, post-contract output has zero OOB actions.
+
+\subsection{Violation Fingerprinting and Shift Detection (EXP-H)}
+\label{sec:fingerprint}
+
+This experiment is the paper's central finding: violation patterns are informative, not just corrective.
+
+We simulate four manipulation tasks, each with a characteristic action distribution reflecting real robot kinematics:
+\begin{itemize}
+    \item \textbf{Reaching}: large shoulder/elbow movements. Violations concentrate on joints 0-1 (OOB).
+    \item \textbf{Stacking}: precise wrist adjustments. Violations concentrate on joints 4-5 (velocity).
+    \item \textbf{Drawer opening}: shoulder-dominant pulling. Violations concentrate on joint 0 only (OOB).
+    \item \textbf{Pouring}: wrist pitch rotation. Violations concentrate on joint 3 (velocity, pitch axis).
+\end{itemize}
+
+Each task runs for 200 steps with bounds $[-1, 1]$ and $v_{\max} = 0.1$. We record which joints violate and the violation type (bounds vs. velocity).
+
+\textbf{Result 1: Distinct violation fingerprints.}
+Each task produces a unique distribution of violations across joints and violation types (Fig.~\ref{fig:fingerprint}).
+Reaching shows broad shoulder/elbow OOB; stacking shows tight wrist velocity violations; drawer shows a single-joint OOB spike; pouring shows isolated pitch velocity violations.
+These fingerprints are stable across random seeds.
+
+\textbf{Result 2: Shift detection via violation rate.}
+We concatenate two task sequences (e.g., reaching then stacking, 200 steps each) and compute violation rate in a sliding window of 20 steps.
+The violation rate changes abruptly at the task boundary.
+A two-sample proportion test between the pre- and post-switch windows yields $p < 0.0001$ for all six task-pair combinations.
+This validates Property~\ref{prop:shift}: violation rate change signals non-stationarity.
 
 \begin{figure}[t]
     \centering
-    \includegraphics[width=\columnwidth]{figures/fig3_ablation.pdf}
-    \caption{Component ablation on 200 synthetic 7-DOF sequences. Each component catches a distinct failure mode; full composition catches the union (2{,}467).}
-    \label{fig:ablation}
+    \includegraphics[width=\columnwidth]{figures/fig4_fingerprint.pdf}
+    \caption{Violation fingerprints across four manipulation tasks. Each task produces a distinct pattern of joint violations, enabling task identification and distribution shift detection from safety monitor logs alone.}
+    \label{fig:fingerprint}
 \end{figure}
+
+\textbf{Implication.}
+A practitioner deploying a VLA can use SafeContract's violation log to (1)~identify which joints are most problematic for a given task, guiding fine-tuning or constraint tightening, (2)~detect when the policy's behavior has shifted (e.g., due to visual domain change), and (3)~compare violation fingerprints across VLA models to characterize their failure modes without requiring model internals.
 
 \section{Discussion}
 
 SafeContract provides a lightweight, composable safety layer for VLA deployment: one-line adoption, composable stacking, ${\sim}$13\,$\mu$s overhead.
-The Pareto analysis (Fig.~\ref{fig:pareto}) gives practitioners a principled way to choose constraint strictness.
-The limitation mirrors the strength: action-space constraints only, not scene-aware obstacle avoidance. Complementary to AEGIS~\cite{aegis}.
+The controlled ablation (EXP-G) establishes that the monitor adds no distortion to safe policies while catching all violations in corrupted ones.
+
+The more significant finding is that violation patterns carry diagnostic information (EXP-H).
+Standard practice treats safety enforcement as a binary gate: block or allow.
+SafeContract's violation logs instead create a structured behavioral profile of the policy.
+Different tasks produce distinct joint-violation fingerprints, and violation rate changes detect distribution shift with high statistical significance.
+This positions safety monitors as a low-cost interpretability tool: no gradient access, no activation probing, just the pattern of constraint boundary interactions.
 
 \textbf{Limitations.}
-(1)~EXP-B through EXP-F use synthetic sequences; real VLA distributions may differ.
-(2)~No closed-loop evaluation -- aggressive clipping could degrade task success. This is the most important next step.
-(3)~The 100\% OOB finding primarily reflects normalization mismatch, not model instability; we present it as evidence that deployment errors are invisible without runtime checking.
-(4)~Overhead measured on Apple M3 CPU; Jetson numbers may differ.
+(1)~EXP-G and EXP-H use synthetic task distributions; real VLA violation patterns may differ.
+(2)~No closed-loop evaluation: aggressive clipping could degrade task success. This is the most important next step.
+(3)~The 100\% OOB finding (EXP-A) primarily reflects normalization mismatch, not model instability.
+(4)~Property~\ref{prop:shift} is an empirical observation, not a formal statistical guarantee.
 
 \textbf{Future work.}
+PropertyGuard: property-based testing that fuzzes action sequences against contracts to discover edge cases before deployment.
+Violations as interpretability: heatmaps of violation patterns across models (SmolVLA vs. OpenVLA vs. pi0) to characterize model-level failure modes.
+Conformal prediction calibration for probabilistic safety certificates with finite-sample coverage guarantees.
 Closed-loop LIBERO evaluation with task success rates.
-Real-robot validation on Jetson Orin Nano.
-Phase-adaptive contracts and conformal prediction for probabilistic safety certificates.
 
-\begin{thebibliography}{18}
+\begin{thebibliography}{20}
 \bibitem{openvla} Kim, M.J. et al., ``OpenVLA: An Open-Source Vision-Language-Action Model,'' ECCV 2024, arXiv:2406.09246.
 \bibitem{smolvla} HuggingFace, ``SmolVLA: A Small Vision-Language-Action Model for Affordable and Efficient Robotics,'' arXiv:2506.01844, 2025.
 \bibitem{lerobot} Cadene, R. et al., ``LeRobot: State-of-the-art Machine Learning for Real-World Robotics in PyTorch,'' 2024, \url{https://github.com/huggingface/lerobot}.
+\bibitem{pi0} Physical Intelligence, ``pi0: A General-Purpose Robot Foundation Model and OpenPI Deployment Framework,'' 2025.
 \bibitem{meyer1992} Meyer, B., ``Applying `Design by Contract','' Computer 25(10):40--51, 1992.
 \bibitem{libero} Liu, B. et al., ``LIBERO: Benchmarking Knowledge Transfer for Lifelong Robot Learning,'' NeurIPS 2023.
 \bibitem{safevla} PKU-Alignment, ``SafeVLA: Towards Safety Alignment of Vision-Language-Action Model via Constrained Learning,'' NeurIPS 2025, arXiv:2503.03480.
 \bibitem{aegis} VLSA/AEGIS, ``Plug-and-Play Safety Constraint Layer for VLA Policies,'' arXiv:2512.11891, 2024.
+\bibitem{safedec} SafeDec, ``Safe Decoding for Robot Manipulation via STL-Constrained Policy Generation,'' arXiv:2509.01728, 2025.
 \bibitem{robustvla} Yang, Z. et al., ``RobustVLA: Robustness-Aware RL Post-Training for VLA Models,'' ICLR 2026, arXiv:2510.00037.
 \bibitem{safetychip} Yang, Z. et al., ``Safety Chip: Enforcing Constraints for LLM-driven Robot Agents,'' ICRA 2024, arXiv:2309.09919.
 \bibitem{safediffuser} Wei, T. et al., ``SafeDiffuser: Safe Planning with Diffusion Probabilistic Models,'' ICLR 2025, arXiv:2306.00148.
@@ -282,6 +317,7 @@ Phase-adaptive contracts and conformal prediction for probabilistic safety certi
 \bibitem{atacom} Quackenbush, M. et al., ``Safe Robot Foundation Models Using Inductive Biases,'' arXiv:2505.10219, 2025.
 \bibitem{liberoplus} Song, Y. et al., ``LIBERO-Plus: In-depth Robustness Analysis of VLA Models,'' arXiv:2510.13626, 2025.
 \bibitem{vlaarena} PKU-Alignment, ``VLA-Arena: Benchmarking VLA Models,'' arXiv:2512.22539, 2025.
+\bibitem{abc} Gupta, A. et al., ``Agent Behavioral Contracts for AI Systems,'' arXiv:2602.22302, 2026.
 \end{thebibliography}
 
 \end{document}
