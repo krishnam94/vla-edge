@@ -1,0 +1,675 @@
+{
+  "experiment": "EXP-ACT-FP: ACT Violation Fingerprint on ALOHA",
+  "model": "lerobot/act_aloha_sim_transfer_cube_human",
+  "model_params": "51.6M",
+  "dataset": "lerobot/aloha_sim_transfer_cube_human",
+  "action_dim": 14,
+  "n_samples": 50,
+  "consecutive": true,
+  "episode": 0,
+  "device": "cpu",
+  "joint_names": [
+    "left_waist",
+    "left_shoulder",
+    "left_elbow",
+    "left_forearm_roll",
+    "left_wrist_angle",
+    "left_wrist_rotate",
+    "left_gripper",
+    "right_waist",
+    "right_shoulder",
+    "right_elbow",
+    "right_forearm_roll",
+    "right_wrist_angle",
+    "right_wrist_rotate",
+    "right_gripper"
+  ],
+  "physical_bounds_analysis": {
+    "bounds": "ALOHA_ACTION_BOUNDS (physical joint limits)",
+    "v_max": 0.1,
+    "model_violations": {
+      "bounds_per_dim": {
+        "left_waist": 0.0,
+        "left_shoulder": 0.0,
+        "left_elbow": 0.0,
+        "left_forearm_roll": 0.0,
+        "left_wrist_angle": 0.0,
+        "left_wrist_rotate": 0.0,
+        "left_gripper": 0.0,
+        "right_waist": 0.0,
+        "right_shoulder": 0.0,
+        "right_elbow": 0.0,
+        "right_forearm_roll": 0.0,
+        "right_wrist_angle": 0.0,
+        "right_wrist_rotate": 0.0,
+        "right_gripper": 0.0
+      },
+      "velocity_per_dim": {
+        "left_waist": 0.0,
+        "left_shoulder": 0.0,
+        "left_elbow": 0.0,
+        "left_forearm_roll": 0.0,
+        "left_wrist_angle": 0.0,
+        "left_wrist_rotate": 0.0,
+        "left_gripper": 0.0,
+        "right_waist": 0.0,
+        "right_shoulder": 0.0,
+        "right_elbow": 0.0,
+        "right_forearm_roll": 0.0,
+        "right_wrist_angle": 0.0,
+        "right_wrist_rotate": 0.0,
+        "right_gripper": 0.0
+      },
+      "overall_bounds_rate": 0.0,
+      "overall_velocity_rate": 0.0,
+      "action_range": [
+        -0.9934,
+        1.2036
+      ],
+      "per_dim_range": {
+        "left_waist": [
+          -0.0173,
+          -0.0166
+        ],
+        "left_shoulder": [
+          -0.9315,
+          -0.8129
+        ],
+        "left_elbow": [
+          1.1743,
+          1.1814
+        ],
+        "left_forearm_roll": [
+          -0.0041,
+          -0.0019
+        ],
+        "left_wrist_angle": [
+          -0.4002,
+          -0.3217
+        ],
+        "left_wrist_rotate": [
+          0.003,
+          0.0126
+        ],
+        "left_gripper": [
+          0.1707,
+          0.1797
+        ],
+        "right_waist": [
+          -0.0632,
+          0.0108
+        ],
+        "right_shoulder": [
+          -0.9934,
+          -0.6138
+        ],
+        "right_elbow": [
+          1.1775,
+          1.2036
+        ],
+        "right_forearm_roll": [
+          -0.0008,
+          0.0144
+        ],
+        "right_wrist_angle": [
+          -0.3141,
+          -0.1971
+        ],
+        "right_wrist_rotate": [
+          0.0041,
+          0.055
+        ],
+        "right_gripper": [
+          0.1737,
+          0.3692
+        ]
+      },
+      "action_mean_per_dim": {
+        "left_waist": -0.017,
+        "left_shoulder": -0.8753,
+        "left_elbow": 1.1774,
+        "left_forearm_roll": -0.003,
+        "left_wrist_angle": -0.3584,
+        "left_wrist_rotate": 0.0082,
+        "left_gripper": 0.1741,
+        "right_waist": -0.0113,
+        "right_shoulder": -0.8229,
+        "right_elbow": 1.1871,
+        "right_forearm_roll": 0.0053,
+        "right_wrist_angle": -0.2673,
+        "right_wrist_rotate": 0.0315,
+        "right_gripper": 0.2015
+      },
+      "action_std_per_dim": {
+        "left_waist": 0.0002,
+        "left_shoulder": 0.0425,
+        "left_elbow": 0.0015,
+        "left_forearm_roll": 0.0008,
+        "left_wrist_angle": 0.0271,
+        "left_wrist_rotate": 0.0038,
+        "left_gripper": 0.0024,
+        "right_waist": 0.0266,
+        "right_shoulder": 0.1298,
+        "right_elbow": 0.0083,
+        "right_forearm_roll": 0.0055,
+        "right_wrist_angle": 0.0469,
+        "right_wrist_rotate": 0.0196,
+        "right_gripper": 0.0446
+      }
+    },
+    "gt_violations": {
+      "bounds_per_dim": {
+        "left_waist": 0.0,
+        "left_shoulder": 0.0,
+        "left_elbow": 0.0,
+        "left_forearm_roll": 0.0,
+        "left_wrist_angle": 0.0,
+        "left_wrist_rotate": 0.0,
+        "left_gripper": 0.0,
+        "right_waist": 0.0,
+        "right_shoulder": 0.0,
+        "right_elbow": 0.0,
+        "right_forearm_roll": 0.0,
+        "right_wrist_angle": 0.0,
+        "right_wrist_rotate": 0.0,
+        "right_gripper": 0.0
+      },
+      "velocity_per_dim": {
+        "left_waist": 0.0,
+        "left_shoulder": 0.0,
+        "left_elbow": 0.0,
+        "left_forearm_roll": 0.0,
+        "left_wrist_angle": 0.0,
+        "left_wrist_rotate": 0.0,
+        "left_gripper": 0.0,
+        "right_waist": 0.0,
+        "right_shoulder": 0.0,
+        "right_elbow": 0.0,
+        "right_forearm_roll": 0.0,
+        "right_wrist_angle": 0.0,
+        "right_wrist_rotate": 0.0,
+        "right_gripper": 0.0
+      },
+      "overall_bounds_rate": 0.0,
+      "overall_velocity_rate": 0.0,
+      "action_range": [
+        -0.9296,
+        1.2057
+      ],
+      "per_dim_range": {
+        "left_waist": [
+          -0.0138,
+          -0.0138
+        ],
+        "left_shoulder": [
+          -0.9296,
+          -0.8053
+        ],
+        "left_elbow": [
+          1.1796,
+          1.1904
+        ],
+        "left_forearm_roll": [
+          -0.0061,
+          -0.0031
+        ],
+        "left_wrist_angle": [
+          -0.4096,
+          -0.3298
+        ],
+        "left_wrist_rotate": [
+          -0.0015,
+          0.0046
+        ],
+        "left_gripper": [
+          0.1637,
+          0.1637
+        ],
+        "right_waist": [
+          -0.0706,
+          0.0107
+        ],
+        "right_shoulder": [
+          -0.9296,
+          -0.5722
+        ],
+        "right_elbow": [
+          1.1689,
+          1.2057
+        ],
+        "right_forearm_roll": [
+          -0.0031,
+          0.0307
+        ],
+        "right_wrist_angle": [
+          -0.3206,
+          -0.1779
+        ],
+        "right_wrist_rotate": [
+          0.0153,
+          0.0399
+        ],
+        "right_gripper": [
+          0.19,
+          0.4328
+        ]
+      },
+      "action_mean_per_dim": {
+        "left_waist": -0.0138,
+        "left_shoulder": -0.8598,
+        "left_elbow": 1.186,
+        "left_forearm_roll": -0.0043,
+        "left_wrist_angle": -0.3788,
+        "left_wrist_rotate": 0.0023,
+        "left_gripper": 0.1637,
+        "right_waist": -0.013,
+        "right_shoulder": -0.7761,
+        "right_elbow": 1.1878,
+        "right_forearm_roll": 0.0102,
+        "right_wrist_angle": -0.2641,
+        "right_wrist_rotate": 0.0233,
+        "right_gripper": 0.2113
+      },
+      "action_std_per_dim": {
+        "left_waist": 0.0,
+        "left_shoulder": 0.0382,
+        "left_elbow": 0.0033,
+        "left_forearm_roll": 0.0011,
+        "left_wrist_angle": 0.0289,
+        "left_wrist_rotate": 0.0011,
+        "left_gripper": 0.0,
+        "right_waist": 0.0327,
+        "right_shoulder": 0.1297,
+        "right_elbow": 0.0123,
+        "right_forearm_roll": 0.0129,
+        "right_wrist_angle": 0.0589,
+        "right_wrist_rotate": 0.0078,
+        "right_gripper": 0.0516
+      }
+    }
+  },
+  "datadriven_bounds_analysis": {
+    "bounds": "mean +/- 4*std (from training normalization stats)",
+    "bounds_lo": [
+      -0.05767592415213585,
+      -1.8111315965652466,
+      0.3632230758666992,
+      -0.23001879453659058,
+      -1.0654526948928833,
+      -0.42503929138183594,
+      -0.10000000149011612,
+      -0.46118006110191345,
+      -1.428993582725525,
+      0.1773967146873474,
+      -1.2658718824386597,
+      -1.5467147827148438,
+      -2.3557205200195312,
+      -0.10000000149011612
+    ],
+    "bounds_hi": [
+      0.04254702851176262,
+      0.5547629594802856,
+      1.6993436813354492,
+      0.13673251867294312,
+      0.12122520804405212,
+      0.2759853005409241,
+      1.100000023841858,
+      0.3868049681186676,
+      0.7767647504806519,
+      1.6220433712005615,
+      0.8384503126144409,
+      0.9099068641662598,
+      1.8885011672973633,
+      1.100000023841858
+    ],
+    "v_max": 0.05,
+    "model_violations": {
+      "bounds_per_dim": {
+        "left_waist": 0.0,
+        "left_shoulder": 0.0,
+        "left_elbow": 0.0,
+        "left_forearm_roll": 0.0,
+        "left_wrist_angle": 0.0,
+        "left_wrist_rotate": 0.0,
+        "left_gripper": 0.0,
+        "right_waist": 0.0,
+        "right_shoulder": 0.0,
+        "right_elbow": 0.0,
+        "right_forearm_roll": 0.0,
+        "right_wrist_angle": 0.0,
+        "right_wrist_rotate": 0.0,
+        "right_gripper": 0.0
+      },
+      "velocity_per_dim": {
+        "left_waist": 0.0,
+        "left_shoulder": 0.0,
+        "left_elbow": 0.0,
+        "left_forearm_roll": 0.0,
+        "left_wrist_angle": 0.0,
+        "left_wrist_rotate": 0.0,
+        "left_gripper": 0.0,
+        "right_waist": 0.0,
+        "right_shoulder": 0.0,
+        "right_elbow": 0.0,
+        "right_forearm_roll": 0.0,
+        "right_wrist_angle": 0.0,
+        "right_wrist_rotate": 0.0,
+        "right_gripper": 0.0
+      },
+      "overall_bounds_rate": 0.0,
+      "overall_velocity_rate": 0.0,
+      "action_range": [
+        -0.9934,
+        1.2036
+      ],
+      "per_dim_range": {
+        "left_waist": [
+          -0.0173,
+          -0.0166
+        ],
+        "left_shoulder": [
+          -0.9315,
+          -0.8129
+        ],
+        "left_elbow": [
+          1.1743,
+          1.1814
+        ],
+        "left_forearm_roll": [
+          -0.0041,
+          -0.0019
+        ],
+        "left_wrist_angle": [
+          -0.4002,
+          -0.3217
+        ],
+        "left_wrist_rotate": [
+          0.003,
+          0.0126
+        ],
+        "left_gripper": [
+          0.1707,
+          0.1797
+        ],
+        "right_waist": [
+          -0.0632,
+          0.0108
+        ],
+        "right_shoulder": [
+          -0.9934,
+          -0.6138
+        ],
+        "right_elbow": [
+          1.1775,
+          1.2036
+        ],
+        "right_forearm_roll": [
+          -0.0008,
+          0.0144
+        ],
+        "right_wrist_angle": [
+          -0.3141,
+          -0.1971
+        ],
+        "right_wrist_rotate": [
+          0.0041,
+          0.055
+        ],
+        "right_gripper": [
+          0.1737,
+          0.3692
+        ]
+      },
+      "action_mean_per_dim": {
+        "left_waist": -0.017,
+        "left_shoulder": -0.8753,
+        "left_elbow": 1.1774,
+        "left_forearm_roll": -0.003,
+        "left_wrist_angle": -0.3584,
+        "left_wrist_rotate": 0.0082,
+        "left_gripper": 0.1741,
+        "right_waist": -0.0113,
+        "right_shoulder": -0.8229,
+        "right_elbow": 1.1871,
+        "right_forearm_roll": 0.0053,
+        "right_wrist_angle": -0.2673,
+        "right_wrist_rotate": 0.0315,
+        "right_gripper": 0.2015
+      },
+      "action_std_per_dim": {
+        "left_waist": 0.0002,
+        "left_shoulder": 0.0425,
+        "left_elbow": 0.0015,
+        "left_forearm_roll": 0.0008,
+        "left_wrist_angle": 0.0271,
+        "left_wrist_rotate": 0.0038,
+        "left_gripper": 0.0024,
+        "right_waist": 0.0266,
+        "right_shoulder": 0.1298,
+        "right_elbow": 0.0083,
+        "right_forearm_roll": 0.0055,
+        "right_wrist_angle": 0.0469,
+        "right_wrist_rotate": 0.0196,
+        "right_gripper": 0.0446
+      }
+    },
+    "gt_violations": {
+      "bounds_per_dim": {
+        "left_waist": 0.0,
+        "left_shoulder": 0.0,
+        "left_elbow": 0.0,
+        "left_forearm_roll": 0.0,
+        "left_wrist_angle": 0.0,
+        "left_wrist_rotate": 0.0,
+        "left_gripper": 0.0,
+        "right_waist": 0.0,
+        "right_shoulder": 0.0,
+        "right_elbow": 0.0,
+        "right_forearm_roll": 0.0,
+        "right_wrist_angle": 0.0,
+        "right_wrist_rotate": 0.0,
+        "right_gripper": 0.0
+      },
+      "velocity_per_dim": {
+        "left_waist": 0.0,
+        "left_shoulder": 0.0,
+        "left_elbow": 0.0,
+        "left_forearm_roll": 0.0,
+        "left_wrist_angle": 0.0,
+        "left_wrist_rotate": 0.0,
+        "left_gripper": 0.0,
+        "right_waist": 0.0,
+        "right_shoulder": 0.0,
+        "right_elbow": 0.0,
+        "right_forearm_roll": 0.0,
+        "right_wrist_angle": 0.0,
+        "right_wrist_rotate": 0.0,
+        "right_gripper": 0.0
+      },
+      "overall_bounds_rate": 0.0,
+      "overall_velocity_rate": 0.0,
+      "action_range": [
+        -0.9296,
+        1.2057
+      ],
+      "per_dim_range": {
+        "left_waist": [
+          -0.0138,
+          -0.0138
+        ],
+        "left_shoulder": [
+          -0.9296,
+          -0.8053
+        ],
+        "left_elbow": [
+          1.1796,
+          1.1904
+        ],
+        "left_forearm_roll": [
+          -0.0061,
+          -0.0031
+        ],
+        "left_wrist_angle": [
+          -0.4096,
+          -0.3298
+        ],
+        "left_wrist_rotate": [
+          -0.0015,
+          0.0046
+        ],
+        "left_gripper": [
+          0.1637,
+          0.1637
+        ],
+        "right_waist": [
+          -0.0706,
+          0.0107
+        ],
+        "right_shoulder": [
+          -0.9296,
+          -0.5722
+        ],
+        "right_elbow": [
+          1.1689,
+          1.2057
+        ],
+        "right_forearm_roll": [
+          -0.0031,
+          0.0307
+        ],
+        "right_wrist_angle": [
+          -0.3206,
+          -0.1779
+        ],
+        "right_wrist_rotate": [
+          0.0153,
+          0.0399
+        ],
+        "right_gripper": [
+          0.19,
+          0.4328
+        ]
+      },
+      "action_mean_per_dim": {
+        "left_waist": -0.0138,
+        "left_shoulder": -0.8598,
+        "left_elbow": 1.186,
+        "left_forearm_roll": -0.0043,
+        "left_wrist_angle": -0.3788,
+        "left_wrist_rotate": 0.0023,
+        "left_gripper": 0.1637,
+        "right_waist": -0.013,
+        "right_shoulder": -0.7761,
+        "right_elbow": 1.1878,
+        "right_forearm_roll": 0.0102,
+        "right_wrist_angle": -0.2641,
+        "right_wrist_rotate": 0.0233,
+        "right_gripper": 0.2113
+      },
+      "action_std_per_dim": {
+        "left_waist": 0.0,
+        "left_shoulder": 0.0382,
+        "left_elbow": 0.0033,
+        "left_forearm_roll": 0.0011,
+        "left_wrist_angle": 0.0289,
+        "left_wrist_rotate": 0.0011,
+        "left_gripper": 0.0,
+        "right_waist": 0.0327,
+        "right_shoulder": 0.1297,
+        "right_elbow": 0.0123,
+        "right_forearm_roll": 0.0129,
+        "right_wrist_angle": 0.0589,
+        "right_wrist_rotate": 0.0078,
+        "right_gripper": 0.0516
+      }
+    }
+  },
+  "prediction_error": {
+    "mean_l1": 0.0127,
+    "per_dim": {
+      "left_waist": 0.0032,
+      "left_shoulder": 0.0155,
+      "left_elbow": 0.0086,
+      "left_forearm_roll": 0.0013,
+      "left_wrist_angle": 0.0204,
+      "left_wrist_rotate": 0.0059,
+      "left_gripper": 0.0104,
+      "right_waist": 0.0052,
+      "right_shoulder": 0.0468,
+      "right_elbow": 0.0148,
+      "right_forearm_roll": 0.0068,
+      "right_wrist_angle": 0.0118,
+      "right_wrist_rotate": 0.0137,
+      "right_gripper": 0.0139
+    }
+  },
+  "latency": {
+    "cold_start_ms": 180.0,
+    "avg_ms": 0.9,
+    "min_ms": 0.5,
+    "max_ms": 1.4
+  },
+  "normalization": {
+    "method": "manual MEAN_STD from safetensors (lerobot 0.5.0 compat)",
+    "action_mean": [
+      -0.007564446423202753,
+      -0.6281843185424805,
+      1.0312833786010742,
+      -0.04664313793182373,
+      -0.4721137583255768,
+      -0.07452698051929474,
+      0.373897910118103,
+      -0.03718753531575203,
+      -0.32611438632011414,
+      0.8997200727462769,
+      -0.21371079981327057,
+      -0.3184039890766144,
+      -0.2336096167564392,
+      0.5519470572471619
+    ],
+    "action_std": [
+      0.012527869082987309,
+      0.29573681950569153,
+      0.16701507568359375,
+      0.04584391415119171,
+      0.14833474159240723,
+      0.087628073990345,
+      0.30665168166160583,
+      0.10599812865257263,
+      0.2757197916507721,
+      0.18058083951473236,
+      0.2630402743816376,
+      0.30707770586013794,
+      0.5305277109146118,
+      0.38380080461502075
+    ]
+  },
+  "cross_model_comparison": {
+    "smolvla_reference": "exp_normalized_fingerprints.json",
+    "act_closed_loop_reference": "closed_loop_eval_50ep.json (3,949 violations in closed-loop)",
+    "key_finding": "ACT open-loop on training data: 0% bounds, 0% velocity violations. SmolVLA open-loop on training data (after unnorm): 0-80% bounds, 58-100% velocity. ACT is a well-calibrated specialist (30M params, task-specific). SmolVLA is a generalist VLA (450M params, multi-task) that produces noisier outputs. Critical distinction: ACT closed-loop (EXP-CL) has 3,949 violations - open-loop hides compounding errors. SafeContract matters in deployment (closed-loop).",
+    "smolvla_unnorm_velocity_rates": {
+      "note": "from exp_normalized_fingerprints.json, after correct unnormalization",
+      "libero_spatial": {
+        "x": 0.7368,
+        "y": 0.5789,
+        "z": 0.7368,
+        "roll": 0.1053,
+        "pitch": 0.1579,
+        "yaw": 0.0,
+        "gripper": 0.4211
+      },
+      "libero_object": {
+        "x": 0.4211,
+        "y": 0.8947,
+        "z": 0.6842,
+        "roll": 0.0,
+        "pitch": 0.1053,
+        "yaw": 0.0,
+        "gripper": 0.2632
+      }
+    },
+    "act_open_loop_velocity_rates": "All 0% - perfectly smooth on training data"
+  },
+  "timestamp": "2026-04-05T21:52:38Z"
+}
