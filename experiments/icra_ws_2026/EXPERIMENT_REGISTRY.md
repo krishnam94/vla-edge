@@ -617,3 +617,17 @@ Lesson: integrate experiment registration into the workflow, not as an afterthou
 - **Limitations**: Images are synthetic (random, seeded) because torchcodec video decode is broken in this env. State input is real (from dataset). Policy behavior may differ with real images.
 - **Paper**: Section 4.X (cross-architecture fingerprints), completes 3-architecture generality claim
 - **Status**: VALIDATED - ran successfully, numbers in JSON match output
+
+### EXP-DIFF-FP: Diffusion Policy Fingerprint (Day cross-model)
+- **Script**: `exp_diffusion_fingerprint.py`
+- **Results**: `results/exp_diffusion_fingerprint.json`
+- **Parameters**: bounds [-1,1], v_max=0.1, 50 samples, seed=42, device=mps
+- **Key metrics**: Normalized bounds=0%, velocity=12%, mismatch bounds=100%
+- **Status**: VALIDATED
+
+### EXP-ACT-FP: ACT Fingerprint on ALOHA (Day cross-model)
+- **Script**: `exp_act_fingerprint.py`
+- **Results**: `results/exp_act_fingerprint.json`
+- **Parameters**: physical bounds (ALOHA joints), v_max=0.1, 50 samples, seed=42, device=cpu
+- **Key metrics**: Bounds=0%, velocity=0% (smooth specialist model)
+- **Status**: VALIDATED
