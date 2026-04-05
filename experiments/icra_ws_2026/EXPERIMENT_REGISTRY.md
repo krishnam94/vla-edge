@@ -686,3 +686,25 @@ Lesson: integrate experiment registration into the workflow, not as an afterthou
   - ALL are O(1) per step, no model inference, no external dependencies
   - Metrics: clip magnitude distribution, crest factor per joint, EWMA trend value
 - **Status**: IMPLEMENTING
+
+### EXP-SMOLVLA-CL-V2: SmolVLA Closed-Loop with Fixed Preprocessing
+- **Script**: `exp_closed_loop_v2.py` (to be created)
+- **Results**: `results/exp_closed_loop_v2.json` (pending)
+- **Hypothesis**: Fixing 3 preprocessing bugs (state representation, state normalization, image flip) will achieve >0% task success on LIBERO
+- **Design review**:
+  - **State fix**: Use robot0_eef_pos(3) + quat_to_axis_angle(robot0_eef_quat)(3) + robot0_gripper_qpos(2) = 8 dims
+  - **State normalization**: Apply MEAN_STD from checkpoint/dataset stats before model
+  - **Image flip**: torch.flip(img, dims=[2, 3]) to match training pipeline
+  - **Metric**: task success rate (binary per episode). Must be >0% to be useful.
+  - **Sampling**: Same init states for with/without SafeContract
+  - **Baseline**: If raw SmolVLA achieves X% success, SafeContract should achieve ~X% (no degradation)
+  - **Does the number make physical sense?** SmolVLA is reported at ~40-60% on LIBERO by HuggingFace. If we get similar, the preprocessing is correct.
+  - **Risk**: State normalization stats may be wrong. If 0% persists, the checkpoint itself may be flawed (LeRobot #2354)
+- **Parameters**:
+  - model: HuggingFaceVLA/smolvla_libero
+  - env: libero_object task 0
+  - bounds: [-1, 1] after unnormalization
+  - v_max: 0.1
+  - n_episodes: 10 per condition (20 total)
+  - device: mps
+- **Status**: REGISTERED (pre-run)

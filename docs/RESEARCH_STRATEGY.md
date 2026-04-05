@@ -165,3 +165,10 @@ See `docs/CONFERENCE_TRACKER.md` for full table. Key:
 - **Apr 15**: ICRA VLA Pipelines Workshop (2-4 pg, non-archival) - ACTIVE TARGET
 - **May 29**: CoRL 2026 (full paper) - stretch goal
 - **Sep 2026**: NeurIPS workshops - ChaosVLA + "Is RL Necessary?"
+
+
+### Key lesson (Lesson 014)
+Don't reimplement preprocessing pipelines. Use the framework's own pipeline.
+SmolVLA on LIBERO got 0% because we reimplemented observation preprocessing
+incorrectly: wrong state (joint_pos vs eef_pos), missing normalization, missing
+image flip. Three lines of code. Use lerobot's LiberoProcessorStep instead.
