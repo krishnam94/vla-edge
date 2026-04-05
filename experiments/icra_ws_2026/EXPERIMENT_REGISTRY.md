@@ -637,15 +637,31 @@ Lesson: integrate experiment registration into the workflow, not as an afterthou
 ## REGISTERED DURING OVERHAUL (retroactive - should have been BEFORE running per instinct)
 
 ### EXP-PUSHT-CL: Diffusion Policy Closed-Loop on PushT
-- **Script**: TBD (agent writing)
-- **Results**: TBD
+- **Script**: `experiments/closed_loop_diffusion_pusht.py`
+- **Results**: `results/closed_loop_diffusion_pusht_20ep.json`
 - **Hypothesis**: SafeContract does not degrade Diffusion Policy task success on PushT
+- **Parameters**:
+  - model: Diffusion Policy (lerobot/diffusion_pusht, 262M params, DDPM 100 denoising steps)
+  - env: PushT (gym_pusht/PushT-v0, obs_type=pixels_agent_pos, render_mode=rgb_array)
+  - action_dim: 2 (x, y pixel coordinates)
+  - action space: pixel [0, 512] (env native), model outputs normalized [-1, 1]
+  - unnormalization: MIN_MAX, action_min=[12, 25], action_max=[511, 511]
+  - bounds: [0, 512] in pixel space (workspace bounds)
+  - v_max: 30.0 pixels/step (conservative for 2D pusht - agent moves ~10-50px/step)
+  - n_episodes: 20 per condition (PushT is fast, 2D, simple)
+  - n_obs_steps: 2 (Diffusion Policy uses 2-frame history)
+  - n_action_steps: 8 (action chunking)
+  - seed_base: 0
+  - device: mps (auto-selected)
+  - max_steps: 300 per episode
+  - success metric: coverage >= 0.95 OR info['is_success']
 - **Design review**:
-  - Metric: task success rate (push T-block to target). Binary per episode.
-  - Actions: 2D (x,y). May be pixel [0,512] or normalized [-1,1] - MUST verify before claiming
-  - Sampling: same episodes for both conditions (with/without SafeContract)
-  - Baseline: reasonable bounds + v_max for PushT action space
-  - Expected: success rate similar between conditions (like ACT result)
+  - Same seeds for both conditions (deterministic comparison)
+  - Policy loaded once, reset per episode
+  - Normalization handled manually (lerobot 0.5.0 compat, same approach as ACT eval)
+  - Safety contract: pixel-space bounds [0, 512] + velocity clamp 30 px/step
+  - Reports: success rate, avg coverage, violations, actions modified
+  - Statistical test: Fisher's exact (same as ACT eval)
 - **Status**: RUNNING
 
 ### EXP-SMOLVLA-DEBUG: SmolVLA Closed-Loop Root Cause Analysis
