@@ -325,6 +325,14 @@ SafeContract's violation logs instead create a structured behavioral profile of 
 Different tasks produce distinct joint-violation fingerprints, and violation rate changes detect distribution shift with high statistical significance.
 This positions safety monitors as a low-cost interpretability tool: no gradient access, no activation probing, just the pattern of constraint boundary interactions.
 
+\textbf{Behavioral telemetry for VLAs.}
+SafeContract's violation logs constitute a form of \emph{behavioral telemetry} for VLA deployment, analogous to User and Entity Behavioral Analytics (UEBA) in cybersecurity or Statistical Process Control (SPC) in manufacturing.
+In cybersecurity, behavioral analytics detect compromised accounts by monitoring deviation from baseline patterns.
+In manufacturing, control charts track defect rates against statistical limits.
+SafeContract applies the same principle to robot actions: baseline violation rates characterize normal policy behavior, and deviations signal anomalies (distribution shift, model regression, integration errors).
+This reframes safety monitoring not as a cost but as an observability layer that provides deployment-time insights unavailable from training metrics alone.
+To our knowledge, no prior work treats VLA action-space constraint interactions as a telemetry signal.
+
 \textbf{Cross-architecture applicability.}
 SafeContract's decorator pattern is architecture-agnostic by design.
 We verified this on ground-truth actions from three architectures and datasets:

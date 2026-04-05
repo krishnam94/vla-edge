@@ -74,10 +74,11 @@ Single source of truth for research direction, paper plans, and process.
 ## Research Process
 
 ### How ideas are generated
-1. **Specialist agents** (5 types: efficiency, systems, safety, bio-inspired, evaluation)
-2. **Each uses a different novel thinking method** (first principles, bisociation, TRIZ, adjacent possible, Hamming)
-3. **Cross-domain inspiration** from audio codecs, game engines, AV safety, biology, HFT, compilers
-4. **Wiki gap mining** - `/wiki gaps` cross-references "Gaps We Spotted" sections across all wiki articles to find uncovered research opportunities. Gaps that appear in multiple articles independently are high-signal.
+1. **Novel thinking agents** using 5 methods: first principles, bisociation, TRIZ, adjacent possible, Hamming
+2. **Cross-domain inspiration** from audio DSP, game engines, AV safety, cybersecurity (UEBA), HFT, SPC manufacturing, compilers
+3. **Wiki gap mining** - `/wiki gaps` cross-references "Gaps We Spotted" sections across all wiki articles. Gaps that appear in multiple articles independently are high-signal.
+4. **Future directions harvesting** - every wiki article has "Future Directions (from authors)" sections extracted from papers. These are raw material for novel combinations.
+5. **`/skill-sync audit`** flags patterns from recent sessions that should become instincts or skills.
 
 ### How ideas are validated
 1. **Novelty critic** - skeptical reviewer searches for damaging prior work
