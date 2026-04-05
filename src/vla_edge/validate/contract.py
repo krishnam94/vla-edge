@@ -58,6 +58,24 @@ def safety_contract(
     Returns:
         Decorated function that always returns safe actions.
 
+    Composition note:
+        Stacking multiple @safety_contract decorators is order-independent for
+        per-joint bounds (action_range, workspace_bounds) because clipping is
+        idempotent and commutative per dimension - sequential clipping equals
+        intersection clipping.
+
+        However, velocity clamping is STATEFUL: it depends on the previous
+        clipped action (a_{t-1}). When two decorators are stacked, the inner
+        decorator's clipped output becomes the outer decorator's input. This
+        means the outer decorator's velocity reference (its stored a_{t-1})
+        differs from the inner one's, making sequential velocity clamping
+        ORDER-DEPENDENT. Two contracts with different joint_velocity_max values
+        will produce different results depending on stacking order.
+
+        If you need multiple velocity constraints, merge them into a single
+        contract with joint_velocity_max = min(v_max_1, v_max_2) rather than
+        stacking two decorators.
+
     Example:
         @safety_contract(action_range=[-1, 1], joint_velocity_max=0.1)
         def predict(self, image, instruction, state=None):
