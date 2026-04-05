@@ -15,10 +15,12 @@ Usage:
   python experiments/icra_ws_2026/exp_comprehensive_fingerprints.py
 """
 
+import gc
 import json
 import os
 import sys
 import time
+import traceback
 import types
 from collections import deque
 from pathlib import Path
@@ -42,6 +44,7 @@ from libero.libero.envs import OffScreenRenderEnv
 
 RESULTS_DIR = Path(__file__).parent / "results"
 RESULTS_DIR.mkdir(exist_ok=True)
+OUT_PATH = RESULTS_DIR / "exp_comprehensive_fingerprints.json"
 
 SUITE_NAMES = ["libero_spatial", "libero_object", "libero_goal", "libero_10"]
 DIM_LABELS = ["x", "y", "z", "roll", "pitch", "yaw", "gripper"]
@@ -59,26 +62,8 @@ LIBERO_ACTION_STD = np.array(
 
 
 # ---------------------------------------------------------------------------
-# Environment + observation helpers (from exp_closed_loop.py patterns)
+# Observation helper
 # ---------------------------------------------------------------------------
-
-def create_libero_env(suite_name: str, task_id: int):
-    """Create a LIBERO environment for a specific suite and task."""
-    bench = benchmark.get_benchmark_dict()
-    suite = bench[suite_name]()
-    task = suite.get_task(task_id)
-
-    task_bddl_file = os.path.join(
-        get_libero_path("bddl_files"), task.problem_folder, task.bddl_file
-    )
-
-    env = OffScreenRenderEnv(
-        bddl_file_name=task_bddl_file,
-        camera_heights=256,
-        camera_widths=256,
-    )
-    return env, task
-
 
 def build_observation(raw_obs: dict, task_description: str, policy, processor, device) -> dict:
     """Convert LIBERO raw observation to SmolVLA input format."""
@@ -122,23 +107,16 @@ def build_observation(raw_obs: dict, task_description: str, policy, processor, d
 # ---------------------------------------------------------------------------
 
 def compute_task_fingerprint(actions: np.ndarray) -> dict:
-    """Compute violation fingerprint for one task's action trajectory.
-
-    Args:
-        actions: shape (n_steps, n_dims) - raw normalized actions from model
-
-    Returns:
-        Per-dim bounds and velocity violation rates plus action stats.
-    """
+    """Compute violation fingerprint for one task's action trajectory."""
     n_steps, n_dims = actions.shape
 
-    # Bounds violations: how often each dim exceeds [-1, 1]
+    # Bounds violations
     bounds_violations = np.zeros(n_dims)
     for d in range(n_dims):
         viols = np.sum((actions[:, d] < BOUNDS_LO) | (actions[:, d] > BOUNDS_HI))
         bounds_violations[d] = viols / n_steps
 
-    # Velocity violations: consecutive-step delta exceeding v_max
+    # Velocity violations
     velocity_violations = np.zeros(n_dims)
     if n_steps > 1:
         for d in range(n_dims):
@@ -146,13 +124,11 @@ def compute_task_fingerprint(actions: np.ndarray) -> dict:
             vel_viols = np.sum(velocities > V_MAX)
             velocity_violations[d] = vel_viols / (n_steps - 1)
 
-    # Action statistics
     action_mean = np.mean(actions, axis=0)
     action_std = np.std(actions, axis=0)
     action_min = np.min(actions, axis=0)
     action_max = np.max(actions, axis=0)
 
-    # Overall rates (any dim violated in a step)
     oob_mask = (actions < BOUNDS_LO) | (actions > BOUNDS_HI)
     overall_bounds_rate = float(np.any(oob_mask, axis=1).mean())
 
@@ -197,161 +173,21 @@ def cosine_distance(v1: np.ndarray, v2: np.ndarray) -> float:
     return 1.0
 
 
-# ---------------------------------------------------------------------------
-# Main
-# ---------------------------------------------------------------------------
-
-def main():
-    device = "mps" if (hasattr(torch.backends, "mps") and torch.backends.mps.is_available()) else "cpu"
-    print(f"Device: {device}")
-
-    # ---- Load model ----
-    print("Loading SmolVLA policy...")
-    t0 = time.perf_counter()
-    policy = SmolVLAPolicy.from_pretrained("HuggingFaceVLA/smolvla_libero")
-    torch_device = torch.device(device)
-    policy.to(torch_device)
-    policy.config.device = torch_device
-    policy.eval()
-    processor = AutoProcessor.from_pretrained(policy.config.vlm_model_name)
-    load_time = time.perf_counter() - t0
-    print(f"Model loaded in {load_time:.1f}s")
-
-    # ---- Run all suites ----
-    all_results = {}
-    total_tasks = 0
-    total_steps = 0
-    global_t0 = time.perf_counter()
-
-    for suite_name in SUITE_NAMES:
-        print(f"\n{'='*60}")
-        print(f"Suite: {suite_name}")
-        print(f"{'='*60}")
-
-        bench = benchmark.get_benchmark_dict()
-        suite = bench[suite_name]()
-        n_tasks = suite.n_tasks
-        print(f"  {n_tasks} tasks")
-
-        suite_task_fps = []
-        suite_task_details = []
-
-        for task_id in range(n_tasks):
-            task = suite.get_task(task_id)
-            task_description = task.language
-
-            task_bddl_file = os.path.join(
-                get_libero_path("bddl_files"), task.problem_folder, task.bddl_file
-            )
-
-            print(f"\n  Task {task_id}/{n_tasks}: {task_description}")
-
-            # Create environment
-            env = OffScreenRenderEnv(
-                bddl_file_name=task_bddl_file,
-                camera_heights=256,
-                camera_widths=256,
-            )
-            raw_obs = env.reset()
-
-            # Reset policy action queues
-            policy.reset()
-            if hasattr(policy, "_queues"):
-                for k in policy._queues:
-                    policy._queues[k] = deque(maxlen=policy._queues[k].maxlen)
-
-            actions_list = []
-            latencies = []
-
-            for step in range(N_STEPS):
-                obs = build_observation(raw_obs, task_description, policy, processor, torch_device)
-
-                t_start = time.perf_counter()
-                with torch.inference_mode():
-                    action_tensor = policy.select_action(obs)
-                elapsed_ms = (time.perf_counter() - t_start) * 1000
-                latencies.append(elapsed_ms)
-
-                # Raw normalized action (for fingerprinting)
-                action = action_tensor.detach().cpu().numpy().squeeze()
-                actions_list.append(action.copy())
-
-                # Unnormalize for env stepping
-                action_unnorm = action * LIBERO_ACTION_STD[:len(action)] + LIBERO_ACTION_MEAN[:len(action)]
-
-                # Step environment
-                env_action = np.zeros(7)
-                env_action[:min(len(action_unnorm), 7)] = action_unnorm[:7]
-                raw_obs, reward, done, info = env.step(env_action)
-
-                if done:
-                    break
-
-            env.close()
-
-            actions_arr = np.array(actions_list)
-            fp = compute_task_fingerprint(actions_arr)
-
-            suite_task_fps.append(fp)
-            suite_task_details.append({
-                "task_index": task_id,
-                "task_name": task_description,
-                "n_steps_actual": len(actions_list),
-                "action_shape": list(actions_arr.shape),
-                "avg_latency_ms": round(float(np.mean(latencies)), 1),
-                "fingerprint": fp,
-            })
-
-            total_tasks += 1
-            total_steps += len(actions_list)
-
-            print(f"    Steps: {len(actions_list)}, Avg latency: {np.mean(latencies):.0f}ms")
-            print(f"    Bounds viol: {fp['overall_bounds_rate']:.1%}, "
-                  f"Velocity viol: {fp['overall_velocity_rate']:.1%}")
-            bounds_str = " ".join(
-                f"{DIM_LABELS[d]}={fp['bounds_per_dim'][d]:.2f}"
-                for d in range(len(fp["bounds_per_dim"]))
-            )
-            print(f"    Per-dim bounds: {bounds_str}")
-
-        # Aggregate suite
-        agg = aggregate_fingerprints(suite_task_fps)
-        all_results[suite_name] = {
-            "n_tasks": n_tasks,
-            "tasks": suite_task_details,
-            "aggregated": agg,
-        }
-
-        print(f"\n  Suite aggregate ({suite_name}):")
-        print(f"    Bounds mean:    {[f'{v:.3f}' for v in agg['bounds_mean']]}")
-        print(f"    Bounds std:     {[f'{v:.3f}' for v in agg['bounds_std']]}")
-        print(f"    Velocity mean:  {[f'{v:.3f}' for v in agg['velocity_mean']]}")
-        print(f"    Velocity std:   {[f'{v:.3f}' for v in agg['velocity_std']]}")
-        print(f"    Overall bounds: {agg['overall_bounds_mean']:.1%} +/- {agg['overall_bounds_std']:.1%}")
-        print(f"    Overall velocity: {agg['overall_velocity_mean']:.1%} +/- {agg['overall_velocity_std']:.1%}")
-
-    # ---- Cosine distance matrix ----
-    print(f"\n{'='*60}")
-    print("Cosine distance matrix between suites")
-    print(f"{'='*60}")
-
+def save_results(all_results, device, load_time, total_tasks, total_steps, elapsed_total):
+    """Save current results (supports partial saves on crash)."""
+    # Cosine distance matrix (only for completed suites)
+    completed = [s for s in SUITE_NAMES if s in all_results]
     distance_matrix = {}
-    vectors = {s: fingerprint_vector(all_results[s]["aggregated"]) for s in SUITE_NAMES}
+    vectors = {s: fingerprint_vector(all_results[s]["aggregated"]) for s in completed}
 
-    for i, s1 in enumerate(SUITE_NAMES):
-        for j, s2 in enumerate(SUITE_NAMES):
+    for i, s1 in enumerate(completed):
+        for j, s2 in enumerate(completed):
             if j <= i:
                 continue
             d = cosine_distance(vectors[s1], vectors[s2])
-            pair_key = f"{s1}_vs_{s2}"
-            distance_matrix[pair_key] = round(d, 6)
-            print(f"  {s1} vs {s2}: {d:.6f}")
+            distance_matrix[f"{s1}_vs_{s2}"] = round(d, 6)
 
     avg_cosine = float(np.mean(list(distance_matrix.values()))) if distance_matrix else 0.0
-    print(f"\n  Average cosine distance: {avg_cosine:.6f}")
-
-    # ---- Save results ----
-    elapsed_total = time.perf_counter() - global_t0
 
     output = {
         "experiment": "Comprehensive LIBERO Fingerprints",
@@ -365,22 +201,196 @@ def main():
         "total_steps": total_steps,
         "total_time_s": round(elapsed_total, 1),
         "model_load_time_s": round(load_time, 1),
+        "suites_completed": len(completed),
         "suites": all_results,
         "cosine_distance_matrix": distance_matrix,
         "avg_cosine_distance": round(avg_cosine, 6),
         "timestamp": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
     }
 
-    out_path = RESULTS_DIR / "exp_comprehensive_fingerprints.json"
-    out_path.write_text(json.dumps(
+    OUT_PATH.write_text(json.dumps(
         output, indent=2,
         default=lambda o: o.item() if hasattr(o, "item") else float(o),
     ))
+    return output, distance_matrix, avg_cosine
 
-    print(f"\n{'='*60}")
-    print(f"Results saved to {out_path}")
-    print(f"Total: {total_tasks} tasks, {total_steps} steps in {elapsed_total:.0f}s")
-    print(f"Avg cosine distance between suites: {avg_cosine:.6f}")
+
+# ---------------------------------------------------------------------------
+# Run a single task
+# ---------------------------------------------------------------------------
+
+def run_task(task_id, suite, policy, processor, torch_device):
+    """Run one task for N_STEPS, return actions array and latencies."""
+    task = suite.get_task(task_id)
+    task_description = task.language
+    task_bddl_file = os.path.join(
+        get_libero_path("bddl_files"), task.problem_folder, task.bddl_file
+    )
+
+    env = OffScreenRenderEnv(
+        bddl_file_name=task_bddl_file,
+        camera_heights=256,
+        camera_widths=256,
+    )
+
+    try:
+        raw_obs = env.reset()
+
+        # Reset policy action queues
+        policy.reset()
+        if hasattr(policy, "_queues"):
+            for k in policy._queues:
+                policy._queues[k] = deque(maxlen=policy._queues[k].maxlen)
+
+        actions_list = []
+        latencies = []
+
+        for step in range(N_STEPS):
+            obs = build_observation(raw_obs, task_description, policy, processor, torch_device)
+
+            t_start = time.perf_counter()
+            with torch.inference_mode():
+                action_tensor = policy.select_action(obs)
+            elapsed_ms = (time.perf_counter() - t_start) * 1000
+            latencies.append(elapsed_ms)
+
+            action = action_tensor.detach().cpu().numpy().squeeze()
+            actions_list.append(action.copy())
+
+            # Unnormalize for env stepping
+            action_unnorm = action * LIBERO_ACTION_STD[:len(action)] + LIBERO_ACTION_MEAN[:len(action)]
+            env_action = np.zeros(7)
+            env_action[:min(len(action_unnorm), 7)] = action_unnorm[:7]
+            raw_obs, reward, done, info = env.step(env_action)
+
+            if done:
+                break
+
+        return task_description, np.array(actions_list), latencies
+
+    finally:
+        env.close()
+        # Force cleanup to prevent MuJoCo memory leaks
+        gc.collect()
+
+
+# ---------------------------------------------------------------------------
+# Main
+# ---------------------------------------------------------------------------
+
+def main():
+    device = "mps" if (hasattr(torch.backends, "mps") and torch.backends.mps.is_available()) else "cpu"
+    print(f"Device: {device}", flush=True)
+
+    # ---- Load model ----
+    print("Loading SmolVLA policy...", flush=True)
+    t0 = time.perf_counter()
+    policy = SmolVLAPolicy.from_pretrained("HuggingFaceVLA/smolvla_libero")
+    torch_device = torch.device(device)
+    policy.to(torch_device)
+    policy.config.device = torch_device
+    policy.eval()
+    processor = AutoProcessor.from_pretrained(policy.config.vlm_model_name)
+    load_time = time.perf_counter() - t0
+    print(f"Model loaded in {load_time:.1f}s", flush=True)
+
+    # ---- Run all suites ----
+    all_results = {}
+    total_tasks = 0
+    total_steps = 0
+    global_t0 = time.perf_counter()
+
+    for suite_name in SUITE_NAMES:
+        print(f"\n{'='*60}", flush=True)
+        print(f"Suite: {suite_name}", flush=True)
+        print(f"{'='*60}", flush=True)
+
+        bench = benchmark.get_benchmark_dict()
+        suite = bench[suite_name]()
+        n_tasks = suite.n_tasks
+        print(f"  {n_tasks} tasks", flush=True)
+
+        suite_task_fps = []
+        suite_task_details = []
+
+        for task_id in range(n_tasks):
+            try:
+                task_desc, actions_arr, latencies = run_task(
+                    task_id, suite, policy, processor, torch_device
+                )
+
+                fp = compute_task_fingerprint(actions_arr)
+                suite_task_fps.append(fp)
+                suite_task_details.append({
+                    "task_index": task_id,
+                    "task_name": task_desc,
+                    "n_steps_actual": actions_arr.shape[0],
+                    "action_shape": list(actions_arr.shape),
+                    "avg_latency_ms": round(float(np.mean(latencies)), 1),
+                    "fingerprint": fp,
+                })
+
+                total_tasks += 1
+                total_steps += actions_arr.shape[0]
+
+                print(f"\n  Task {task_id}/{n_tasks}: {task_desc}", flush=True)
+                print(f"    Steps: {actions_arr.shape[0]}, Avg latency: {np.mean(latencies):.0f}ms", flush=True)
+                print(f"    Bounds viol: {fp['overall_bounds_rate']:.1%}, "
+                      f"Velocity viol: {fp['overall_velocity_rate']:.1%}", flush=True)
+                bounds_str = " ".join(
+                    f"{DIM_LABELS[d]}={fp['bounds_per_dim'][d]:.2f}"
+                    for d in range(len(fp["bounds_per_dim"]))
+                )
+                print(f"    Per-dim bounds: {bounds_str}", flush=True)
+
+            except Exception as e:
+                print(f"\n  Task {task_id}/{n_tasks}: FAILED - {e}", flush=True)
+                traceback.print_exc()
+                gc.collect()
+                continue
+
+        if not suite_task_fps:
+            print(f"\n  WARNING: No tasks completed for {suite_name}, skipping.", flush=True)
+            continue
+
+        # Aggregate suite
+        agg = aggregate_fingerprints(suite_task_fps)
+        all_results[suite_name] = {
+            "n_tasks": n_tasks,
+            "n_tasks_completed": len(suite_task_fps),
+            "tasks": suite_task_details,
+            "aggregated": agg,
+        }
+
+        print(f"\n  Suite aggregate ({suite_name}):", flush=True)
+        print(f"    Bounds mean:    {[f'{v:.3f}' for v in agg['bounds_mean']]}", flush=True)
+        print(f"    Bounds std:     {[f'{v:.3f}' for v in agg['bounds_std']]}", flush=True)
+        print(f"    Velocity mean:  {[f'{v:.3f}' for v in agg['velocity_mean']]}", flush=True)
+        print(f"    Velocity std:   {[f'{v:.3f}' for v in agg['velocity_std']]}", flush=True)
+        print(f"    Overall bounds: {agg['overall_bounds_mean']:.1%} +/- {agg['overall_bounds_std']:.1%}", flush=True)
+        print(f"    Overall velocity: {agg['overall_velocity_mean']:.1%} +/- {agg['overall_velocity_std']:.1%}", flush=True)
+
+        # Save after each suite completes (crash recovery)
+        elapsed_so_far = time.perf_counter() - global_t0
+        save_results(all_results, device, load_time, total_tasks, total_steps, elapsed_so_far)
+        print(f"\n  [checkpoint saved to {OUT_PATH}]", flush=True)
+
+    # ---- Final save with cosine distance matrix ----
+    elapsed_total = time.perf_counter() - global_t0
+    output, distance_matrix, avg_cosine = save_results(
+        all_results, device, load_time, total_tasks, total_steps, elapsed_total
+    )
+
+    print(f"\n{'='*60}", flush=True)
+    print("Cosine distance matrix between suites", flush=True)
+    print(f"{'='*60}", flush=True)
+    for pair, dist in distance_matrix.items():
+        print(f"  {pair}: {dist:.6f}", flush=True)
+    print(f"\n  Average cosine distance: {avg_cosine:.6f}", flush=True)
+
+    print(f"\n{'='*60}", flush=True)
+    print(f"Results saved to {OUT_PATH}", flush=True)
+    print(f"Total: {total_tasks} tasks, {total_steps} steps in {elapsed_total:.0f}s", flush=True)
 
 
 if __name__ == "__main__":

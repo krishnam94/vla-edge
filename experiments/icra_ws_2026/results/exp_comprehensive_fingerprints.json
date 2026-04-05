@@ -1,0 +1,620 @@
+{
+  "suites": {
+    "libero_spatial": {
+      "n_tasks": 10,
+      "n_skipped": 0,
+      "mean_bounds": [
+        0.32,
+        0.1,
+        0.18,
+        0.1,
+        0.34,
+        0.06,
+        0.0
+      ],
+      "std_bounds": [
+        0.286,
+        0.184,
+        0.14,
+        0.184,
+        0.254,
+        0.092,
+        0.0
+      ],
+      "tasks": [
+        {
+          "task_id": 0,
+          "task": "pick up the black bowl between the plate and the ramekin and place it on the plate",
+          "bounds_per_dim": [
+            0.4,
+            0.0,
+            0.2,
+            0.0,
+            0.6,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "task_id": 1,
+          "task": "pick up the black bowl next to the ramekin and place it on the plate",
+          "bounds_per_dim": [
+            0.0,
+            0.6,
+            0.0,
+            0.2,
+            0.2,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "task_id": 2,
+          "task": "pick up the black bowl from table center and place it on the plate",
+          "bounds_per_dim": [
+            0.0,
+            0.0,
+            0.4,
+            0.0,
+            0.4,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "task_id": 3,
+          "task": "pick up the black bowl on the cookie box and place it on the plate",
+          "bounds_per_dim": [
+            0.6,
+            0.0,
+            0.0,
+            0.2,
+            0.6,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "task_id": 4,
+          "task": "pick up the black bowl in the top drawer of the wooden cabinet and place it on the plate",
+          "bounds_per_dim": [
+            0.6,
+            0.2,
+            0.2,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "task_id": 5,
+          "task": "pick up the black bowl on the ramekin and place it on the plate",
+          "bounds_per_dim": [
+            0.4,
+            0.0,
+            0.2,
+            0.6,
+            0.0,
+            0.2,
+            0.0
+          ]
+        },
+        {
+          "task_id": 6,
+          "task": "pick up the black bowl next to the cookie box and place it on the plate",
+          "bounds_per_dim": [
+            0.8,
+            0.2,
+            0.0,
+            0.0,
+            0.2,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "task_id": 7,
+          "task": "pick up the black bowl on the stove and place it on the plate",
+          "bounds_per_dim": [
+            0.4,
+            0.0,
+            0.4,
+            0.0,
+            0.4,
+            0.2,
+            0.0
+          ]
+        },
+        {
+          "task_id": 8,
+          "task": "pick up the black bowl next to the plate and place it on the plate",
+          "bounds_per_dim": [
+            0.0,
+            0.0,
+            0.2,
+            0.0,
+            0.8,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "task_id": 9,
+          "task": "pick up the black bowl on the wooden cabinet and place it on the plate",
+          "bounds_per_dim": [
+            0.0,
+            0.0,
+            0.2,
+            0.0,
+            0.2,
+            0.2,
+            0.0
+          ]
+        }
+      ]
+    },
+    "libero_object": {
+      "n_tasks": 10,
+      "n_skipped": 0,
+      "mean_bounds": [
+        0.12,
+        0.22,
+        0.08,
+        0.2,
+        0.18,
+        0.08,
+        0.24
+      ],
+      "std_bounds": [
+        0.16,
+        0.209,
+        0.098,
+        0.219,
+        0.166,
+        0.133,
+        0.344
+      ],
+      "tasks": [
+        {
+          "task_id": 0,
+          "task": "pick up the alphabet soup and place it in the basket",
+          "bounds_per_dim": [
+            0.0,
+            0.4,
+            0.0,
+            0.6,
+            0.2,
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "task_id": 1,
+          "task": "pick up the cream cheese and place it in the basket",
+          "bounds_per_dim": [
+            0.2,
+            0.0,
+            0.2,
+            0.0,
+            0.2,
+            0.2,
+            0.0
+          ]
+        },
+        {
+          "task_id": 2,
+          "task": "pick up the salad dressing and place it in the basket",
+          "bounds_per_dim": [
+            0.4,
+            0.0,
+            0.2,
+            0.0,
+            0.2,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "task_id": 3,
+          "task": "pick up the bbq sauce and place it in the basket",
+          "bounds_per_dim": [
+            0.0,
+            0.2,
+            0.2,
+            0.0,
+            0.0,
+            0.0,
+            0.2
+          ]
+        },
+        {
+          "task_id": 4,
+          "task": "pick up the ketchup and place it in the basket",
+          "bounds_per_dim": [
+            0.2,
+            0.4,
+            0.0,
+            0.4,
+            0.0,
+            0.2,
+            1.0
+          ]
+        },
+        {
+          "task_id": 5,
+          "task": "pick up the tomato sauce and place it in the basket",
+          "bounds_per_dim": [
+            0.4,
+            0.2,
+            0.0,
+            0.0,
+            0.2,
+            0.4,
+            0.0
+          ]
+        },
+        {
+          "task_id": 6,
+          "task": "pick up the butter and place it in the basket",
+          "bounds_per_dim": [
+            0.0,
+            0.4,
+            0.0,
+            0.4,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "task_id": 7,
+          "task": "pick up the milk and place it in the basket",
+          "bounds_per_dim": [
+            0.0,
+            0.6,
+            0.0,
+            0.4,
+            0.2,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "task_id": 8,
+          "task": "pick up the chocolate pudding and place it in the basket",
+          "bounds_per_dim": [
+            0.0,
+            0.0,
+            0.2,
+            0.2,
+            0.6,
+            0.0,
+            0.6
+          ]
+        },
+        {
+          "task_id": 9,
+          "task": "pick up the orange juice and place it in the basket",
+          "bounds_per_dim": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.2,
+            0.0,
+            0.0
+          ]
+        }
+      ]
+    },
+    "libero_goal": {
+      "n_tasks": 10,
+      "n_skipped": 0,
+      "mean_bounds": [
+        0.18,
+        0.06,
+        0.24,
+        0.26,
+        0.22,
+        0.08,
+        0.26
+      ],
+      "std_bounds": [
+        0.244,
+        0.092,
+        0.215,
+        0.284,
+        0.108,
+        0.183,
+        0.347
+      ],
+      "tasks": [
+        {
+          "task_id": 0,
+          "task": "open the middle drawer of the cabinet",
+          "bounds_per_dim": [
+            0.4,
+            0.0,
+            0.0,
+            1.0,
+            0.4,
+            0.6,
+            0.0
+          ]
+        },
+        {
+          "task_id": 1,
+          "task": "put the bowl on the stove",
+          "bounds_per_dim": [
+            0.0,
+            0.2,
+            0.6,
+            0.0,
+            0.2,
+            0.0,
+            1.0
+          ]
+        },
+        {
+          "task_id": 2,
+          "task": "put the wine bottle on top of the cabinet",
+          "bounds_per_dim": [
+            0.0,
+            0.0,
+            0.4,
+            0.0,
+            0.4,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "task_id": 3,
+          "task": "open the top drawer and put the bowl inside",
+          "bounds_per_dim": [
+            0.0,
+            0.0,
+            0.2,
+            0.2,
+            0.2,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "task_id": 4,
+          "task": "put the bowl on top of the cabinet",
+          "bounds_per_dim": [
+            0.0,
+            0.0,
+            0.2,
+            0.0,
+            0.2,
+            0.0,
+            0.2
+          ]
+        },
+        {
+          "task_id": 5,
+          "task": "push the plate to the front of the stove",
+          "bounds_per_dim": [
+            0.6,
+            0.2,
+            0.0,
+            0.2,
+            0.2,
+            0.2,
+            0.0
+          ]
+        },
+        {
+          "task_id": 6,
+          "task": "put the cream cheese in the bowl",
+          "bounds_per_dim": [
+            0.0,
+            0.0,
+            0.6,
+            0.2,
+            0.2,
+            0.0,
+            0.2
+          ]
+        },
+        {
+          "task_id": 7,
+          "task": "turn on the stove",
+          "bounds_per_dim": [
+            0.6,
+            0.2,
+            0.2,
+            0.4,
+            0.2,
+            0.0,
+            0.4
+          ]
+        },
+        {
+          "task_id": 8,
+          "task": "put the bowl on the plate",
+          "bounds_per_dim": [
+            0.2,
+            0.0,
+            0.2,
+            0.2,
+            0.2,
+            0.0,
+            0.8
+          ]
+        },
+        {
+          "task_id": 9,
+          "task": "put the wine bottle on the rack",
+          "bounds_per_dim": [
+            0.0,
+            0.0,
+            0.0,
+            0.4,
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      ]
+    },
+    "libero_10": {
+      "n_tasks": 10,
+      "n_skipped": 0,
+      "mean_bounds": [
+        0.18,
+        0.12,
+        0.0,
+        0.12,
+        0.16,
+        0.1,
+        0.16
+      ],
+      "std_bounds": [
+        0.244,
+        0.183,
+        0.0,
+        0.098,
+        0.174,
+        0.134,
+        0.265
+      ],
+      "tasks": [
+        {
+          "task_id": 0,
+          "task": "put both the alphabet soup and the tomato sauce in the basket",
+          "bounds_per_dim": [
+            0.0,
+            0.2,
+            0.0,
+            0.2,
+            0.0,
+            0.0,
+            0.4
+          ]
+        },
+        {
+          "task_id": 1,
+          "task": "put both the cream cheese box and the butter in the basket",
+          "bounds_per_dim": [
+            0.8,
+            0.0,
+            0.0,
+            0.0,
+            0.4,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "task_id": 2,
+          "task": "turn on the stove and put the moka pot on it",
+          "bounds_per_dim": [
+            0.0,
+            0.0,
+            0.0,
+            0.2,
+            0.0,
+            0.2,
+            0.0
+          ]
+        },
+        {
+          "task_id": 3,
+          "task": "put the black bowl in the bottom drawer of the cabinet and close it",
+          "bounds_per_dim": [
+            0.0,
+            0.2,
+            0.0,
+            0.2,
+            0.2,
+            0.2,
+            0.0
+          ]
+        },
+        {
+          "task_id": 4,
+          "task": "put the white mug on the left plate and put the yellow and white mug on the right plate",
+          "bounds_per_dim": [
+            0.2,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "task_id": 5,
+          "task": "pick up the book and place it in the back compartment of the caddy",
+          "bounds_per_dim": [
+            0.4,
+            0.0,
+            0.0,
+            0.2,
+            0.0,
+            0.4,
+            0.8
+          ]
+        },
+        {
+          "task_id": 6,
+          "task": "put the white mug on the plate and put the chocolate pudding to the right of the plate",
+          "bounds_per_dim": [
+            0.2,
+            0.0,
+            0.0,
+            0.0,
+            0.4,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "task_id": 7,
+          "task": "put both the alphabet soup and the cream cheese box in the basket",
+          "bounds_per_dim": [
+            0.2,
+            0.6,
+            0.0,
+            0.2,
+            0.2,
+            0.0,
+            0.4
+          ]
+        },
+        {
+          "task_id": 8,
+          "task": "put both moka pots on the stove",
+          "bounds_per_dim": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        {
+          "task_id": 9,
+          "task": "put the yellow and white mug in the microwave and close it",
+          "bounds_per_dim": [
+            0.0,
+            0.2,
+            0.0,
+            0.2,
+            0.4,
+            0.2,
+            0.0
+          ]
+        }
+      ]
+    }
+  }
+}
