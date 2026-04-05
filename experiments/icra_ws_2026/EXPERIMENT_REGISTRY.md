@@ -495,3 +495,44 @@ Last audited: 2026-04-01.
 4. **EXP-REAL-FP roll dimension**: Investigate why SmolVLA outputs z=70+ on roll dimension. This may indicate a normalization or output space issue in the adapter.
 5. **EXP-H-REAL-TASK**: Create a standalone script (currently inline from v14 session).
 6. **Seed reproducibility**: For camera-ready, consider adding seeds to model-inference experiments or documenting that exact reproduction requires the same hardware + model weights.
+
+---
+
+## NEW EXPERIMENTS (Overhaul Days 1-6, Apr 5-6)
+
+### EXP-NORM: Normalization Comparison (Day 2)
+- **Script**: `exp_normalization_comparison.py`
+- **Results**: `results/exp_normalization_comparison.json`
+- **Parameters**: bounds [-1,1], v_max=0.1, 50 obs, seed=42, device=mps, model=smolvla_libero
+- **Key metrics**: RAW bounds=86%, UNNORM bounds=0%. RAW velocity=100%, UNNORM velocity=98%
+- **Paper**: Section 4.1 normalization analysis
+- **Status**: VALIDATED (numbers match paper)
+
+### EXP-ORACLE: Scripted Oracle Closed-Loop (Day 3)
+- **Script**: `exp_oracle_closed_loop.py`
+- **Results**: `results/exp_oracle_closed_loop.json`
+- **Parameters**: bounds [-1,1], v_max=0.1, 8 episodes, sigma={0,0.05,0.1,0.2,0.5}, device=mps
+- **Key metrics**: 0% success ALL conditions (GT replay doesn't work in LIBERO)
+- **Paper**: NOT USED (failed experiment)
+- **Status**: VALIDATED but FAILED (honest: GT replay limitation)
+
+### EXP-AEGIS: AEGIS Comparison (Day 5)
+- **Script**: N/A (formal proof + capability table)
+- **Results**: `results/comparison_table.tex`, `results/aegis_equivalence_proof.tex`
+- **Key metrics**: QP equivalence proved for box constraints, 13-feature comparison table
+- **Paper**: Related Work section + Table comparison
+- **Status**: VALIDATED
+
+### EXP-NORM-FP: Normalized Fingerprints (Day 6)
+- **Script**: `exp_normalized_fingerprints.py`
+- **Results**: `results/exp_normalized_fingerprints.json`
+- **Parameters**: bounds [-1,1], v_max=0.1, 20 steps/task, 4 suites task 0, device=mps, unnorm applied
+- **Key metrics**: Bounds->0% after unnorm. Velocity fingerprints differ: spatial x=74%, object y=89%, goal z=79%
+- **Paper**: Section 4.3 corrected fingerprints
+- **Status**: VALIDATED - cosine distance 0.054 confirms task-dependent velocity patterns
+- **THIS IS THE BREAKTHROUGH RESULT**
+
+### EXPERIMENT AUDIT NOTE
+These experiments were created during the overhaul sprint and initially bypassed the /experiment registry.
+Registered retroactively. Future experiments should use /experiment register BEFORE running.
+Lesson: integrate experiment registration into the workflow, not as an afterthought.
