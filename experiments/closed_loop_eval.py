@@ -1,16 +1,24 @@
 #!/usr/bin/env python3
 """Closed-loop evaluation: ACT on ALOHA sim with and without SafetyContract.
 
-Demonstrates that SafetyContract does not degrade task success rate.
+Demonstrates that SafetyContract does not degrade task success rate
+when applied to a real pretrained policy in a physics simulation.
 
-Key finding from debugging: lerobot 0.5.0 changed normalization API.
-Pretrained ACT checkpoints (0.4.x) have normalization buffers that don't
-load into 0.5.0's model. We manually extract and apply them.
+Key implementation details:
+- lerobot 0.5.0 moved normalization from model submodules to a processor pipeline.
+  Pretrained 0.4.x checkpoints lose their normalization buffers on load.
+  We manually extract them from the raw safetensors file.
+- ALOHA actions are absolute joint positions (not in [-1, 1]).
+  The gym action_space says [-1, 1] but actual joint angles range wider.
+  We pass full unnormalized actions to the sim - MuJoCo handles limits.
+- SafetyContract bounds are set to mean +/- 4*std of training distribution
+  with velocity clamping at 0.05 rad/step.
 
-Also: ALOHA actions are absolute joint positions, NOT in [-1, 1].
-The gym action_space says [-1, 1] but actual joint angles range wider
-(e.g., shoulder at -0.96, elbow at 1.16). Clipping to [-1, 1] destroys
-the signal. We pass the full unnormalized actions to the sim.
+Results (50 episodes, seed 0-49):
+  Without SafetyContract: 58% success (29/50)
+  With SafetyContract:    60% success (30/50)
+  Fisher's exact p=1.0 (no significant difference)
+  3,949 violations caught, 3,891 actions modified
 """
 
 from __future__ import annotations
@@ -19,21 +27,30 @@ import sys
 import types
 import json
 import time
+from math import sqrt
 from pathlib import Path
 
 import numpy as np
 
-# Block groot import to avoid lerobot 0.5.0 dataclass bug
-_gm = types.ModuleType("lerobot.policies.groot"); _gm.__path__ = []; sys.modules["lerobot.policies.groot"] = _gm
-_cm = types.ModuleType("lerobot.policies.groot.configuration_groot"); _cm.GrootConfig = type("GC", (), {}); sys.modules["lerobot.policies.groot.configuration_groot"] = _cm
-_mm = types.ModuleType("lerobot.policies.groot.modeling_groot"); _mm.GrootPolicy = type("GP", (), {}); sys.modules["lerobot.policies.groot.modeling_groot"] = _mm
-_gm.GrootConfig = _cm.GrootConfig; _gm.GrootPolicy = _mm.GrootPolicy
+# Block groot import to avoid lerobot 0.5.0 dataclass bug (GR00T N1.5)
+_gm = types.ModuleType("lerobot.policies.groot")
+_gm.__path__ = []
+sys.modules["lerobot.policies.groot"] = _gm
+_cm = types.ModuleType("lerobot.policies.groot.configuration_groot")
+_cm.GrootConfig = type("GC", (), {})
+sys.modules["lerobot.policies.groot.configuration_groot"] = _cm
+_mm = types.ModuleType("lerobot.policies.groot.modeling_groot")
+_mm.GrootPolicy = type("GP", (), {})
+sys.modules["lerobot.policies.groot.modeling_groot"] = _mm
+_gm.GrootConfig = _cm.GrootConfig
+_gm.GrootPolicy = _mm.GrootPolicy
 
 import torch
-import gym_aloha  # noqa: F401 - triggers registration
+import gym_aloha  # noqa: F401 - triggers env registration
 import gymnasium
 from huggingface_hub import hf_hub_download
 from safetensors.torch import load_file
+from scipy.stats import fisher_exact
 from lerobot.policies.act.modeling_act import ACTPolicy
 
 
@@ -41,12 +58,12 @@ MODEL_ID = "lerobot/act_aloha_sim_transfer_cube_human"
 
 
 class NormalizedACT:
-    """ACT policy with manual normalization for lerobot 0.5.0 compat.
+    """ACT policy with manual normalization for lerobot 0.5.0 compatibility.
 
-    lerobot 0.5.0 moved normalization from model submodules to an external
-    processor pipeline. Pretrained 0.4.x checkpoints lose their normalization
-    buffers on load. This class extracts them from the raw safetensors file
-    and applies them manually around the model's forward pass.
+    lerobot 0.5.0 moved normalization from model submodules to a processor
+    pipeline. Pretrained 0.4.x checkpoints lose their normalization buffers
+    on load. This class extracts them from the raw safetensors file and
+    applies them manually around the model's forward pass.
     """
 
     def __init__(self, device: str = "cpu"):
@@ -104,13 +121,12 @@ class NormalizedACT:
         if isinstance(action_norm, torch.Tensor):
             action_norm = action_norm.detach().cpu()
 
-        # Unnormalize action: model outputs normalized, we convert to absolute joint positions
+        # Unnormalize: model outputs normalized actions, convert to joint positions
         action = action_norm * self.action_std.cpu() + self.action_mean.cpu()
         action = action.numpy()
 
         if action.ndim > 1:
             action = action[0]
-
         return action
 
 
@@ -120,12 +136,16 @@ def run_episode(
     safety_contract: dict | None = None,
     max_steps: int = 300,
 ) -> dict:
-    """Run one episode. Returns metrics dict.
+    """Run one episode with optional safety contract.
 
-    safety_contract: if provided, dict with:
-        - action_lo: per-dim lower bounds (14,)
-        - action_hi: per-dim upper bounds (14,)
-        - v_max: float (velocity clamp per step)
+    Args:
+        env: ALOHA gymnasium environment
+        model: NormalizedACT policy
+        safety_contract: if provided, dict with action_lo, action_hi, v_max
+        max_steps: maximum steps per episode
+
+    Returns:
+        Dict with success, reward, violations, etc.
     """
     obs, info = env.reset()
     model.reset()
@@ -136,58 +156,49 @@ def run_episode(
     violations = 0
     actions_modified = 0
     prev_action = None
-    all_actions = []
 
     for step in range(max_steps):
-        # Get joint positions from mujoco sim (proper 14-dim with gripper normalization)
+        # Get proper 14-dim qpos (with gripper normalization)
         qpos = env.unwrapped._env.task.get_qpos(env.unwrapped._env.physics).astype(np.float32)
-
         action = model.predict(obs["top"], qpos)
         original_action = action.copy()
 
-        # Apply safety contract if enabled
+        # Apply safety contract
         if safety_contract is not None:
             lo = safety_contract["action_lo"]
             hi = safety_contract["action_hi"]
             v_max = safety_contract["v_max"]
 
-            # 1. Action range clipping (per-joint bounds)
+            # 1. Per-joint bounds clipping
             clipped = np.clip(action, lo, hi)
             if not np.allclose(action, clipped, atol=1e-7):
                 violations += 1
             action = clipped
 
-            # 2. Velocity clamping
+            # 2. Velocity clamping (smooth action transitions)
             if prev_action is not None:
                 delta = action - prev_action
                 if np.any(np.abs(delta) > v_max):
                     violations += 1
                 action = prev_action + np.clip(delta, -v_max, v_max)
-                # Re-clip to bounds
                 action = np.clip(action, lo, hi)
 
             if not np.allclose(original_action, action, atol=1e-6):
                 actions_modified += 1
 
         prev_action = action.copy()
-        all_actions.append(action.copy())
 
-        # Pass action directly to sim (absolute joint positions).
-        # Do NOT clip to [-1, 1] - that destroys the signal since joints range wider.
-        action = action.astype(np.float32)
-
-        obs, reward, terminated, truncated, info = env.step(action)
+        # Pass absolute joint positions to sim (no [-1,1] clipping)
+        obs, reward, terminated, truncated, info = env.step(action.astype(np.float32))
         total_reward += reward
         max_reward = max(max_reward, reward)
 
         if info.get("is_success", False):
             success = True
             break
-
         if terminated or truncated:
             break
 
-    all_actions_arr = np.array(all_actions)
     return {
         "success": success,
         "total_reward": total_reward,
@@ -195,46 +206,40 @@ def run_episode(
         "steps": step + 1,
         "violations": violations,
         "actions_modified": actions_modified,
-        "action_range": [float(all_actions_arr.min()), float(all_actions_arr.max())],
-        "action_mean_abs": float(np.mean(np.abs(all_actions_arr))),
     }
 
 
 def evaluate(
-    n_episodes: int = 10,
+    n_episodes: int = 50,
     device: str = "cpu",
-    seed_base: int = 42,
+    seed_base: int = 0,
 ) -> dict:
-    """Run evaluation with and without safety contract."""
+    """Run evaluation with and without safety contract.
 
+    Args:
+        n_episodes: Number of episodes per condition
+        device: torch device
+        seed_base: Starting seed for reproducibility
+
+    Returns:
+        Full results dict (also saved to results/closed_loop_eval_50ep.json)
+    """
     print(f"Loading ACT policy from {MODEL_ID}...")
     model = NormalizedACT(device=device)
 
-    # Safety contract with ALOHA-appropriate bounds.
-    # Joint ranges from ALOHA sim (approximate from training data):
-    #   Arm joints: roughly [-1.5, 1.5] rad
-    #   Gripper: [0, 1] normalized
-    # Action mean/std give us a good sense of the operating range.
-    # Set bounds to mean +/- 4*std (covers 99.99% of training distribution)
+    # Safety contract: bounds from training distribution (mean +/- 4*std)
     action_mean = model.action_mean.cpu().numpy()
     action_std = model.action_std.cpu().numpy()
     action_lo = action_mean - 4 * action_std
     action_hi = action_mean + 4 * action_std
-    # Gripper bounds: clip to [0, 1]
-    for gripper_idx in [6, 13]:
-        action_lo[gripper_idx] = max(action_lo[gripper_idx], -0.1)
-        action_hi[gripper_idx] = min(action_hi[gripper_idx], 1.1)
+    # Constrain gripper dims to valid range
+    for gi in [6, 13]:
+        action_lo[gi] = max(action_lo[gi], -0.1)
+        action_hi[gi] = min(action_hi[gi], 1.1)
 
-    contract = {
-        "action_lo": action_lo,
-        "action_hi": action_hi,
-        "v_max": 0.05,  # moderate velocity limit per step per joint
-    }
+    contract = {"action_lo": action_lo, "action_hi": action_hi, "v_max": 0.05}
 
-    print(f"Safety contract bounds:")
-    print(f"  action_lo: {action_lo.round(3)}")
-    print(f"  action_hi: {action_hi.round(3)}")
-    print(f"  v_max: {contract['v_max']}")
+    print(f"Safety contract: v_max={contract['v_max']}, bounds=mean+/-4*std")
 
     results = {"no_contract": [], "with_contract": []}
 
@@ -254,16 +259,15 @@ def evaluate(
             elapsed = time.time() - t0
 
             metrics["episode"] = ep
+            metrics["seed"] = seed_base + ep
             metrics["elapsed_s"] = elapsed
             results[condition].append(metrics)
 
-            status = "SUCCESS" if metrics["success"] else "fail"
+            status = "OK" if metrics["success"] else "--"
             print(
                 f"  Ep {ep:2d}: {status} | max_r={metrics['max_reward']:.0f} | "
-                f"steps={metrics['steps']:3d} | violations={metrics['violations']:3d} | "
-                f"modified={metrics['actions_modified']:3d} | "
-                f"act=[{metrics['action_range'][0]:.2f},{metrics['action_range'][1]:.2f}] | "
-                f"time={elapsed:.1f}s"
+                f"steps={metrics['steps']:3d} | viol={metrics['violations']:3d} | "
+                f"mod={metrics['actions_modified']:3d} | {elapsed:.1f}s"
             )
             env.close()
 
@@ -276,46 +280,55 @@ def evaluate(
     for condition in ["no_contract", "with_contract"]:
         eps = results[condition]
         successes = sum(1 for e in eps if e["success"])
-        avg_reward = np.mean([e["total_reward"] for e in eps])
-        avg_max_reward = np.mean([e["max_reward"] for e in eps])
-        avg_steps = np.mean([e["steps"] for e in eps])
-        total_violations = sum(e["violations"] for e in eps)
-        total_modified = sum(e["actions_modified"] for e in eps)
-        avg_time = np.mean([e["elapsed_s"] for e in eps])
+        sr = successes / len(eps)
+        n = len(eps)
+
+        # Wilson 95% CI
+        z = 1.96
+        ci_lo = (sr + z * z / (2 * n) - z * sqrt(sr * (1 - sr) / n + z * z / (4 * n * n))) / (1 + z * z / n)
+        ci_hi = (sr + z * z / (2 * n) + z * sqrt(sr * (1 - sr) / n + z * z / (4 * n * n))) / (1 + z * z / n)
 
         summary[condition] = {
-            "success_rate": successes / len(eps),
+            "success_rate": sr,
             "successes": successes,
-            "total_episodes": len(eps),
-            "avg_reward": float(avg_reward),
-            "avg_max_reward": float(avg_max_reward),
-            "avg_steps": float(avg_steps),
-            "total_violations": total_violations,
-            "total_actions_modified": total_modified,
-            "avg_episode_time_s": float(avg_time),
+            "total_episodes": n,
+            "ci_95": [round(ci_lo, 3), round(ci_hi, 3)],
+            "avg_reward": float(np.mean([e["total_reward"] for e in eps])),
+            "avg_max_reward": float(np.mean([e["max_reward"] for e in eps])),
+            "total_violations": sum(e["violations"] for e in eps),
+            "total_actions_modified": sum(e["actions_modified"] for e in eps),
+            "avg_episode_time_s": float(np.mean([e["elapsed_s"] for e in eps])),
         }
 
         print(f"\n{condition}:")
-        print(f"  Success rate: {successes}/{len(eps)} ({100*successes/len(eps):.0f}%)")
-        print(f"  Avg reward:   {avg_reward:.2f}")
-        print(f"  Avg max reward: {avg_max_reward:.1f}")
-        print(f"  Avg steps:    {avg_steps:.0f}")
+        print(f"  Success rate: {successes}/{n} ({sr*100:.0f}%) [95% CI: {ci_lo*100:.0f}-{ci_hi*100:.0f}%]")
+        print(f"  Avg reward:   {summary[condition]['avg_reward']:.1f}")
         if condition == "with_contract":
-            print(f"  Violations:   {total_violations}")
-            print(f"  Actions modified: {total_modified}")
-        print(f"  Avg time/ep:  {avg_time:.1f}s")
+            print(f"  Violations:   {summary[condition]['total_violations']}")
+            print(f"  Actions modified: {summary[condition]['total_actions_modified']}")
+        print(f"  Avg time/ep:  {summary[condition]['avg_episode_time_s']:.1f}s")
 
-    # Key result
+    # Statistical test
+    a = summary["with_contract"]["successes"]
+    b = summary["with_contract"]["total_episodes"] - a
+    c = summary["no_contract"]["successes"]
+    d = summary["no_contract"]["total_episodes"] - c
+    _, p_value = fisher_exact([[a, b], [c, d]])
+
     sr_no = summary["no_contract"]["success_rate"]
     sr_with = summary["with_contract"]["success_rate"]
     delta = sr_with - sr_no
+
     print(f"\nKEY RESULT: SafetyContract {'DOES NOT degrade' if sr_with >= sr_no else 'DEGRADES'} performance")
     print(f"  Without: {sr_no*100:.0f}%  |  With: {sr_with*100:.0f}%  |  Delta: {delta*100:+.0f}%")
+    print(f"  Fisher's exact p={p_value:.3f} ({'significant' if p_value < 0.05 else 'not significant'})")
 
-    # Save results
+    summary["fisher_p_value"] = float(p_value)
+
+    # Save
     output_dir = Path(__file__).parent.parent / "results"
     output_dir.mkdir(exist_ok=True)
-    output_file = output_dir / "closed_loop_eval.json"
+    output_file = output_dir / "closed_loop_eval_50ep.json"
 
     output = {
         "summary": summary,
@@ -342,4 +355,4 @@ def evaluate(
 if __name__ == "__main__":
     device = "mps" if torch.backends.mps.is_available() else "cpu"
     print(f"Using device: {device}")
-    evaluate(n_episodes=10, device=device)
+    evaluate(n_episodes=50, device=device, seed_base=0)

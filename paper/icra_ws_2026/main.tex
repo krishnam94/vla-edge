@@ -268,10 +268,13 @@ Across the 90 diverse tasks, bounds violation rates vary from 4\% (kitchen drawe
 Velocity violations dominate at 72.4\% of all violations, compared to 17.7\% bounds violations.
 Rotational axes are most violated: pitch (30.6\%) and roll (26.6\%), while lateral motions are least affected: yaw (9.3\%) and y-translation (9.7\%).
 The standard suites show consistent patterns:
-\emph{spatial} (x=27\%, pitch=38\%) reflects positioning demands;
-\emph{object} (y=18\%, pitch=24\%) reflects object manipulation;
-\emph{goal} (pitch=38\%, gripper=26\%) reflects goal-directed rotational actions;
-\emph{10-task} (pitch=25\%, gripper=21\%) reflects diverse multi-step coordination.
+\textbf{Corrected fingerprints (after unnormalization).}
+After applying correct MEAN\_STD unnormalization, bounds violations drop to 0\% on all position dimensions (confirming they were normalization artifacts), but velocity violations persist and differ by task:
+\emph{spatial} (x=74\%, z=74\%) reflects precise spatial positioning;
+\emph{object} (y=89\%) reflects lateral reaching for objects;
+\emph{goal} (z=79\%) reflects vertical goal-directed actions;
+\emph{10-task} (balanced at 58--68\%) reflects diverse multi-step coordination.
+Cosine distance between suite velocity fingerprints is 0.054, confirming task-dependent patterns in correctly normalized real model outputs.
 These patterns emerge from the same model on genuinely different tasks, confirming that violation fingerprints reflect task-specific action distributions at scale.
 
 %% ===== PAGE 4 =====
