@@ -231,13 +231,13 @@ We ran SmolVLA on all 130 tasks (40 standard + 90 diverse).
 Bounds violation rates vary from 4\% to 37\%; velocity violations dominate at 72.4\%.
 Rotational axes are most violated (pitch 30.6\%, roll 26.6\%) while lateral motions are least affected (yaw 9.3\%, y 9.7\%).
 After correct unnormalization, bounds violations drop to 0\%, but velocity fingerprints persist by suite:
-\emph{spatial} (x=74\%, z=74\%), \emph{object} (y=89\%), \emph{goal} (z=79\%), \emph{10-task} (balanced 58--68\%).
+\emph{spatial} (x=83\%, z=85\%), \emph{object} (y=85\%), \emph{goal} (z=78\%), \emph{10-task} (gripper=46\%).
 Cosine distance between suite fingerprints is 0.054, confirming task-dependent patterns (Fig.~\ref{fig:130tasks}).
 
 \begin{figure}[t]
     \centering
     \includegraphics[width=\columnwidth]{figures/fig_130tasks.pdf}
-    \caption{Bounds violation rates across 90 LIBERO-90 tasks, sorted. The 4\%--37\% spread demonstrates that violation fingerprints vary meaningfully by task: simple drawer tasks produce few violations while complex mug placement tasks produce many.}
+    \caption{Bounds violation rates across 90 LIBERO-90 tasks (sorted). Violation rates range from 4\% (drawer manipulation) to 37\% (mug placement), demonstrating task-dependent monitoring signals.}
     \label{fig:130tasks}
 \end{figure}
 
