@@ -34,6 +34,14 @@ pip-installable toolkit for profiling, optimizing, validating, and deploying VLA
 - NEVER hardcode API keys or HuggingFace tokens. Use environment variables.
 - NEVER use em dashes in any content. Use hyphens or rewrite.
 
+## Process Rules (HARD - NO EXCEPTIONS)
+- **Experiments**: ALWAYS register in `experiments/icra_ws_2026/EXPERIMENT_REGISTRY.md` BEFORE writing any experiment code or launching any experiment agent. Include hypothesis, parameters, design review. No "I'll register later."
+- **Research/Papers**: ALWAYS compile findings to `~/Desktop/wiki/` via `/wiki compile`. Every paper read, research session, or substantial learning becomes a wiki article with Future Directions and Gaps sections.
+- **Metrics**: ALWAYS verify metric definitions before accepting results. Ask: "Is this metric measuring what we CLAIM?" (e.g., velocity must be consecutive timesteps, not random samples)
+- **References**: ALWAYS verify each reference against arxiv/venue before including. Check author, title, year, venue.
+- **Claims**: NEVER claim "all X" without testing all X. NEVER present synthetic-data results as evidence of general model behavior without caveat.
+- **Formal properties**: ALWAYS verify claims hold for the FULL system, not just a component.
+
 ## Testing
 - pytest with hardware markers (cpu, gpu, jetson, tensorrt, slow).
 - Default: runs only CPU tests (`-m 'not gpu and not jetson and not slow'`).
