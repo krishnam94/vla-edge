@@ -245,6 +245,17 @@ Very tight & $\pm 0.3$ & 0.02 & 2{,}561 & 0.91 \\
 
 This provides a concrete deployment guide: for a typical $[-1, 1]$ action space, the ``moderate'' operating point catches 2{,}019 violations while correcting actions by less than half a unit on average.
 
+\subsection{Noise Sensitivity (EXP-NOISE)}
+
+To verify SafeContract is calibrated, we add Gaussian noise at 7 levels ($\sigma \in \{0, 0.01, 0.05, 0.1, 0.3, 0.5, 1.0\}$) to ground-truth LIBERO actions (500 samples) and measure violations.
+Bounds violations scale monotonically from 0 (clean) to 5{,}353 ($\sigma{=}1.0$).
+Velocity violations scale from 527 to 13{,}916.
+SafeContract eliminates 100\% of violations at \emph{every} noise level (post-contract violations = 0).
+Actions modified range from 50.6\% (clean) to 100\% ($\sigma{=}1.0$).
+
+The 527 velocity violations on clean data ($\sigma{=}0$) are expected: LIBERO demonstrations include fast gripper snaps (velocity up to 2.0/step) that exceed our conservative $v_{\max}{=}0.1$.
+This is by design: even expert demonstrations benefit from velocity monitoring in safety-critical deployment.
+
 \subsection{Controlled Ablation (EXP-G)}
 \label{sec:ablation}
 
