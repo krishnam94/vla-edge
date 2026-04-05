@@ -10,10 +10,19 @@ Structured tracking of all experiments, their validation status, and linkage to 
 ## Sub-commands
 
 ### `register <name>`
-Register a new experiment:
+Register a new experiment. This MUST happen BEFORE running.
+
 1. Ask for: hypothesis, script path, results path, key metrics, paper section it supports
-2. Add entry to `experiments/icra_ws_2026/EXPERIMENT_REGISTRY.md`
-3. Mark status as UNVALIDATED
+2. **MANDATORY: Design review checklist** (answer before running):
+   - What EXACTLY does each metric measure? (e.g., "velocity" = diff between WHAT?)
+   - Are samples consecutive/independent/stratified? Does the metric require a specific sampling?
+   - Does the expected result make physical sense? (e.g., 98% violation rate on expert data = red flag)
+   - Could the metric be inflated by the sampling strategy? (non-sequential diff, overlapping windows)
+   - What is the null hypothesis? What would a meaningless result look like?
+   - Are the baseline/test conditions truly comparable? (same data, same model, same seeds)
+3. Add entry to `experiments/icra_ws_2026/EXPERIMENT_REGISTRY.md` with design review answers
+4. Mark status as REGISTERED (not yet run)
+5. ONLY THEN proceed to implementation and execution
 
 ### `validate <name>`
 Run the `/verify-experiments` checklist on a specific experiment:

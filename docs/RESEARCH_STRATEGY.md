@@ -111,6 +111,14 @@ benefit on realistic data. Motor controllers absorb clipping discontinuities. Al
 with experiments before committing to a paper direction. "Novel" is not enough - it must also
 matter in practice.
 
+### Key lesson (Lesson 012)
+Question every metric definition BEFORE celebrating results. EXP-NORM reported "98%
+velocity violations persist after normalization" but was computing velocity between
+non-consecutive samples from different episodes. The real rate on consecutive steps
+is 22% - still significant but 4.5x lower. The error: optimizing for speed over
+correctness. Fix: mandatory design review before running, asking "is this metric
+measuring what we claim?" Added question-metric-definition instinct.
+
 ### Key lesson (Lesson 010)
 ALWAYS check action normalization when connecting a model to an environment.
 SmolVLA outputs MEAN_STD normalized actions. We sent them raw to LIBERO sim,
