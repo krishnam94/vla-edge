@@ -675,3 +675,14 @@ Lesson: integrate experiment registration into the workflow, not as an afterthou
   - Check: camera key mapping
   - Compare model output to GT for same observation
 - **Status**: INVESTIGATING
+
+### IMPLEMENTATION: Clip Magnitude Telemetry + Crest Factor + EWMA Trend
+- **Script**: src/vla_edge/validate/monitor.py (NEW module)
+- **Hypothesis**: These 3 techniques transform SafeContract from binary clipping to continuous health monitoring
+- **Design review**:
+  - Clip magnitude: already computed in contract.py (raw - clipped), just store it
+  - Crest factor: peak/RMS over sliding window, dimensionless, cross-robot comparable
+  - EWMA: exponential weighted average of violation rate, one float of state
+  - ALL are O(1) per step, no model inference, no external dependencies
+  - Metrics: clip magnitude distribution, crest factor per joint, EWMA trend value
+- **Status**: IMPLEMENTING
