@@ -24,7 +24,7 @@ kayjee1994@gmail.com}}
 
 \begin{abstract}
 Vision-Language-Action (VLA) models predict robot actions from images and instructions, but no composable, architecture-agnostic runtime safety framework exists for their outputs.
-We introduce \texttt{SafeContract}, a design-by-contract framework that wraps any VLA policy with composable safety constraints via a Python decorator.
+We introduce \texttt{SafeContract}, a design-by-contract~\cite{meyer1992} framework that wraps any VLA policy with composable safety constraints via a Python decorator.
 We show that a lightweight safety contract not only prevents unsafe actions but reveals systematic violation patterns that characterize model behavior and detect distribution shift.
 Controlled ablations demonstrate zero false positives on clean policies while catching all violations on drifting and jerky policies.
 More significantly, each manipulation task produces a distinct \emph{violation fingerprint} across joint dimensions, and changes in violation rate detect task switches with $p < 0.05$ across all tested pairs.
@@ -135,7 +135,7 @@ AEGIS~\cite{aegis} solves a CBF-QP at runtime (0.36\,ms) using VLM scene underst
 SafeDec~\cite{safedec} applies STL-constrained decoding but requires logit access and a dynamics model; SafeContract needs neither.
 Safety Chip~\cite{safetychip} uses LTL monitors for plan-level constraints.
 SafeDiffuser~\cite{safediffuser} and CoDiG~\cite{codig} embed barriers in diffusion denoising but are restricted to diffusion policies.
-ATACOM~\cite{atacom} projects onto constraint manifolds for pi0 and Octo but provides no composition guarantees and requires scene perception.
+ATACOM~\cite{atacom} projects onto constraint manifolds for Octo but provides no composition guarantees and requires scene perception.
 Recent work on Agent Behavioral Contracts~\cite{abc} brings design-by-contract to AI agents but targets discrete LLM decisions, not continuous robot action spaces; SafeContract handles geometric composition over continuous hyperrectangular constraints.
 \textbf{Runtime monitoring.}
 Sentinel~\cite{sentinel} combines STAC (temporal consistency) with VLM monitoring to detect failures in generative policies, catching 18\% more failures than either component alone.
@@ -308,13 +308,13 @@ This validates Property~\ref{prop:shift}: violation rate change signals non-stat
 Using cosine similarity between live violation vectors and stored reference fingerprints, a nearest-centroid classifier achieves 100\% task identification accuracy across 40 trials (10 per task, with Gaussian noise $\sigma=0.05$ added to fingerprints).
 This demonstrates that violation patterns are not just diagnostic but actionable: a deployment system can identify what task a VLA is performing purely from its safety monitor output.
 
-\textbf{Validation on real VLA inference.}
-We ran SmolVLA on 100 LIBERO observations (25 per task group, MPS device) and computed real violation fingerprints.
-Roll (dim 3) shows 100\% OOB across all groups (z-score $\approx$73, severe normalization mismatch).
-However, other dimensions show meaningful variation: x-axis bounds violations range from 4\% (spatial tasks) to 20\% (goal tasks), yaw velocity from 79\% to 96\%.
-When the roll dimension is excluded (it is a constant normalization artifact, not a task-dependent signal), the remaining 5 dimensions show clearer differentiation: cosine distances increase to 0.008--0.033, and a nearest-centroid classifier achieves 96\% task identification accuracy (77/80 trials).
-Spatial tasks show low x-axis bounds violations (4\%) but high yaw velocity (96\%); object tasks show the highest x-velocity violations (46\%).
-This confirms that task-dependent fingerprint patterns exist in real model outputs, though they are subtler than in synthetic distributions.
+\textbf{Preliminary validation on real VLA inference.}
+We ran SmolVLA on 100 LIBERO observations (25 per episode group, MPS device).
+Roll (dim 3) shows 100\% OOB across all groups (z-score $\approx$73, severe normalization mismatch), immediately flagged by SafeContract.
+Other dimensions show per-group variation: x-axis bounds violations range from 4\% to 20\%, yaw velocity from 79\% to 96\%.
+Excluding roll (a constant artifact), remaining dimensions show cosine distances of 0.008--0.033 between groups.
+Note: these groups are episode-range splits within a single dataset, not controlled task variation.
+Full validation on distinct LIBERO task suites is future work.
 
 \textbf{Implication.}
 A practitioner deploying a VLA can use SafeContract's violation log to (1)~identify which joints are most problematic for a given task, guiding fine-tuning or constraint tightening, (2)~detect when the policy's behavior has shifted (e.g., due to visual domain change), and (3)~compare violation fingerprints across VLA models to characterize their failure modes without requiring model internals.
@@ -374,25 +374,25 @@ Conformal prediction calibration for probabilistic safety certificates with fini
 Closed-loop LIBERO evaluation with task success rates.
 
 \begin{thebibliography}{20}
-\bibitem{openvla} Kim, M.J. et al., ``OpenVLA: An Open-Source Vision-Language-Action Model,'' ECCV 2024, arXiv:2406.09246.
-\bibitem{smolvla} HuggingFace, ``SmolVLA: A Small Vision-Language-Action Model for Affordable and Efficient Robotics,'' arXiv:2506.01844, 2025.
+\bibitem{openvla} Kim, M.J. et al., ``OpenVLA: An Open-Source Vision-Language-Action Model,'' CoRL 2024, arXiv:2406.09246.
+\bibitem{smolvla} Shukor, M. et al., ``SmolVLA: A Vision-Language-Action Model for Affordable and Efficient Robotics,'' arXiv:2506.01844, 2025.
 \bibitem{lerobot} Cadene, R. et al., ``LeRobot: State-of-the-art Machine Learning for Real-World Robotics in PyTorch,'' 2024, \url{https://github.com/huggingface/lerobot}.
-\bibitem{pi0} Physical Intelligence, ``pi0: A General-Purpose Robot Foundation Model and OpenPI Deployment Framework,'' 2025.
+\bibitem{pi0} Black, K. et al., ``$\pi_0$: A Vision-Language-Action Flow Model for General Robot Control,'' arXiv:2410.24164, 2024.
 \bibitem{meyer1992} Meyer, B., ``Applying `Design by Contract','' Computer 25(10):40--51, 1992.
 \bibitem{libero} Liu, B. et al., ``LIBERO: Benchmarking Knowledge Transfer for Lifelong Robot Learning,'' NeurIPS 2023.
-\bibitem{safevla} PKU-Alignment, ``SafeVLA: Towards Safety Alignment of Vision-Language-Action Model via Constrained Learning,'' NeurIPS 2025, arXiv:2503.03480.
-\bibitem{aegis} VLSA/AEGIS, ``Plug-and-Play Safety Constraint Layer for VLA Policies,'' arXiv:2512.11891, 2024.
-\bibitem{safedec} SafeDec, ``Safe Decoding for Robot Manipulation via STL-Constrained Policy Generation,'' arXiv:2509.01728, 2025.
-\bibitem{robustvla} Yang, Z. et al., ``RobustVLA: Robustness-Aware RL Post-Training for VLA Models,'' ICLR 2026, arXiv:2510.00037.
-\bibitem{safetychip} Yang, Z. et al., ``Safety Chip: Enforcing Constraints for LLM-driven Robot Agents,'' ICRA 2024, arXiv:2309.09919.
-\bibitem{safediffuser} Wei, T. et al., ``SafeDiffuser: Safe Planning with Diffusion Probabilistic Models,'' ICLR 2025, arXiv:2306.00148.
-\bibitem{codig} Romero, L. et al., ``CoDiG: Constraint-Aware Diffusion Guidance for Robotics,'' CoRL 2025, arXiv:2505.13131.
-\bibitem{atacom} Quackenbush, M. et al., ``Safe Robot Foundation Models Using Inductive Biases,'' arXiv:2505.10219, 2025.
-\bibitem{liberoplus} Song, Y. et al., ``LIBERO-Plus: In-depth Robustness Analysis of VLA Models,'' arXiv:2510.13626, 2025.
-\bibitem{vlaarena} PKU-Alignment, ``VLA-Arena: Benchmarking VLA Models,'' arXiv:2512.22539, 2025.
+\bibitem{safevla} Zhang, B. et al., ``SafeVLA: Towards Safety Alignment of Vision-Language-Action Model via Constrained Learning,'' NeurIPS 2025, arXiv:2503.03480.
+\bibitem{aegis} Zhang, Y. et al., ``VLSA: VLA Models with Plug-and-Play Safety Constraint Layer,'' arXiv:2512.11891, 2025.
+\bibitem{safedec} Kapoor, P. et al., ``Constrained Decoding for Robotics Foundation Models,'' arXiv:2509.01728, 2025.
+\bibitem{robustvla} Guo, J. et al., ``On Robustness of Vision-Language-Action Models against Multi-Modal Perturbations,'' ICLR 2026, arXiv:2510.00037.
+\bibitem{safetychip} Yang, Z. et al., ``Plug in the Safety Chip: Enforcing Constraints for LLM-driven Robot Agents,'' ICRA 2024, arXiv:2309.09919.
+\bibitem{safediffuser} Xiao, W. et al., ``SafeDiffuser: Safe Planning with Diffusion Probabilistic Models,'' ICLR 2025, arXiv:2306.00148.
+\bibitem{codig} Ma, H. et al., ``CoDiG: Constraint-Aware Diffusion Guidance for Robotics,'' CoRL 2025, arXiv:2505.13131.
+\bibitem{atacom} Tolle, M. et al., ``Towards Safe Robot Foundation Models Using Inductive Biases,'' arXiv:2505.10219, 2025.
+\bibitem{liberoplus} Fei, S. et al., ``LIBERO-Plus: In-depth Robustness Analysis of VLA Models,'' arXiv:2510.13626, 2025.
+\bibitem{vlaarena} Zhang, B. et al., ``VLA-Arena: An Open-Source Framework for Benchmarking VLA Models,'' arXiv:2512.22539, 2025.
 \bibitem{abc} Bhardwaj, V.P., ``Agent Behavioral Contracts,'' arXiv:2602.22302, 2026.
-\bibitem{sentinel} Hu, H. et al., ``Sentinel: Runtime Monitoring of Generative Policies via STAC,'' CoRL 2024, arXiv:2410.04640.
-\bibitem{saber} SABER, ``Black-Box Adversarial Attacks on VLAs via Instruction Perturbation,'' arXiv:2603.24935, 2026.
+\bibitem{sentinel} Agia, C. et al., ``Unpacking Failure Modes of Generative Policies: Runtime Monitoring of Consistency and Progress,'' CoRL 2024, arXiv:2410.04640.
+\bibitem{saber} Wu, X. et al., ``SABER: A Stealthy Agentic Black-Box Attack Framework for VLAs,'' arXiv:2603.24935, 2026.
 \end{thebibliography}
 
 \end{document}
