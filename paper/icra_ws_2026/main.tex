@@ -29,7 +29,7 @@ We show that a lightweight safety contract not only prevents unsafe actions but 
 Controlled ablations demonstrate zero false positives on clean policies while catching all violations on drifting and jerky policies.
 More significantly, each manipulation task produces a distinct \emph{violation fingerprint} across joint dimensions, and changes in violation rate detect task switches with $p < 0.05$ across all tested pairs.
 These findings suggest that action-space monitors double as interpretability tools: violation patterns expose what a VLA ``thinks'' about its action space without requiring model internals.
-The full decorator adds ${\sim}$13\,$\mu$s overhead per action, requiring no QP solver, VLM, or model retraining.
+The full decorator adds ${\sim}$16\,$\mu$s overhead per action, requiring no QP solver, VLM, or model retraining.
 We release the framework as an open-source toolkit.\footnote{Code: \url{https://github.com/krishnam94/vla-edge}}
 \end{abstract}
 
@@ -108,7 +108,7 @@ where $(C_1 \cap C_2)_i = [\max(l_{1,i}, l_{2,i}),\; \min(u_{1,i}, u_{2,i})]$.
 Stacking multiple \texttt{@safety\_contract} decorators is order-independent.
 \end{property}
 
-\textit{Proof.} Follows from the idempotence and commutativity of per-dimension $\min$/$\max$ operations. \hfill $\square$
+\textit{Proof.} Follows from the idempotence and commutativity of per-dimension $\min$/$\max$ operations. Empirically verified: sequential clipping through two contracts produces outputs identical to intersection clipping on 200 random-walk sequences (1{,}482 violations caught by both methods). \hfill $\square$
 
 \begin{property}[Feasibility from Safe States]
 \label{prop:deadlock}
@@ -140,9 +140,9 @@ Recent work on Agent Behavioral Contracts~\cite{abc} brings design-by-contract t
 \textbf{Runtime monitoring.}
 Sentinel~\cite{sentinel} combines STAC (temporal consistency) with VLM monitoring to detect failures in generative policies, catching 18\% more failures than either component alone.
 However, Sentinel \emph{detects} but does not \emph{prevent} unsafe actions, and requires an additional VLM call for scene understanding.
-SafeContract both detects and prevents, using constraint boundary interactions (${\sim}$13\,$\mu$s) instead of a separate monitor model.
+SafeContract both detects and prevents, using constraint boundary interactions (${\sim}$16\,$\mu$s) instead of a separate monitor model.
 
-SafeContract differs from all the above: (i)~architecture-agnostic; (ii)~explicit composition properties; (iii)~pure clipping (${\sim}$13\,$\mu$s); (iv)~violation logging doubles as behavioral telemetry.
+SafeContract differs from all the above: (i)~architecture-agnostic; (ii)~explicit composition properties; (iii)~pure clipping (${\sim}$16\,$\mu$s); (iv)~violation logging doubles as behavioral telemetry.
 
 \textbf{Robustness and adversarial attacks.}
 LIBERO-Plus~\cite{liberoplus} and VLA-Arena~\cite{vlaarena} diagnose VLA brittleness.
@@ -210,7 +210,7 @@ For box constraints, SafeContract's clipping produces outputs \emph{mathematical
 Method & Overhead ($\mu$s) \\
 \midrule
 \texttt{np.clip} alone & 0.9 \\
-SafeContract full decorator & \textbf{12.6} \\
+SafeContract full decorator & \textbf{15.6 $\pm$ 3.8} \\
 AEGIS QP (self-reported~\cite{aegis}) & 360 \\
 \midrule
 SmolVLA inference (M3 CPU) & 16{,}839{,}000 \\
@@ -219,8 +219,8 @@ SmolVLA inference (M3 CPU) & 16{,}839{,}000 \\
 \end{tabular}
 \end{table}
 
-The 12.6\,$\mu$s includes input conversion, per-joint clipping, velocity clamping, re-clipping, and violation logging.
-Even on edge hardware where VLA inference is 100-200\,ms, the overhead remains negligible ($<$0.01\%).
+The full decorator overhead is 15.6\,$\pm$\,3.8\,$\mu$s across 10 trials (each 5{,}000 iterations), including input conversion, per-joint clipping, velocity clamping, re-clipping, and violation logging.
+Even on edge hardware where VLA inference is 100--200\,ms, the overhead remains negligible ($<$0.02\%).
 
 \subsection{Safety-Fidelity Tradeoff (EXP-D)}
 
@@ -316,7 +316,7 @@ A practitioner deploying a VLA can use SafeContract's violation log to (1)~ident
 
 \section{Discussion}
 
-SafeContract provides a lightweight, composable safety layer for VLA deployment: one-line adoption, composable stacking, ${\sim}$13\,$\mu$s overhead.
+SafeContract provides a lightweight, composable safety layer for VLA deployment: one-line adoption, composable stacking, ${\sim}$16\,$\mu$s overhead.
 The controlled ablation (EXP-G) establishes that the monitor adds no distortion to safe policies while catching all violations in corrupted ones.
 
 The more significant finding is that violation patterns carry diagnostic information (EXP-H).
@@ -358,7 +358,7 @@ The monitoring signal is most informative during deployment transitions; in stea
 
 \textbf{Limitations.}
 (1)~EXP-G and EXP-H use synthetic task distributions; real VLA violation patterns may differ.
-(2)~No closed-loop evaluation: aggressive clipping could degrade task success. This is the most important next step.
+(2)~No closed-loop evaluation: aggressive clipping could degrade task success. Preliminary closed-loop experiments with the \texttt{smolvla\_libero} checkpoint yielded 0\% success for both raw and contracted conditions, consistent with known checkpoint reproducibility issues (LeRobot issue \#2354). Closed-loop validation with a verified checkpoint is the most important next step.
 (3)~The 100\% OOB finding (EXP-A) primarily reflects normalization mismatch, not model instability.
 (4)~Property~\ref{prop:shift} is an empirical observation, not a formal statistical guarantee.
 
