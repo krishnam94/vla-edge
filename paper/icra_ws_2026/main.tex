@@ -25,10 +25,10 @@ Vision-Language-Action (VLA) models predict robot actions from images and instru
 We introduce \texttt{SafeContract}, a design-by-contract~\cite{meyer1992} framework that wraps any VLA policy with composable safety constraints via a Python decorator.
 We show that a lightweight safety contract not only prevents unsafe actions but reveals systematic violation patterns that characterize model behavior and detect distribution shift.
 Controlled ablations demonstrate zero false positives on clean policies while catching all violations on drifting and jerky policies.
-Across 130 LIBERO tasks (40 standard + 90 long-horizon), each task produces a distinct \emph{violation fingerprint} across joint dimensions, with bounds violation rates varying from 4\% to 37\% and velocity violations dominating at 72.4\% of all violations.
+Across 130 LIBERO tasks (40 standard + 90 diverse), each task produces a distinct \emph{violation fingerprint} across joint dimensions, with bounds violation rates varying from 4\% to 37\% and velocity violations dominating at 72.4\% of all violations.
 Changes in violation rate detect task switches with $p < 0.005$ across all tested pairs.
 These findings suggest that action-space monitors double as interpretability tools: violation patterns expose what a VLA ``thinks'' about its action space without requiring model internals.
-The full decorator adds ${\sim}$16\,$\mu$s overhead per action, requiring no QP solver, VLM, or model retraining.
+The full decorator adds ${\sim}$13\,$\mu$s overhead per action, requiring no QP solver, VLM, or model retraining.
 We release the framework as an open-source toolkit.\footnote{Code: \url{https://github.com/krishnam94/vla-edge}}
 \end{abstract}
 
@@ -115,7 +115,7 @@ For a stationary policy $\pi$ and fixed contract $C$, the per-step violation rat
 \section{Related Work}
 
 \textbf{Training-time safety.}
-SafeVLA~\cite{safevla} fine-tunes with constrained RL (83\% violation cost reduction); RobustVLA~\cite{robustvla} adds Jacobian regularization. Both require retraining; SafeContract is orthogonal.
+SafeVLA~\cite{safevla} fine-tunes with constrained RL (83\% violation cost reduction); RobustVLA~\cite{robustvla} adds robust optimization for perturbation resilience. Both require retraining; SafeContract is orthogonal.
 
 \textbf{Inference-time enforcement.}
 AEGIS~\cite{aegis} solves a CBF-QP at runtime (0.36\,ms) using VLM scene understanding.
@@ -127,9 +127,10 @@ Agent Behavioral Contracts~\cite{abc} brings design-by-contract to AI agents but
 
 \textbf{Runtime monitoring.}
 Sentinel~\cite{sentinel} combines temporal consistency with VLM monitoring to detect failures, but does not \emph{prevent} unsafe actions and requires an additional VLM call.
+LIBERO-Plus~\cite{liberoplus} and VLA-Arena~\cite{vlaarena} benchmark VLA robustness under perturbation.
 SABER~\cite{saber} demonstrates black-box adversarial attacks on VLAs; SafeContract provides defense-in-depth since enforcement operates at the action boundary regardless of input provenance.
 
-SafeContract differs from all the above: (i)~architecture-agnostic; (ii)~explicit composition; (iii)~pure clipping (${\sim}$16\,$\mu$s); (iv)~violation logging as behavioral telemetry.
+SafeContract differs from all the above: (i)~architecture-agnostic; (ii)~explicit composition; (iii)~pure clipping (${\sim}$13\,$\mu$s); (iv)~violation logging as behavioral telemetry.
 
 \section{Experiments}
 
@@ -215,22 +216,22 @@ Using cosine similarity between live violation vectors and stored fingerprints, 
 \end{figure}
 
 \textbf{Validation on 130 LIBERO tasks.}
-We ran SmolVLA on all 130 LIBERO tasks: 40 from the four standard suites and 90 long-horizon tasks from LIBERO-90.
-Across the 90 long-horizon tasks, bounds violation rates vary from 4\% (kitchen drawer manipulation) to 37\% (living room mug placement).
+We ran SmolVLA on all 130 LIBERO tasks: 40 from the four standard suites and 90 diverse tasks from LIBERO-90.
+Across the 90 diverse tasks, bounds violation rates vary from 4\% (kitchen drawer manipulation) to 37\% (living room mug placement).
 Velocity violations dominate at 72.4\% of all violations, compared to 17.7\% bounds violations.
 Rotational axes are most violated: pitch (30.6\%) and roll (26.6\%), while lateral motions are least affected: yaw (9.3\%) and y-translation (9.7\%).
 The standard suites show consistent patterns:
-\emph{spatial} (x=32\%, pitch=34\%) reflects positioning demands;
-\emph{object} (y=22\%, gripper=24\%) reflects grasping;
-\emph{goal} (z=24\%, roll=26\%, gripper=26\%) reflects rotational actions;
-\emph{10-task} (balanced, max=18\%) reflects diverse coordination.
+\emph{spatial} (x=27\%, pitch=38\%) reflects positioning demands;
+\emph{object} (y=18\%, pitch=24\%) reflects object manipulation;
+\emph{goal} (pitch=38\%, gripper=26\%) reflects goal-directed rotational actions;
+\emph{10-task} (pitch=25\%, gripper=21\%) reflects diverse multi-step coordination.
 These patterns emerge from the same model on genuinely different tasks, confirming that violation fingerprints reflect task-specific action distributions at scale.
 
 %% ===== PAGE 4 =====
 
 \section{Discussion}
 
-SafeContract provides a lightweight, composable safety layer for VLA deployment: one-line adoption, composable stacking, ${\sim}$16\,$\mu$s overhead.
+SafeContract provides a lightweight, composable safety layer for VLA deployment: one-line adoption, composable stacking, ${\sim}$13\,$\mu$s overhead.
 The controlled ablation establishes that the monitor adds no distortion to safe policies while catching all violations in corrupted ones.
 
 The more significant finding is that violation patterns carry diagnostic information.
@@ -275,7 +276,7 @@ Closed-loop LIBERO evaluation with task success rates.
 \bibitem{meyer1992} Meyer, B., ``Applying `Design by Contract','' Computer 25(10):40--51, 1992.
 \bibitem{libero} Liu, B. et al., ``LIBERO: Benchmarking Knowledge Transfer for Lifelong Robot Learning,'' NeurIPS 2023.
 \bibitem{safevla} Zhang, B. et al., ``SafeVLA: Towards Safety Alignment of Vision-Language-Action Model via Constrained Learning,'' NeurIPS 2025, arXiv:2503.03480.
-\bibitem{aegis} Zhang, Y. et al., ``VLSA: VLA Models with Plug-and-Play Safety Constraint Layer,'' arXiv:2512.11891, 2025.
+\bibitem{aegis} Hu, S. et al., ``VLSA: VLA Models with Plug-and-Play Safety Constraint Layer,'' arXiv:2512.11891, 2025.
 \bibitem{safedec} Kapoor, P. et al., ``Constrained Decoding for Robotics Foundation Models,'' arXiv:2509.01728, 2025.
 \bibitem{robustvla} Guo, J. et al., ``On Robustness of Vision-Language-Action Models against Multi-Modal Perturbations,'' ICLR 2026, arXiv:2510.00037.
 \bibitem{safetychip} Yang, Z. et al., ``Plug in the Safety Chip: Enforcing Constraints for LLM-driven Robot Agents,'' ICRA 2024, arXiv:2309.09919.
