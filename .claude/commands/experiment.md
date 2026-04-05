@@ -78,6 +78,24 @@ Each entry in EXPERIMENT_REGISTRY.md:
 - **Issues**: (if any)
 ```
 
+## Experiment Versioning
+
+When re-running an experiment with modifications:
+
+1. **Version naming**: `exp_<name>_v<N>.json` (e.g., `exp_normalization_comparison_v2.json`)
+2. **Never overwrite** the original results - keep all versions for audit trail
+3. **Link versions** in the EXPERIMENT_REGISTRY entry:
+   ```
+   ### EXP-NORM: Normalization Comparison
+   - v1: results/exp_normalization_comparison.json (non-sequential velocity - FLAWED)
+   - v2: results/exp_normalization_comparison_v2.json (consecutive steps - CORRECTED)
+   - **Learning**: velocity must be computed on consecutive timesteps within episodes
+   - **Active version**: v2 (used in paper)
+   ```
+4. **Document WHY** the version changed - what was wrong, what was fixed, what lesson learned
+5. **Paper references** must always point to the latest VALIDATED version
+6. **Git commits** should reference the experiment version: "EXP-NORM v2: fix consecutive velocity"
+
 ## Instinct Integration
 
 These instincts should fire during experiment work:
