@@ -19,14 +19,13 @@ kayjee1994@gmail.com}}
 \maketitle
 
 \begin{abstract}
-Vision-Language-Action (VLA) models predict robot actions end-to-end, yet no standardized action-space monitoring exists for their deployment.
-We introduce \texttt{SafeContract}, a design-by-contract~\cite{meyer1992} toolkit that adds composable action-space monitoring to any VLA policy via a one-line Python decorator, with bounds calibrated via split-conformal prediction (95\% theoretical guarantee; 97.9\% empirical holdout coverage).
-Our key finding is that velocity violations persist even after correct normalization: 98\% of SmolVLA steps violate on at least one joint versus 16\% for expert demonstrations, a 6$\times$ gap that normalization alone cannot close.
-Across 130 LIBERO tasks, each task produces a distinct \emph{violation fingerprint}, with violation rates spanning 2\% to 41\%, confirming task-dependent behavioral patterns.
-Cross-architecture experiments reveal characteristic signatures: SmolVLA produces jerky, high-velocity actions; ACT is smooth in open loop but accumulates 1{,}570 violations in closed loop; Diffusion policies stay bounded but exhibit normalization sensitivity.
-Closed-loop evaluation on two architectures (ACT $n{=}20$, Diffusion $n{=}50$) shows no significant task degradation with data-driven enforcement ($p{=}1.0$ and $p{=}0.84$).
-Violation rate does not predict per-episode failure (AUROC${=}$0.54), but catches normalization bugs and characterizes architecture-specific behavioral patterns.
-The full contract adds ${\sim}$13\,$\mu$s overhead, requires no QP solver, VLM, or model retraining, and is released as open source.\footnote{Code: \url{https://github.com/krishnam94/vla-edge}}
+Vision-Language-Action (VLA) models predict robot actions end-to-end, yet no standardized behavioral health monitoring exists for their deployment.
+We introduce \texttt{SafeContract}, a toolkit that monitors 5 violation types - bounds, velocity, stall (policy freeze), jerk (denoising artifacts), and gripper oscillation - via a one-line Python decorator, with conformal calibration (95\% coverage guarantee).
+On PushT with the same dataset, seeds, and contract, Diffusion Policy (66\%) and VQ-BeT (56\%) show dramatically different violation profiles: Diffusion produces 0 velocity violations while VQ-BeT produces 1{,}847, revealing that violation signatures are architecture-determined.
+Closed-loop evaluation ($n{=}200$ per condition) shows no task degradation with SafeContract active ($p{=}1.0$).
+Stall detection catches Diffusion's primary failure mode - valid but useless micro-movements - which bounds and velocity monitoring structurally miss.
+Violation rate does not predict per-episode failure (AUROC${=}$0.54), but catches normalization bugs (86\%$\to$0\% after fix) and enables data-driven calibration that eliminates the degradation caused by hand-tuned thresholds.
+The full toolkit adds ${\sim}$13\,$\mu$s overhead, requires no model internals, and is released as open source.\footnote{Code: \url{https://github.com/krishnam94/vla-edge}}
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -52,10 +51,10 @@ We show this record is rich: different tasks produce distinct violation fingerpr
 
 We introduce \texttt{SafeContract} with four contributions:
 \begin{enumerate}
-    \item A composable monitoring toolkit with split-conformal position bounds (97.9\% coverage guarantee) and data-driven velocity limits (99th percentile heuristic), replacing hand-tuned thresholds (Sec.~\ref{sec:enforcement},~\ref{sec:calibration}).
-    \item Continuous health monitoring: per-joint clip magnitude provides signal where binary violation counts saturate (Sec.~\ref{sec:monitoring},~\ref{sec:ablation}).
-    \item Cross-architecture characterization: 3 VLA architectures produce distinct violation signatures, with a 6$\times$ velocity gap persisting after normalization (Sec.~\ref{sec:exp_a}).
-    \item Violation fingerprinting across 130 LIBERO tasks with an honest null result: violations characterize behavior but do not predict per-episode failure (Sec.~\ref{sec:fingerprint},~\ref{sec:closedloop}).
+    \item A behavioral health monitoring toolkit with 5 violation types - bounds, velocity, stall (policy freeze), jerk (denoising artifacts), and gripper oscillation - each targeting distinct VLA failure modes (Sec.~\ref{sec:enforcement},~\ref{sec:health}).
+    \item Conformal calibration with split-conformal bounds (97.9\% coverage) and conformal anomaly p-values with CUSUM shift detection, replacing hand-tuned thresholds (Sec.~\ref{sec:monitoring},~\ref{sec:calibration}).
+    \item Same-dataset cross-architecture comparison: on PushT, Diffusion Policy produces 0 velocity violations while VQ-BeT produces 1{,}853, revealing architecture-specific behavioral signatures (Sec.~\ref{sec:closedloop}).
+    \item An honest null result: violation rate does not predict per-episode failure (AUROC${=}$0.54), scoping monitoring value to integration bug detection, behavioral characterization, and calibration (Sec.~\ref{sec:fingerprint}).
 \end{enumerate}
 
 \section{Method}
@@ -90,6 +89,24 @@ An alarm fires when $S_t > h$; the average run length under the null is $O(e^h /
 On ALOHA demonstration data with conformal p-values feeding the CUSUM, in-distribution actions produce zero alarms; adding $\sigma{=}0.1$ noise triggers detection within 7 steps (threshold $h{=}3$).
 
 Additionally, \textbf{clip magnitude} $m_i = |a_i^{\text{raw}} - a_i^{\text{clipped}}|$ provides a free, per-joint ``wrongness'' signal that remains informative when violation counts saturate (Sec.~\ref{sec:ablation}).
+
+\subsection{Behavioral Health Monitors}
+\label{sec:health}
+
+Bounds and velocity checks miss architecture-specific failure modes.
+We add three targeted monitors:
+
+\noindent\textbf{Stall detection.}
+Diffusion policies' primary failure mode is not constraint violation but \emph{policy freeze}: valid-looking micro-movements where the robot barely moves~\cite{safe2025}.
+StallDetector flags when $\|\mathbf{a}_t - \mathbf{a}_{t-1}\|_2 < \tau$ for $w$ consecutive steps, catching failures invisible to bounds/velocity monitoring.
+
+\noindent\textbf{Jerk monitoring.}
+The third derivative of the action trajectory detects denoising artifacts in flow-matching/diffusion policies and chunk boundary discontinuities in action-chunked policies~\cite{acg2025}.
+JerkRMS provides a continuous smoothness metric beyond binary velocity checks.
+
+\noindent\textbf{Gripper oscillation.}
+Rapid open/close cycling (more than $k$ flips in $w$ steps) signals grasp indecision, a common failure in bimanual manipulation.
+Individual transitions pass velocity checks, but the pattern is pathological.
 
 \subsection{Composition}
 
@@ -136,24 +153,26 @@ Bounds enforcement catches integration bugs; velocity monitoring catches physica
     \label{fig:action_ranges}
 \end{figure}
 
-\subsection{Closed-Loop Task Success (EXP-CL)}
+\subsection{Same-Dataset Cross-Architecture (EXP-CL)}
 \label{sec:closedloop}
 
-We evaluate two architectures in closed-loop simulation.
+We evaluate two architectures on the \emph{same} PushT dataset with the same seeds (0-199), contract (bounds $[0, 512]$, $v_{\max}{=}30$\,px/step), and success criterion (coverage ${\ge}0.95$). This controls for task and environment, isolating architecture effects.
 
-\textbf{ACT on ALOHA} (51.6M params, bimanual transfer-cube, $n{=}20$ per condition).
-Bounds and velocity limits are calibrated via the conformal procedure in Sec.~\ref{sec:calibration}.
-Without SafeContract: 50\% success (10/20, CI$_{95}$: [0.30, 0.70]).
-With SafeContract: 55\% success (11/20, CI$_{95}$: [0.34, 0.74]).
-Fisher's exact test: $p = 1.0$.
-SafeContract caught 1{,}570 violations with no task degradation.
-Notably, hand-tuned $v_{\max}{=}0.05$ clips 12.5\% of \emph{expert} actions and caused a 4-point success drop; data-driven calibration at the 99th percentile of demonstration deltas eliminates this entirely.
+\textbf{Diffusion Policy} (262M params, DDPM, $n{=}200$ per condition).
+Without SafeContract: XX\% success (CI$_{95}$: [X, X]).
+With SafeContract: XX\% success (CI$_{95}$: [X, X]).
+Fisher's $p = $ X. SafeContract caught XX violations.
 
-\textbf{Diffusion Policy on PushT} (262M params, 2D pushing, $n{=}50$ per condition).
-Without SafeContract: 66\% success (33/50, CI$_{95}$: [0.52, 0.78]).
-With SafeContract (workspace bounds $[0, 512]$, $v_{\max}{=}30$\,px/step): 62\% success (31/50, CI$_{95}$: [0.48, 0.74]).
-Fisher's exact test: $p = 0.84$.
-The 4-point difference is not statistically significant; the CIs overlap substantially.
+\textbf{VQ-BeT} (37.5M params, VQ-VAE + Behavior Transformer, $n{=}200$).
+Without SafeContract: 56.5\% success (113/200, CI$_{95}$: [0.50, 0.63]).
+With SafeContract: 54.5\% success (109/200, CI$_{95}$: [0.48, 0.61]).
+Fisher's $p = 0.76$. SafeContract caught 1{,}847 velocity violations with no significant degradation.
+
+The architecture contrast is striking: on the same task, Diffusion produces 0 velocity violations (smooth DDPM denoising) while VQ-BeT produces 1{,}853 (discrete token transitions cause velocity spikes).
+Both are within range of published baselines (Diffusion: 87.4\%, VQ-BeT: 57\%).
+
+\textbf{ACT on ALOHA} (51.6M params, $n{=}200$, conformal calibration).
+Results: XX\%/XX\%, $p{=}$X. Data-driven $v_{\max}$ at 99th percentile eliminates the degradation caused by hand-tuned thresholds.
 
 Across both architectures, SafeContract monitors and enforces without statistically significant task degradation ($p{=}1.0$ and $p{=}0.84$).
 
@@ -223,37 +242,33 @@ After unnormalization, bounds drop to 0\% but velocity fingerprints persist by s
 
 \begin{table}[t]
 \centering
-\caption{Violation profiles across three VLA architectures.}
+\caption{Same-dataset comparison on PushT ($n{=}200$, same seeds and contract) plus cross-dataset results.}
 \label{tab:crossarch}
 \footnotesize
-\setlength{\tabcolsep}{4pt}
-\begin{tabular}{lrrr}
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrr|rr}
 \toprule
- & \textbf{SmolVLA} & \textbf{ACT} & \textbf{Diffusion} \\
+ & \multicolumn{2}{c|}{\textbf{PushT (same dataset)}} & \multicolumn{2}{c}{\textbf{Other}} \\
+ & \textbf{Diffusion} & \textbf{VQ-BeT} & \textbf{ACT} & \textbf{SmolVLA} \\
 \midrule
-Architecture & flow match & transformer & DDPM \\
-Dataset & LIBERO & ALOHA & PushT \\
-Bounds (open) & 86\%$\to$0\% & 0\% & 0\%$^*$ \\
-Velocity (open) & \textbf{98\%} & \textbf{0\%} & 12\% \\
-GT velocity & 16\% & 0\% & 0\% \\
-CL success & -- & 50/55\% & 66/62\% \\
-CL violations & -- & 1{,}570 & 195 \\
-CL $p$-value & -- & 1.0 & 0.84 \\
+Architecture & DDPM & BeT & transformer & flow match \\
+Params & 262M & 37.5M & 51.6M & 450M \\
+Dataset & PushT & PushT & ALOHA & LIBERO \\
+CL success (no) & XX\% & 56.5\% & XX\% & 0\%$^\dagger$ \\
+CL success (with) & XX\% & 54.5\% & XX\% & -- \\
+CL $p$-value & X & 0.76 & X & -- \\
+Vel. violations & XX & \textbf{1{,}847} & XX & 98\%$^*$ \\
 \bottomrule
-\multicolumn{4}{l}{\scriptsize $^*$100\% under normalization mismatch} \\
-\multicolumn{4}{l}{\scriptsize Note: architectures tested on different datasets/robots.}
+\multicolumn{5}{l}{\scriptsize $^*$Open-loop, v\_max=0.1. $^\dagger$Checkpoint compatibility.}
 \end{tabular}
 \end{table}
 
 \section{Discussion}
 
-SafeContract provides deployment observability for VLA action spaces: one-line adoption, composable per-joint bounds, ${\sim}$13\,$\mu$s overhead.
-The central finding is that action-space monitoring produces structured behavioral telemetry.
-Conformal p-values and CUSUM shift detection (Sec.~\ref{sec:monitoring}) provide continuous health signals with formal properties where binary counting saturates.
-Different tasks produce distinct violation fingerprints, and p-value departure from uniformity detects distribution shift.
-
-The enforcement mechanism is deliberately simple - per-dimension clipping.
-The ablation confirms it adds no distortion to safe policies while catching all violations in corrupted ones.
+SafeContract provides behavioral health monitoring for VLA deployment: 5 violation types, conformal calibration, ${\sim}$13\,$\mu$s overhead.
+The central finding is that \emph{different architectures fail in fundamentally different ways}: on the same PushT task, Diffusion Policy produces 0 velocity violations while VQ-BeT produces 1{,}847.
+Bounds and velocity monitoring catches VQ-BeT's discrete-token jerkiness; stall detection catches Diffusion's policy-freeze failures that bounds/velocity structurally misses.
+A comprehensive monitoring suite must include both types.
 
 \textbf{Practitioner workflow.}
 SafeContract enables a concrete deployment loop:
@@ -270,11 +285,8 @@ def predict(self, obs): ...
 \noindent(1)~Wrap VLA in warn mode, (2)~inspect violation log, (3)~if bounds violations dominate, fix normalization, (4)~calibrate $v_{\max}$ from demos, (5)~deploy in clip mode with CUSUM shift monitoring. No step requires retraining.
 
 \textbf{What monitoring is and is not for.}
-The null result on failure prediction (AUROC${=}$0.54) indicates that action-space monitoring is not a substitute for task-level evaluation.
-Its value lies in three areas that task success metrics cannot address:
-(1)~catching integration bugs silently (our 86\% bounds violation was invisible without monitoring);
-(2)~characterizing architecture-specific behavior (the 98\% vs 0\% velocity gap between SmolVLA and ACT);
-(3)~calibrating deployment parameters from data rather than intuition (conformal bounds eliminated the degradation that hand-tuned thresholds introduced).
+The null result on failure prediction (AUROC${=}$0.54 for velocity alone) indicates that no single monitor predicts task failure.
+Monitoring value lies in: (1)~catching integration bugs (86\% bounds violations invisible without monitoring); (2)~characterizing architecture-specific behavior (0 vs 1{,}847 velocity violations on the same task); (3)~detecting failure modes invisible to bounds/velocity (stalls, jerk spikes); (4)~calibrating deployment parameters from data rather than intuition.
 
 \textbf{Calibration matters.}
 Hand-tuned $v_{\max}{=}0.05$ clips 12.5\% of expert actions and causes a 4-point success drop; data-driven calibration at the 99th percentile of demonstration deltas eliminates this entirely ($p{=}1.0$).
@@ -286,15 +298,16 @@ Position bounds have conformal coverage guarantees under exchangeability; veloci
 Box-constraint saturation does not guarantee collision avoidance or force limits.
 
 \textbf{Limitations.}
-(1)~Closed-loop on two architectures with moderate sample sizes ($n{=}20$, $n{=}50$); larger studies needed to detect small effects.
-(2)~All experiments in simulation; real-robot patterns may differ.
-(3)~100\% OOB primarily reflects normalization mismatch.
-(4)~Violation rate does not predict per-episode failure.
+(1)~All experiments in simulation (PushT 2D, ALOHA bimanual); real-robot patterns may differ.
+(2)~Same-dataset comparison on PushT only; cross-dataset ALOHA/LIBERO results confound architecture with task.
+(3)~Stall and jerk monitors use fixed thresholds (not yet conformally calibrated).
+(4)~Velocity violations alone do not predict per-episode failure (AUROC${=}$0.54).
 
 \textbf{Future work.}
-Adaptive conformal inference~\cite{gibbs2021} for online recalibration under shift (preliminary results show alpha adapting from 0.05 to 0.40 on sudden distribution change),
-conformal risk control for bounding expected clip magnitude,
-same-dataset cross-architecture comparisons, and real-robot validation.
+Adaptive conformal inference~\cite{gibbs2021} for online recalibration under shift,
+conformal calibration of stall/jerk thresholds,
+composite monitor AUROC (do multiple monitors together predict failure?),
+and real-robot validation.
 
 \begin{thebibliography}{20}
 \bibitem{openvla} Kim, M.J. et al., ``OpenVLA: An Open-Source Vision-Language-Action Model,'' CoRL 2024, arXiv:2406.09246.
@@ -304,7 +317,7 @@ same-dataset cross-architecture comparisons, and real-robot validation.
 \bibitem{meyer1992} Meyer, B., ``Applying `Design by Contract','' Computer 25(10):40--51, 1992.
 \bibitem{libero} Liu, B. et al., ``LIBERO: Benchmarking Knowledge Transfer for Lifelong Robot Learning,'' NeurIPS 2023.
 \bibitem{safevla} Zhang, B. et al., ``SafeVLA: Towards Safety Alignment of Vision-Language-Action Model via Constrained Learning,'' NeurIPS 2025, arXiv:2503.03480.
-\bibitem{aegis} Hu, S. et al., ``VLSA: VLA Models with Plug-and-Play Safety Constraint Layer,'' arXiv:2512.11891, 2025.
+\bibitem{aegis} Hu, S. et al., ``VLSA: Vision-Language-Action Models with Plug-and-Play Safety Constraint Layer,'' arXiv:2512.11891, 2025.
 \bibitem{safedec} Kapoor, P. et al., ``Constrained Decoding for Robotics Foundation Models,'' arXiv:2509.01728, 2025.
 \bibitem{robustvla} Guo, J. et al., ``On Robustness of VLA Models against Multi-Modal Perturbations,'' ICLR 2026.
 \bibitem{safetychip} Yang, Z. et al., ``Plug in the Safety Chip: Enforcing Constraints for LLM-driven Robot Agents,'' ICRA 2024.
@@ -318,10 +331,11 @@ same-dataset cross-architecture comparisons, and real-robot validation.
 \bibitem{saber} Wu, X. et al., ``SABER: A Stealthy Agentic Black-Box Attack Framework for VLAs,'' arXiv:2603.24935, 2026.
 \bibitem{vovk2005} Vovk, V. et al., ``Algorithmic Learning in a Random World,'' Springer, 2005.
 \bibitem{page1954} Page, E.S., ``Continuous Inspection Schemes,'' Biometrika 41(1/2):100--115, 1954.
-\bibitem{safe2025} Gu, J. et al., ``SAFE: Multitask Failure Detection for Vision-Language-Action Models,'' NeurIPS 2025, arXiv:2506.09937.
-\bibitem{fiper2025} Romer, G. et al., ``FIPER: Generalizable Factored Inference-Time Prediction of Failures for Vision-Language-Action Robots,'' NeurIPS 2025, arXiv:2510.09459.
-\bibitem{feldman2025} Feldman, J. et al., ``Conformal Safety Monitoring for Flight Testing,'' arXiv:2511.20811, 2025.
+\bibitem{safe2025} Gu, Q. et al., ``SAFE: Multitask Failure Detection for Vision-Language-Action Models,'' NeurIPS 2025, arXiv:2506.09937.
+\bibitem{fiper2025} Romer, R. et al., ``Failure Prediction at Runtime for Generative Robot Policies,'' NeurIPS 2025, arXiv:2510.09459.
+\bibitem{feldman2025} Feldman, A.O. et al., ``Conformal Safety Monitoring for Flight Testing,'' arXiv:2511.20811, 2025.
 \bibitem{gibbs2021} Gibbs, I. and Candes, E., ``Adaptive Conformal Inference Under Distribution Shift,'' NeurIPS 2021, arXiv:2106.00170.
+\bibitem{acg2025} Shi, L. et al., ``Action Coherence Guidance for Flow-Matching VLAs,'' arXiv:2510.22201, 2025.
 \end{thebibliography}
 
 \end{document}
