@@ -142,7 +142,8 @@ def run_episode(env, policy, device, is_normalized, action_min, action_max,
         if is_normalized and action_min is not None:
             a_min = action_min.numpy()
             a_max = action_max.numpy()
-            action_np = action_np * (a_max - a_min) + a_min
+            # MIN_MAX unnormalize: [-1,1] -> [min,max]
+            action_np = (action_np + 1) / 2 * (a_max - a_min) + a_min
 
         per_step_actions.append(action_np.tolist())
         original = action_np.copy()
