@@ -1,7 +1,10 @@
 ---
-description: Run a panel of 3 critic personas for architecture/roadmap decisions
+description: VLA-specific review panel (overrides system /review-panel with robotics personas)
 argument-hint: Decision or area to review (e.g., "GGUF loading design", "v0.2 roadmap")
 ---
+<!-- VLA-EDGE OVERRIDE: This file overrides the generic system /review-panel skill
+     with VLA/robotics-specific personas. System skill at
+     ~/.claude/skills/review-panel/SKILL.md has the generic version. -->
 
 # Review Panel - Multi-Persona Architecture Review
 

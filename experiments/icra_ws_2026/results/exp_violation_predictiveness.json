@@ -1,0 +1,105 @@
+{
+  "experiment": "EXP-VIOLATION-PRED: Violation Rate as Failure Predictor",
+  "description": "Tests whether per-episode violation rate predicts task failure",
+  "datasets": [
+    {
+      "name": "ACT-holdout (n=50)",
+      "n_episodes": 50,
+      "n_success": 25,
+      "n_fail": 25,
+      "success_violation_rate": {
+        "mean": 0.28030887241203184,
+        "std": 0.11314609451860515,
+        "median": 0.2607003891050584
+      },
+      "failure_violation_rate": {
+        "mean": 0.32026666666666664,
+        "std": 0.15981911997977938,
+        "median": 0.33666666666666667
+      },
+      "mann_whitney": {
+        "U": 338.0,
+        "p_value": 0.31379224637225844,
+        "significant": "False"
+      },
+      "point_biserial": {
+        "r": 0.14281118231895518,
+        "p_value": 0.3224825405586886,
+        "significant": "False"
+      },
+      "auroc": 0.5408,
+      "best_threshold": {
+        "violation_rate": 0.1615151515151515,
+        "precision": 0.5111111111111111,
+        "recall": 0.92,
+        "f1": 0.6571428571428571
+      }
+    },
+    {
+      "name": "ACT-original (n=50)",
+      "n_episodes": 50,
+      "n_success": 30,
+      "n_fail": 20,
+      "success_violation_rate": {
+        "mean": 0.2805783931492883,
+        "std": 0.11433224163244708,
+        "median": 0.23671327025373062
+      },
+      "failure_violation_rate": {
+        "mean": 0.26599999999999996,
+        "std": 0.15185007225696154,
+        "median": 0.18333333333333335
+      },
+      "mann_whitney": {
+        "U": 224.0,
+        "p_value": 0.9351182132325003,
+        "significant": "False"
+      },
+      "point_biserial": {
+        "r": -0.05458773673864054,
+        "p_value": 0.706536554737294,
+        "significant": "False"
+      },
+      "auroc": 0.37333333333333335,
+      "best_threshold": {
+        "violation_rate": 0.12333333333333334,
+        "precision": 0.3877551020408163,
+        "recall": 0.95,
+        "f1": 0.5507246376811594
+      }
+    },
+    {
+      "name": "PushT-Diffusion (n=10)",
+      "n_episodes": 10,
+      "n_success": 8,
+      "n_fail": 2,
+      "success_violation_rate": {
+        "mean": 0.03601376551557562,
+        "std": 0.0230381435281383,
+        "median": 0.038386068187392694
+      },
+      "failure_violation_rate": {
+        "mean": 0.01,
+        "std": 0.0033333333333333335,
+        "median": 0.01
+      },
+      "mann_whitney": {
+        "U": 3.0,
+        "p_value": 0.9111111111111111,
+        "significant": "False"
+      },
+      "point_biserial": {
+        "r": -0.449826541272896,
+        "p_value": 0.1921018527896145,
+        "significant": "False"
+      },
+      "auroc": 0.1875,
+      "best_threshold": {
+        "violation_rate": 0.003787878787878788,
+        "precision": 0.2222222222222222,
+        "recall": 1.0,
+        "f1": 0.3636363636363636
+      }
+    }
+  ]
+}

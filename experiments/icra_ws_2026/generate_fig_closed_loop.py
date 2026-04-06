@@ -1,6 +1,6 @@
 """Generate closed-loop experiment figure (EXP-CL).
 
-Bar chart: Without SafeContract (58%) vs With SafeContract (60%)
+Bar chart: Without SafeContract vs With SafeContract (held-out calibration)
 with Wilson 95% CI error bars and statistical annotations.
 
 Usage:
@@ -57,18 +57,18 @@ def wilson_ci(successes, total, alpha=0.05):
 
 
 def main():
-    with open(RESULTS_DIR / "closed_loop_eval_50ep.json") as f:
+    with open(RESULTS_DIR / ".." / "experiments" / "icra_ws_2026" / "results" / "exp_act_cl_datadriven.json") as f:
         data = json.load(f)
 
     s = data["summary"]
     no_sr = s["no_contract"]["success_rate"]
     with_sr = s["with_contract"]["success_rate"]
-    no_n = s["no_contract"]["total_episodes"]
-    with_n = s["with_contract"]["total_episodes"]
+    no_n = s["no_contract"].get("total", s["no_contract"].get("total_episodes", 20))
+    with_n = s["with_contract"].get("total", s["with_contract"].get("total_episodes", 20))
     no_succ = s["no_contract"]["successes"]
     with_succ = s["with_contract"]["successes"]
-    violations = s["with_contract"]["total_violations"]
-    fisher_p = s["fisher_p_value"]
+    violations = s["with_contract"].get("violations", s["with_contract"].get("total_violations", 0))
+    fisher_p = s.get("fisher_p", s.get("fisher_p_value", 1.0))
 
     # Wilson CIs
     no_lo, no_hi = wilson_ci(no_succ, no_n)
@@ -107,7 +107,7 @@ def main():
     ax.annotate(
         f"p = {fisher_p:.1f} (Fisher's exact)\n"
         f"{violations:,} violations caught\n"
-        f"0 task degradation",
+        f"Conformal + data-driven $v_{{max}}$",
         xy=(0.98, 0.55), xycoords="axes fraction",
         ha="right", va="center",
         fontsize=7.5,

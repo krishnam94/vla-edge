@@ -1,0 +1,248 @@
+{
+  "experiment": "EXP-MONITOR-CROSSARCH: ActionHealthMonitor Cross-Architecture",
+  "description": "Behavioral health signatures across SmolVLA, ACT, and Diffusion",
+  "architectures": {
+    "SmolVLA": {
+      "name": "SmolVLA (synthetic)",
+      "n_sequences": 5,
+      "total_steps": 250,
+      "total_violations": 249,
+      "mean_violation_rate": 0.9960000000000001,
+      "mean_clip_magnitude": 0.5700714256082262,
+      "std_clip_magnitude": 0.011357236967018272,
+      "mean_max_clip_magnitude": 2.663380002975464,
+      "mean_crest_factor": 2.550008678436279,
+      "std_crest_factor": 0.14168795427634112,
+      "mean_ewma_trend": 0.9947316964547394,
+      "mean_health_score": 3.047417263205957
+    },
+    "ACT": {
+      "name": "ACT (synthetic)",
+      "n_sequences": 5,
+      "total_steps": 250,
+      "total_violations": 0,
+      "mean_violation_rate": 0.0,
+      "mean_clip_magnitude": 0.0,
+      "std_clip_magnitude": 0.0,
+      "mean_max_clip_magnitude": 0.0,
+      "mean_crest_factor": 1.5043129205703736,
+      "std_crest_factor": 0.045074977039081136,
+      "mean_ewma_trend": 0.0,
+      "mean_health_score": 0.0
+    },
+    "Diffusion": {
+      "name": "Diffusion (synthetic)",
+      "n_sequences": 5,
+      "total_steps": 250,
+      "total_violations": 0,
+      "mean_violation_rate": 0.0,
+      "mean_clip_magnitude": 0.0,
+      "std_clip_magnitude": 0.0,
+      "mean_max_clip_magnitude": 0.0,
+      "mean_crest_factor": 1.86377010345459,
+      "std_crest_factor": 0.12104152004373758,
+      "mean_ewma_trend": 0.0,
+      "mean_health_score": 0.0
+    }
+  },
+  "full_results": {
+    "SmolVLA": {
+      "name": "SmolVLA (synthetic)",
+      "n_sequences": 5,
+      "total_steps": 250,
+      "total_violations": 249,
+      "mean_violation_rate": 0.9960000000000001,
+      "mean_clip_magnitude": 0.5700714256082262,
+      "std_clip_magnitude": 0.011357236967018272,
+      "mean_max_clip_magnitude": 2.663380002975464,
+      "mean_crest_factor": 2.550008678436279,
+      "std_crest_factor": 0.14168795427634112,
+      "mean_ewma_trend": 0.9947316964547394,
+      "mean_health_score": 3.047417263205957,
+      "per_sequence": [
+        {
+          "n_steps": 50,
+          "violations": 50,
+          "violation_rate": 1.0,
+          "mean_clip_magnitude": 0.5529571345874241,
+          "max_clip_magnitude": 2.873300075531006,
+          "final_crest_factor": 2.73728346824646,
+          "final_ewma_trend": 0.9948462247926799,
+          "health_score": 3.1539821624912436
+        },
+        {
+          "n_steps": 50,
+          "violations": 50,
+          "violation_rate": 1.0,
+          "mean_clip_magnitude": 0.5883285828999111,
+          "max_clip_magnitude": 2.552999973297119,
+          "final_crest_factor": 2.37288236618042,
+          "final_ewma_trend": 0.9948462247926799,
+          "health_score": 2.8643807172931846
+        },
+        {
+          "n_steps": 50,
+          "violations": 50,
+          "violation_rate": 1.0,
+          "mean_clip_magnitude": 0.5714142748287746,
+          "max_clip_magnitude": 2.6059000492095947,
+          "final_crest_factor": 2.468777894973755,
+          "final_ewma_trend": 0.9948462247926799,
+          "health_score": 3.38120901586191
+        },
+        {
+          "n_steps": 50,
+          "violations": 49,
+          "violation_rate": 0.98,
+          "mean_clip_magnitude": 0.5714571390833173,
+          "max_clip_magnitude": 2.4121999740600586,
+          "final_crest_factor": 2.4741787910461426,
+          "final_ewma_trend": 0.9942735831029776,
+          "health_score": 3.0286906560436018
+        },
+        {
+          "n_steps": 50,
+          "violations": 50,
+          "violation_rate": 1.0,
+          "mean_clip_magnitude": 0.5661999966417041,
+          "max_clip_magnitude": 2.872499942779541,
+          "final_crest_factor": 2.696920871734619,
+          "final_ewma_trend": 0.9948462247926799,
+          "health_score": 2.808823764339846
+        }
+      ]
+    },
+    "ACT": {
+      "name": "ACT (synthetic)",
+      "n_sequences": 5,
+      "total_steps": 250,
+      "total_violations": 0,
+      "mean_violation_rate": 0.0,
+      "mean_clip_magnitude": 0.0,
+      "std_clip_magnitude": 0.0,
+      "mean_max_clip_magnitude": 0.0,
+      "mean_crest_factor": 1.5043129205703736,
+      "std_crest_factor": 0.045074977039081136,
+      "mean_ewma_trend": 0.0,
+      "mean_health_score": 0.0,
+      "per_sequence": [
+        {
+          "n_steps": 50,
+          "violations": 0,
+          "violation_rate": 0.0,
+          "mean_clip_magnitude": 0.0,
+          "max_clip_magnitude": 0.0,
+          "final_crest_factor": 1.5851370096206665,
+          "final_ewma_trend": 0.0,
+          "health_score": 0.0
+        },
+        {
+          "n_steps": 50,
+          "violations": 0,
+          "violation_rate": 0.0,
+          "mean_clip_magnitude": 0.0,
+          "max_clip_magnitude": 0.0,
+          "final_crest_factor": 1.487753987312317,
+          "final_ewma_trend": 0.0,
+          "health_score": 0.0
+        },
+        {
+          "n_steps": 50,
+          "violations": 0,
+          "violation_rate": 0.0,
+          "mean_clip_magnitude": 0.0,
+          "max_clip_magnitude": 0.0,
+          "final_crest_factor": 1.4978277683258057,
+          "final_ewma_trend": 0.0,
+          "health_score": 0.0
+        },
+        {
+          "n_steps": 50,
+          "violations": 0,
+          "violation_rate": 0.0,
+          "mean_clip_magnitude": 0.0,
+          "max_clip_magnitude": 0.0,
+          "final_crest_factor": 1.5040647983551025,
+          "final_ewma_trend": 0.0,
+          "health_score": 0.0
+        },
+        {
+          "n_steps": 50,
+          "violations": 0,
+          "violation_rate": 0.0,
+          "mean_clip_magnitude": 0.0,
+          "max_clip_magnitude": 0.0,
+          "final_crest_factor": 1.446781039237976,
+          "final_ewma_trend": 0.0,
+          "health_score": 0.0
+        }
+      ]
+    },
+    "Diffusion": {
+      "name": "Diffusion (synthetic)",
+      "n_sequences": 5,
+      "total_steps": 250,
+      "total_violations": 0,
+      "mean_violation_rate": 0.0,
+      "mean_clip_magnitude": 0.0,
+      "std_clip_magnitude": 0.0,
+      "mean_max_clip_magnitude": 0.0,
+      "mean_crest_factor": 1.86377010345459,
+      "std_crest_factor": 0.12104152004373758,
+      "mean_ewma_trend": 0.0,
+      "mean_health_score": 0.0,
+      "per_sequence": [
+        {
+          "n_steps": 50,
+          "violations": 0,
+          "violation_rate": 0.0,
+          "mean_clip_magnitude": 0.0,
+          "max_clip_magnitude": 0.0,
+          "final_crest_factor": 2.076463460922241,
+          "final_ewma_trend": 0.0,
+          "health_score": 0.0
+        },
+        {
+          "n_steps": 50,
+          "violations": 0,
+          "violation_rate": 0.0,
+          "mean_clip_magnitude": 0.0,
+          "max_clip_magnitude": 0.0,
+          "final_crest_factor": 1.8068530559539795,
+          "final_ewma_trend": 0.0,
+          "health_score": 0.0
+        },
+        {
+          "n_steps": 50,
+          "violations": 0,
+          "violation_rate": 0.0,
+          "mean_clip_magnitude": 0.0,
+          "max_clip_magnitude": 0.0,
+          "final_crest_factor": 1.8951562643051147,
+          "final_ewma_trend": 0.0,
+          "health_score": 0.0
+        },
+        {
+          "n_steps": 50,
+          "violations": 0,
+          "violation_rate": 0.0,
+          "mean_clip_magnitude": 0.0,
+          "max_clip_magnitude": 0.0,
+          "final_crest_factor": 1.8262122869491577,
+          "final_ewma_trend": 0.0,
+          "health_score": 0.0
+        },
+        {
+          "n_steps": 50,
+          "violations": 0,
+          "violation_rate": 0.0,
+          "mean_clip_magnitude": 0.0,
+          "max_clip_magnitude": 0.0,
+          "final_crest_factor": 1.714165449142456,
+          "final_ewma_trend": 0.0,
+          "health_score": 0.0
+        }
+      ]
+    }
+  }
+}

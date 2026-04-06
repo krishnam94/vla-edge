@@ -25,6 +25,27 @@ pip-installable toolkit for profiling, optimizing, validating, and deploying VLA
 - `ruff check src/ tests/` - Lint
 - `ruff format src/ tests/` - Format
 
+### System Skills (available in ALL projects via `~/.claude/skills/`)
+- `/investigate` - Scientific method orchestrator (plan, run, report)
+- `/experiment` - Experiment management with registration + validation
+- `/verify-experiments` - Methodology verification checklist
+- `/novelty-check` - Prior art search (skeptical reviewer)
+- `/synthesize` - Novel idea combination generator
+- `/critic` - Architecture criticism (generic; overridden below for VLA)
+- `/review-panel` - Multi-persona review (generic; overridden below for VLA)
+
+### Project Commands (VLA-specific, in `.claude/commands/`)
+- `/morning` - Start of session - project state + overnight insights
+- `/research` - Deep research with 5 VLA-specialist agents (overrides system /research)
+- `/critic` - VLA-specific architecture critic (overrides system /critic)
+- `/review-panel` - VLA-specific 3-persona review (overrides system /review-panel)
+- `/profile` - Profile a VLA model and get optimization suggestions
+- `/add-model` - Adding a new VLA model adapter
+- `/add-backend` - Adding a new hardware backend
+- `/benchmark` - Full benchmark run + results update
+- `/doc-hygiene` - Check all docs for staleness and inconsistencies
+- `/experiment` - Project experiment registry at `experiments/icra_ws_2026/`
+
 ## Conventions
 - New backend = one file in backends/ + `@register_backend("name")`. No core changes.
 - New model = one file in models/ + `@register_model("name")`. No core changes.

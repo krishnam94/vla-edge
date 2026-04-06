@@ -294,14 +294,7 @@ for local development we also run the code review agent before pushing.
 | `/synthesize` | Generate novel idea combinations from questions + papers + code |
 
 ### Claude Code - Installed Plugins (global, use as-is)
-| Plugin | When to use |
-|--------|------------|
-| `/code-review` | On every PR before merging (5 parallel review agents) |
-| `/commit` | For clean, context-aware commit messages |
-| `/commit-push-pr` | When shipping a feature branch to remote + PR |
-| `/feature-dev` | For non-trivial new features (explore -> design -> build) |
-| `/revise-claude-md` | After major changes to keep CLAUDE.md current |
-| `code-simplifier` | Monthly cleanup pass to find simplifiable code |
+NOTE: These were planned but never created. Available commands: see `.claude/commands/` directory.
 
 ### Claude Code - Scheduled Tasks (live on claude.ai/code/scheduled, 3 AM PT)
 
@@ -327,7 +320,7 @@ Morning: You run /morning in CLI
   -> Shows priorities for today based on insights + open issues
 ```
 
-### Instincts (auto-enforced behavior)
+### Instincts (auto-enforced behavior, 8 project instincts)
 | Instinct | What it enforces |
 |----------|-----------------|
 | jetson-constraints | TRT-LLM broken, use llama.cpp, 8GB memory budget |
@@ -336,6 +329,8 @@ Morning: You run /morning in CLI
 | no-hardcoded-keys | Env vars only for tokens/keys |
 | test-before-ship | Tests required before marking features done |
 | sources-in-research | Source URLs in all research docs |
+| investigate-errors | When a tool fails, investigate root cause before retrying with different syntax |
+| post-push-check | After git push, check CI status and update LEARNING.md |
 
 ---
 

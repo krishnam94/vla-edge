@@ -1,0 +1,92 @@
+{
+  "experiment": "EXP-STRESS: Task Success vs Enforcement Strictness",
+  "model": "lerobot/act_aloha_sim_transfer_cube_human",
+  "n_episodes_per_level": 20,
+  "calibration": "holdout_80_20",
+  "levels": [
+    {
+      "v_max": null,
+      "label": "no_contract",
+      "success_rate": 0.6,
+      "successes": 12,
+      "total_episodes": 20,
+      "ci_95": [
+        0.387,
+        0.781
+      ],
+      "total_violations": 0,
+      "total_actions_modified": 0,
+      "mean_violations_per_ep": 0.0
+    },
+    {
+      "v_max": 0.01,
+      "label": "v_max=0.01",
+      "success_rate": 0.0,
+      "successes": 0,
+      "total_episodes": 20,
+      "ci_95": [
+        0,
+        0.161
+      ],
+      "total_violations": 5640,
+      "total_actions_modified": 5306,
+      "mean_violations_per_ep": 282.0
+    },
+    {
+      "v_max": 0.02,
+      "label": "v_max=0.02",
+      "success_rate": 0.1,
+      "successes": 2,
+      "total_episodes": 20,
+      "ci_95": [
+        0.028,
+        0.301
+      ],
+      "total_violations": 4144,
+      "total_actions_modified": 3950,
+      "mean_violations_per_ep": 207.2
+    },
+    {
+      "v_max": 0.05,
+      "label": "v_max=0.05",
+      "success_rate": 0.65,
+      "successes": 13,
+      "total_episodes": 20,
+      "ci_95": [
+        0.433,
+        0.819
+      ],
+      "total_violations": 1743,
+      "total_actions_modified": 1690,
+      "mean_violations_per_ep": 87.15
+    },
+    {
+      "v_max": 0.1,
+      "label": "v_max=0.1",
+      "success_rate": 0.5,
+      "successes": 10,
+      "total_episodes": 20,
+      "ci_95": [
+        0.299,
+        0.701
+      ],
+      "total_violations": 607,
+      "total_actions_modified": 607,
+      "mean_violations_per_ep": 30.35
+    },
+    {
+      "v_max": 0.2,
+      "label": "v_max=0.2",
+      "success_rate": 0.45,
+      "successes": 9,
+      "total_episodes": 20,
+      "ci_95": [
+        0.258,
+        0.658
+      ],
+      "total_violations": 711,
+      "total_actions_modified": 710,
+      "mean_violations_per_ep": 35.55
+    }
+  ]
+}

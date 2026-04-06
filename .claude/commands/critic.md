@@ -1,7 +1,10 @@
 ---
-description: Architecture critic - argues against design decisions, grounded in reality
+description: VLA-specific architecture critic (overrides system /critic with robotics personas)
 argument-hint: Optional specific area to critique (e.g., "registry pattern", "safety module")
 ---
+<!-- VLA-EDGE OVERRIDE: This file overrides the generic system /critic skill
+     with VLA/robotics-specific personas and file paths. System skill at
+     ~/.claude/skills/critic/SKILL.md has the generic version. -->
 
 # Architecture Critic Agent
 

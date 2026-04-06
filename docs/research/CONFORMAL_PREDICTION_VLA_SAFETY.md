@@ -356,6 +356,27 @@ The nonconformity function choices, in order of sophistication:
 
 ---
 
+## 8. April 2026 Update: Novelty Assessment
+
+**Updated 2026-04-05** after deep literature sweep. See `sessions/2026-04-05_conformal_prediction_deep_dive.md` for full analysis.
+
+### Closest competitors identified:
+1. **WATCH** (ICML 2025): Conformal martingales for AI monitoring. General, not VLA-specific. Uses martingales not CUSUM.
+2. **Conformal CUSUM** (Vovk et al., ALT 2025): Theory paper on conformal CUSUM validity/efficiency. Not applied to robotics.
+3. **SAFE** (NeurIPS 2025): CP for VLA failure detection. Trained failure detector, not action residuals.
+4. **FIPER** (NeurIPS 2025): CP-calibrated RND + entropy for failure prediction. Requires training.
+
+### Our novel combination:
+- Conformal p-values ON VLA action residuals (not learned features)
+- CUSUM sequential detection (not threshold, not martingale)
+- Multi-scale temporal structure (step/chunk/episode)
+- Training-free (no auxiliary network needed)
+- Integrated with DBC safety contracts
+
+### Verdict: MODERATE-TO-STRONG novelty. Application-level, not methodological.
+
+---
+
 ## Sources
 
 - [SAFE: Multitask Failure Detection for VLAs](https://arxiv.org/abs/2506.09937) - TRI, NeurIPS 2025
@@ -375,3 +396,17 @@ The nonconformity function choices, in order of sophistication:
 - [Introspective Planning - NeurIPS 2024](https://github.com/kevinliang888/IntroPlan)
 - [Formal Verification and Control with CP - IEEE](https://ieeexplore.ieee.org/iel8/5488303/11274416/11274485.pdf)
 - [S2-NNDS: Safe and Stable Neural Dynamical Systems](https://arxiv.org/abs/2511.20593)
+- [WATCH: Weighted-Conformal Martingales](https://arxiv.org/abs/2505.04608) - Prinster et al., ICML 2025
+- [Conformal CUSUM Validity and Efficiency](https://arxiv.org/abs/2412.03464) - Vovk et al., ALT 2025
+- [Conformal Decision Theory](https://arxiv.org/abs/2310.05921) - Lekeufack et al., 2023
+- [Conformal Policy Learning](https://arxiv.org/abs/2311.01457) - Huang et al., 2023
+- [SoNIC: ACI for Social Navigation](https://arxiv.org/abs/2407.17460) - Shin et al., 2024-2025
+- [Conformal Safety Monitoring for Flight](https://arxiv.org/abs/2511.20811) - Feldman et al., ICRA 2025 WS
+- [Conformal Changepoint Localization](https://arxiv.org/abs/2505.00292) - Dandapanthula & Ramdas, 2025-2026
+- [Conditional Conformal Test Martingales](https://arxiv.org/abs/2602.13848) - Shaer et al., 2026
+- [PACS: Safety Filtering for Diffusion Policies](https://arxiv.org/abs/2511.06385) - ICRA 2026
+- [Conformal STL Shield](https://arxiv.org/abs/2602.14322) - ICASSP 2026
+- [Egocentric CP for Navigation](https://arxiv.org/abs/2504.00447) - Shin et al., 2025
+- [Safe Planning with Robust CP](https://arxiv.org/abs/2602.12616) - Rahaman et al., 2026
+- [Calibrated Safety for Image-Controlled Autonomy](https://arxiv.org/abs/2508.09346) - 2025
+- [Adaptive CP Anomaly Detection - ICLR 2026](https://openreview.net/forum?id=7uFbs68MSI)

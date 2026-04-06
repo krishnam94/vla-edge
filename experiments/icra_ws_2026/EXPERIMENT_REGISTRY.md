@@ -708,3 +708,87 @@ Lesson: integrate experiment registration into the workflow, not as an afterthou
   - n_episodes: 10 per condition (20 total)
   - device: mps
 - **Status**: REGISTERED (pre-run)
+
+### EXP-ACT-CL-HOLDOUT: ACT Closed-Loop with Hold-Out Calibration
+- **Script**: `experiments/closed_loop_eval_holdout.py`
+- **Results**: `results/closed_loop_eval_holdout.json`
+- **Hypothesis**: Using held-out calibration (80/20 split of demo episodes) to compute safety bounds eliminates calibration leakage while maintaining identical task success
+- **Design review**:
+  - **What exactly does each metric measure?** Success rate = fraction of episodes where is_success=True. Violations = count of steps where bounds or velocity exceeded. Actions modified = steps where clipping changed the action.
+  - **Calibration split**: Load ACT training demonstrations. Use first 80% of episodes to compute mean/std. Hold out 20% for coverage verification. Then run closed-loop eval with the 80%-calibrated bounds.
+  - **Coverage verification**: Report what % of held-out demo actions fall within the calibrated bounds. If coverage is <95%, bounds are too tight. If >99.9%, bounds are too loose.
+  - **Does the result make physical sense?** We expect similar success rate to EXP-ACT-CL (58-60%) since bounds should be nearly identical (large sample, 4*std is generous). The key difference is methodological rigor.
+  - **Null hypothesis**: Held-out bounds produce same success rate as full-data bounds (p>0.05 Fisher's test).
+  - **Baseline**: EXP-ACT-CL results (58% vs 60%, p=1.0, 3949 violations)
+  - **Risk**: If training data episodes are ordered non-randomly (e.g., early=easy, late=hard), the 80/20 split could be biased. Mitigation: shuffle before splitting.
+- **Parameters**:
+  - model: lerobot/act_aloha_sim_transfer_cube_human
+  - env: AlohaTransferCube-v0
+  - calibration: 80% of demo episodes (shuffled), bounds = mean +/- 4*std
+  - holdout: 20% of demo episodes for coverage verification
+  - v_max: 0.05 rad/step
+  - n_episodes: 50 per condition (same seeds 0-49 as EXP-ACT-CL)
+  - device: mps
+- **Status**: REGISTERED
+
+### EXP-MONITOR-NOISE: ActionHealthMonitor on Noise Ablation
+- **Script**: `experiments/icra_ws_2026/exp_monitor_noise.py`
+- **Results**: `experiments/icra_ws_2026/results/exp_monitor_noise.json`
+- **Hypothesis**: EWMA trend rises monotonically with noise level; crest factor increases with spikier noise; clip magnitude grows with violation severity
+- **Design review**:
+  - **What exactly does each metric measure?** Clip magnitude = |raw - clipped| per joint. Crest factor = peak/RMS over sliding window. EWMA = exponential moving avg of binary violation indicator.
+  - **Data source**: Reprocess ground-truth LIBERO actions with Gaussian noise at 7 levels (sigma 0 to 1.0), same as exp_noise_ablation. Apply SafeContract + ActionHealthMonitor.
+  - **No new model inference needed** - uses GT actions + synthetic noise.
+  - **Expected**: At sigma=0, all metrics near zero. At sigma=1.0, clip magnitude saturates, crest factor high, EWMA near 1.0.
+  - **Null result**: If metrics don't separate noise levels, the monitor adds no value over binary counting.
+- **Parameters**: 500 GT actions, 7 noise levels, bounds [-1,1], v_max=0.1, EWMA alpha=0.1, window=50
+- **Status**: REGISTERED
+
+### EXP-ACAM-CROSSTASK: ACAM Cross-Task Adaptation on SmolVLA LIBERO
+- **Script**: `experiments/icra_ws_2026/exp_acam_crosstask.py`
+- **Results**: `experiments/icra_ws_2026/results/exp_acam_crosstask.json`
+- **Hypothesis**: ACAM adaptive alpha adjusts when deployed on different task suite than calibrated on
+- **Design review**:
+  - Calibrate on suite A, deploy on suite B. No leakage.
+  - Expected: cross-suite shows alpha rising (shift). Same-suite stays stable.
+  - Null: if alpha doesn't adapt, ACAM adds no value over static CP.
+- **Parameters**: 2 suites (spatial + object), 5 tasks each, 20 steps, alpha=0.05, gamma=0.005
+- **Status**: REGISTERED
+
+### EXP-MONITOR-CROSSARCH: ActionHealthMonitor Cross-Architecture
+- **Script**: `experiments/icra_ws_2026/exp_monitor_crossarch.py`
+- **Results**: `experiments/icra_ws_2026/results/exp_monitor_crossarch.json`
+- **Hypothesis**: SmolVLA produces high clip magnitude + high crest factor (spiky violations); ACT produces low clip magnitude + low crest factor (smooth); Diffusion is intermediate
+- **Design review**:
+  - **Data source**: Reprocess actions from exp_normalization_comparison_v2 (SmolVLA), exp_act_fingerprint (ACT), exp_diffusion_fingerprint (Diffusion) through ActionHealthMonitor.
+  - **No new model inference** - uses existing action sequences.
+  - **Metric definitions**: Mean clip magnitude per architecture, mean crest factor, final EWMA trend.
+  - **Risk**: ACT had 0% velocity violations in open loop, so monitor metrics may all be zero. That's actually informative (healthy policy = zero signal).
+- **Parameters**: Same contract parameters as original experiments per architecture
+- **Status**: REGISTERED
+
+### EXP-CONFORMAL: Conformal Prediction Bounds on ALOHA Demo Data
+- **Script**: `exp_conformal.py`
+- **Results**: `results/exp_conformal.json`
+- **Hypothesis**: Conformal prediction provides tighter, statistically valid safety bounds compared to the heuristic 4-sigma approach, while maintaining guaranteed coverage on held-out data
+- **Design review**:
+  - **Data source**: lerobot/aloha_sim_transfer_cube_human (50 episodes, 20000 frames, 14 action dims)
+  - **No model inference** - pure numpy computation on demonstration actions
+  - **Calibration split**: 80/20 episode split (seed=42), same as EXP-ACT-CL-HOLDOUT
+  - **Nonconformity score**: score_i = max_j |a_ij - cal_mean_j| / cal_std_j (normalized absolute deviation)
+  - **Conformal threshold**: (1-alpha)(1 + 1/n_cal) quantile of calibration scores, alpha=0.05
+  - **Conformal bounds**: cal_mean +/- threshold * cal_std (per dimension)
+  - **Comparison**: Conformal bounds vs 4-sigma heuristic bounds (same as EXP-ACT-CL-HOLDOUT)
+  - **Coverage verification**: What fraction of held-out actions fall within conformal bounds? Should be >= 1-alpha = 95%
+  - **Data-driven v_max**: 99th percentile of consecutive action deltas from calibration data (per dimension)
+  - **Does the result make physical sense?** Conformal bounds should be tighter than 4-sigma (which covers ~99.994% of Gaussian) while still achieving 95% coverage. If conformal bounds are wider, something is wrong.
+  - **Risk**: If action distribution is highly non-Gaussian, conformal may still be valid (distribution-free) but 4-sigma will under-cover.
+- **Parameters**:
+  - dataset: lerobot/aloha_sim_transfer_cube_human
+  - calibration_split: 0.8
+  - seed: 42
+  - alpha: 0.05
+  - n_sigma_heuristic: 4.0
+  - v_max_percentile: 99
+  - device: cpu (numpy only)
+- **Status**: REGISTERED

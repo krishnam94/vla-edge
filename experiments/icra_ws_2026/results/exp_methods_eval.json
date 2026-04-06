@@ -1,0 +1,111 @@
+{
+  "experiment": "EXP-METHODS-EVAL: Conformal + CUSUM + STL on real/simulated VLA data",
+  "conformal_degradation_detection": {
+    "in_distribution": {
+      "mean_p": 0.3327295169051934,
+      "ks_p": 2.6342247791618107e-33,
+      "shift": "True"
+    },
+    "mild_noise_0.1": {
+      "mean_p": 0.06835697768889443,
+      "ks_p": 1.3715113409012763e-116,
+      "shift": "True"
+    },
+    "heavy_noise_0.5": {
+      "mean_p": 0.0006874570339353792,
+      "ks_p": 0.0,
+      "shift": "True"
+    }
+  },
+  "cusum_detection_speed": {
+    "in_distribution_alarms": 0,
+    "mild_noise_first_alarm": null,
+    "heavy_noise_first_alarm": null
+  },
+  "stl_demo_vs_noisy": {
+    "demo": {
+      "steps": 400,
+      "specs": {
+        "bounds_health": {
+          "mean_robustness": 0.3,
+          "min_robustness": 0.3,
+          "max_robustness": 0.3,
+          "violation_rate": 0.0,
+          "n_violated": 0
+        },
+        "velocity_health": {
+          "mean_robustness": 0.0301,
+          "min_robustness": -0.0472,
+          "max_robustness": 0.05,
+          "violation_rate": 0.1,
+          "n_violated": 40
+        },
+        "recovery": {
+          "mean_robustness": 0.3,
+          "min_robustness": 0.3,
+          "max_robustness": 0.3,
+          "violation_rate": 0.0,
+          "n_violated": 0
+        },
+        "sustained_health": {
+          "mean_robustness": 0.5,
+          "min_robustness": 0.5,
+          "max_robustness": 0.5,
+          "violation_rate": 0.0,
+          "n_violated": 0
+        },
+        "smoothness_trend": {
+          "mean_robustness": 0.0,
+          "min_robustness": 0.0,
+          "max_robustness": 0.0,
+          "violation_rate": 0.0,
+          "n_violated": 0
+        }
+      },
+      "overall_min_robustness": -0.0472,
+      "n_any_spec_violated": 40
+    },
+    "noisy": {
+      "steps": 400,
+      "specs": {
+        "bounds_health": {
+          "mean_robustness": -0.0137,
+          "min_robustness": -0.5247,
+          "max_robustness": 0.3,
+          "violation_rate": 0.5075,
+          "n_violated": 203
+        },
+        "velocity_health": {
+          "mean_robustness": -0.7121,
+          "min_robustness": -1.3241,
+          "max_robustness": 0.05,
+          "violation_rate": 0.9975,
+          "n_violated": 399
+        },
+        "recovery": {
+          "mean_robustness": -0.3066,
+          "min_robustness": -0.8247,
+          "max_robustness": 0.3,
+          "violation_rate": 0.9875,
+          "n_violated": 395
+        },
+        "sustained_health": {
+          "mean_robustness": -0.475,
+          "min_robustness": -0.5,
+          "max_robustness": 0.5,
+          "violation_rate": 0.9775,
+          "n_violated": 391
+        },
+        "smoothness_trend": {
+          "mean_robustness": 0.0008,
+          "min_robustness": -0.3087,
+          "max_robustness": 0.3074,
+          "violation_rate": 0.48,
+          "n_violated": 192
+        }
+      },
+      "overall_min_robustness": -1.3241,
+      "n_any_spec_violated": 400
+    }
+  }
+}

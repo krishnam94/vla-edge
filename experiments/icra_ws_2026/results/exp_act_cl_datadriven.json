@@ -1,0 +1,321 @@
+{
+  "experiment": "EXP-ACT-CL-DATADRIVEN: ACT with conformal bounds + data-driven v_max",
+  "calibration": "conformal_95pct + per_joint_v_max_p99",
+  "v_max_per_joint": [
+    0.0015339814126491547,
+    0.016873818933963777,
+    0.01227182149887085,
+    0.009203881025314331,
+    0.01687377691268921,
+    0.013805821537971497,
+    0.07335639297962186,
+    0.013805825263261795,
+    0.024543702602386475,
+    0.012271881103515625,
+    0.033747583627700806,
+    0.03374758142977953,
+    0.06596118211746216,
+    0.08073370814323425
+  ],
+  "summary": {
+    "no_contract": {
+      "success_rate": 0.5,
+      "successes": 10,
+      "total": 20,
+      "violations": 0
+    },
+    "with_contract": {
+      "success_rate": 0.55,
+      "successes": 11,
+      "total": 20,
+      "violations": 1570
+    },
+    "fisher_p": 1.0
+  },
+  "episodes": {
+    "no_contract": [
+      {
+        "success": true,
+        "violations": 0,
+        "modified": 0,
+        "steps": 253,
+        "ep": 0
+      },
+      {
+        "success": true,
+        "violations": 0,
+        "modified": 0,
+        "steps": 296,
+        "ep": 1
+      },
+      {
+        "success": false,
+        "violations": 0,
+        "modified": 0,
+        "steps": 300,
+        "ep": 2
+      },
+      {
+        "success": false,
+        "violations": 0,
+        "modified": 0,
+        "steps": 300,
+        "ep": 3
+      },
+      {
+        "success": false,
+        "violations": 0,
+        "modified": 0,
+        "steps": 300,
+        "ep": 4
+      },
+      {
+        "success": true,
+        "violations": 0,
+        "modified": 0,
+        "steps": 271,
+        "ep": 5
+      },
+      {
+        "success": false,
+        "violations": 0,
+        "modified": 0,
+        "steps": 300,
+        "ep": 6
+      },
+      {
+        "success": false,
+        "violations": 0,
+        "modified": 0,
+        "steps": 300,
+        "ep": 7
+      },
+      {
+        "success": false,
+        "violations": 0,
+        "modified": 0,
+        "steps": 300,
+        "ep": 8
+      },
+      {
+        "success": false,
+        "violations": 0,
+        "modified": 0,
+        "steps": 300,
+        "ep": 9
+      },
+      {
+        "success": false,
+        "violations": 0,
+        "modified": 0,
+        "steps": 300,
+        "ep": 10
+      },
+      {
+        "success": true,
+        "violations": 0,
+        "modified": 0,
+        "steps": 268,
+        "ep": 11
+      },
+      {
+        "success": true,
+        "violations": 0,
+        "modified": 0,
+        "steps": 295,
+        "ep": 12
+      },
+      {
+        "success": false,
+        "violations": 0,
+        "modified": 0,
+        "steps": 300,
+        "ep": 13
+      },
+      {
+        "success": false,
+        "violations": 0,
+        "modified": 0,
+        "steps": 300,
+        "ep": 14
+      },
+      {
+        "success": true,
+        "violations": 0,
+        "modified": 0,
+        "steps": 287,
+        "ep": 15
+      },
+      {
+        "success": true,
+        "violations": 0,
+        "modified": 0,
+        "steps": 287,
+        "ep": 16
+      },
+      {
+        "success": true,
+        "violations": 0,
+        "modified": 0,
+        "steps": 251,
+        "ep": 17
+      },
+      {
+        "success": true,
+        "violations": 0,
+        "modified": 0,
+        "steps": 295,
+        "ep": 18
+      },
+      {
+        "success": true,
+        "violations": 0,
+        "modified": 0,
+        "steps": 287,
+        "ep": 19
+      }
+    ],
+    "with_contract": [
+      {
+        "success": true,
+        "violations": 135,
+        "modified": 131,
+        "steps": 281,
+        "ep": 0
+      },
+      {
+        "success": false,
+        "violations": 62,
+        "modified": 58,
+        "steps": 300,
+        "ep": 1
+      },
+      {
+        "success": false,
+        "violations": 109,
+        "modified": 109,
+        "steps": 300,
+        "ep": 2
+      },
+      {
+        "success": true,
+        "violations": 57,
+        "modified": 57,
+        "steps": 284,
+        "ep": 3
+      },
+      {
+        "success": true,
+        "violations": 57,
+        "modified": 57,
+        "steps": 299,
+        "ep": 4
+      },
+      {
+        "success": true,
+        "violations": 43,
+        "modified": 43,
+        "steps": 265,
+        "ep": 5
+      },
+      {
+        "success": false,
+        "violations": 61,
+        "modified": 61,
+        "steps": 300,
+        "ep": 6
+      },
+      {
+        "success": true,
+        "violations": 91,
+        "modified": 88,
+        "steps": 276,
+        "ep": 7
+      },
+      {
+        "success": true,
+        "violations": 92,
+        "modified": 89,
+        "steps": 258,
+        "ep": 8
+      },
+      {
+        "success": true,
+        "violations": 121,
+        "modified": 121,
+        "steps": 271,
+        "ep": 9
+      },
+      {
+        "success": false,
+        "violations": 36,
+        "modified": 36,
+        "steps": 300,
+        "ep": 10
+      },
+      {
+        "success": true,
+        "violations": 63,
+        "modified": 63,
+        "steps": 270,
+        "ep": 11
+      },
+      {
+        "success": true,
+        "violations": 49,
+        "modified": 49,
+        "steps": 290,
+        "ep": 12
+      },
+      {
+        "success": false,
+        "violations": 40,
+        "modified": 40,
+        "steps": 300,
+        "ep": 13
+      },
+      {
+        "success": false,
+        "violations": 119,
+        "modified": 118,
+        "steps": 300,
+        "ep": 14
+      },
+      {
+        "success": true,
+        "violations": 57,
+        "modified": 57,
+        "steps": 294,
+        "ep": 15
+      },
+      {
+        "success": true,
+        "violations": 39,
+        "modified": 39,
+        "steps": 267,
+        "ep": 16
+      },
+      {
+        "success": false,
+        "violations": 142,
+        "modified": 139,
+        "steps": 300,
+        "ep": 17
+      },
+      {
+        "success": false,
+        "violations": 52,
+        "modified": 52,
+        "steps": 300,
+        "ep": 18
+      },
+      {
+        "success": false,
+        "violations": 145,
+        "modified": 139,
+        "steps": 300,
+        "ep": 19
+      }
+    ]
+  }
+}
