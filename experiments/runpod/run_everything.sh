@@ -1,6 +1,6 @@
 #!/bin/bash
 # Run ALL SafeContract experiments on RunPod A40
-# PushT (2 architectures) + ALOHA transfer (n=100) + ALOHA insertion (n=50)
+# PushT (2 architectures) + ALOHA transfer (n=200) + ALOHA insertion (n=50)
 set -e
 
 export MUJOCO_GL=osmesa
@@ -16,41 +16,41 @@ echo "Start: $(date)"
 
 echo ""
 echo "=========================================="
-echo "1/5: VQ-BeT on PushT (n=100)"
+echo "1/5: VQ-BeT on PushT (n=200)"
 echo "=========================================="
 python -u experiments/runpod/exp_vqbet_pusht_gpu.py \
-    --n-episodes 100 --device cuda --seed-base 0 \
+    --n-episodes 200 --device cuda --seed-base 0 \
     --output /workspace/results/vqbet_pusht_100ep.json \
     2>&1 | tee /workspace/results/vqbet_pusht.log
 
 echo ""
 echo "=========================================="
-echo "2/5: Diffusion on PushT (n=100)"
+echo "2/5: Diffusion on PushT (n=200)"
 echo "=========================================="
 python -u experiments/runpod/exp_diffusion_pusht_gpu.py \
-    --n-episodes 100 --device cuda --seed-base 0 \
+    --n-episodes 200 --device cuda --seed-base 0 \
     --output /workspace/results/diffusion_pusht_100ep.json \
     2>&1 | tee /workspace/results/diffusion_pusht.log
 
 # ============================================
-# ALOHA: Transfer cube (n=100) + Insertion (n=50)
+# ALOHA: Transfer cube (n=200) + Insertion (n=50)
 # ============================================
 
 echo ""
 echo "=========================================="
-echo "3/5: ACT on ALOHA transfer-cube (n=100)"
+echo "3/5: ACT on ALOHA transfer-cube (n=200)"
 echo "=========================================="
 python -u experiments/runpod/exp_act_aloha_gpu.py \
-    --n-episodes 100 --device cuda --seed-base 0 \
+    --n-episodes 200 --device cuda --seed-base 0 \
     --output /workspace/results/act_aloha_transfer_100ep.json \
     2>&1 | tee /workspace/results/act_aloha_transfer.log
 
 echo ""
 echo "=========================================="
-echo "4/5: ACT on ALOHA insertion (n=100)"
+echo "4/5: ACT on ALOHA insertion (n=200)"
 echo "=========================================="
 python -u experiments/runpod/exp_act_aloha_gpu.py \
-    --n-episodes 100 --device cuda --seed-base 0 \
+    --n-episodes 200 --device cuda --seed-base 0 \
     --task insertion \
     --output /workspace/results/act_aloha_insertion_100ep.json \
     2>&1 | tee /workspace/results/act_aloha_insertion.log
