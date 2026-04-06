@@ -71,8 +71,15 @@ def run_episode(env, policy, device, is_normalized, action_min, action_max,
     prev_action = None
     max_coverage = 0.0
 
+    # ImageNet normalization for ResNet18 backbone
+    IMG_MEAN = np.array([0.485, 0.456, 0.406], dtype=np.float32).reshape(1, 1, 3)
+    IMG_STD = np.array([0.229, 0.224, 0.225], dtype=np.float32).reshape(1, 1, 3)
+
     for step in range(max_steps):
-        img = torch.from_numpy(obs["pixels"]).float().to(device) / 255.0
+        # Normalize image: uint8 -> [0,1] -> ImageNet mean/std
+        img_np = obs["pixels"].astype(np.float32) / 255.0
+        img_np = (img_np - IMG_MEAN) / IMG_STD
+        img = torch.from_numpy(img_np).float().to(device)
         img = img.permute(2, 0, 1).unsqueeze(0)
         # MIN_MAX normalize state: raw -> [-1, 1]
         agent_pos = obs["agent_pos"].astype(np.float32)
