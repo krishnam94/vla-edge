@@ -90,31 +90,30 @@ def load_policy(device="cuda"):
     return policy, is_normalized
 
 
-def get_unnorm_stats(device="cuda"):
-    """Get unnormalization stats from model checkpoint."""
+def get_norm_stats(device="cuda"):
+    """Get normalization stats from model checkpoint."""
     from huggingface_hub import hf_hub_download
     from safetensors.torch import load_file
 
     path = hf_hub_download(MODEL_ID, "model.safetensors")
     state = load_file(path)
 
-    stats = {}
-    for key in state:
-        if "unnormalize" in key or "normalize" in key:
-            stats[key] = state[key]
-
-    action_min = stats.get("unnormalize_outputs.buffer_action.min",
-                          stats.get("normalize_targets.buffer_action.min"))
-    action_max = stats.get("unnormalize_outputs.buffer_action.max",
-                          stats.get("normalize_targets.buffer_action.max"))
+    action_min = state.get("unnormalize_outputs.buffer_action.min",
+                          state.get("normalize_targets.buffer_action.min"))
+    action_max = state.get("unnormalize_outputs.buffer_action.max",
+                          state.get("normalize_targets.buffer_action.max"))
+    state_min = state.get("normalize_inputs.buffer_observation_state.min")
+    state_max = state.get("normalize_inputs.buffer_observation_state.max")
 
     if action_min is not None:
         print(f"  Action unnorm: min={action_min.numpy()}, max={action_max.numpy()}")
-    return action_min, action_max
+    if state_min is not None:
+        print(f"  State norm: min={state_min.numpy().round(1)}, max={state_max.numpy().round(1)}")
+    return action_min, action_max, state_min, state_max
 
 
 def run_episode(env, policy, device, is_normalized, action_min, action_max,
-                safety_contract=None, max_steps=300):
+                state_min, state_max, safety_contract=None, max_steps=300):
     obs, info = env.reset()
     policy.reset()
 
@@ -129,7 +128,14 @@ def run_episode(env, policy, device, is_normalized, action_min, action_max,
     for step in range(max_steps):
         img = torch.from_numpy(obs["pixels"]).float().to(device) / 255.0
         img = img.permute(2, 0, 1).unsqueeze(0)
-        state = torch.from_numpy(obs["agent_pos"]).float().to(device).unsqueeze(0)
+        # MIN_MAX normalize state: raw -> [-1, 1]
+        agent_pos = obs["agent_pos"].astype(np.float32)
+        if state_min is not None:
+            s_min, s_max = state_min.numpy(), state_max.numpy()
+            agent_pos_norm = (agent_pos - s_min) / (s_max - s_min + 1e-8) * 2 - 1
+        else:
+            agent_pos_norm = agent_pos
+        state = torch.from_numpy(agent_pos_norm).float().to(device).unsqueeze(0)
 
         with torch.inference_mode():
             action = policy.select_action({"observation.image": img, "observation.state": state})
@@ -202,7 +208,7 @@ def main():
     args = parser.parse_args()
 
     policy, is_normalized = load_policy(args.device)
-    action_min, action_max = get_unnorm_stats(args.device)
+    action_min, action_max, state_min, state_max = get_norm_stats(args.device)
 
     # Same contract as Diffusion PushT experiment
     contract = {
@@ -226,7 +232,7 @@ def main():
 
             t0 = time.time()
             metrics = run_episode(env, policy, args.device, is_normalized, action_min, action_max,
-                                  safety_contract=sc)
+                                  state_min, state_max, safety_contract=sc)
             elapsed = time.time() - t0
 
             # Don't store per-step actions in episode results (too large)
