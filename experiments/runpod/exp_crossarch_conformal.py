@@ -65,8 +65,8 @@ def main():
     # Load experiment results and extract violation info per architecture
     arch_results = {}
 
-    for name, filename in [("Diffusion", "diffusion_pusht_100ep.json"),
-                           ("VQ-BeT", "vqbet_pusht_50ep.json")]:
+    for name, filename in [("Diffusion", "diffusion_pusht_200ep.json"),
+                           ("VQ-BeT", "vqbet_pusht_200ep.json")]:
         filepath = results_dir / filename
         if not filepath.exists():
             print(f"  {name}: file not found at {filepath}, skipping")

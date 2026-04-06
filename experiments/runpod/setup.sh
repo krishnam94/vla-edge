@@ -30,6 +30,10 @@ if [ ! -d /workspace/vla-edge ]; then
 fi
 cd /workspace/vla-edge
 
+# 4b. Install vla-edge package (for violations, conformal, monitor modules)
+echo "Installing vla-edge package..."
+pip install -q -e . 2>/dev/null || echo "WARNING: vla-edge install failed, using sys.path fallback"
+
 # 5. Create results directory
 mkdir -p /workspace/results
 
@@ -37,7 +41,7 @@ mkdir -p /workspace/results
 echo "Pre-downloading models..."
 python -c "
 from huggingface_hub import snapshot_download
-for m in ['lerobot/vqbet_pusht', 'lerobot/diffusion_pusht', 'lerobot/act_aloha_sim_transfer_cube_human']:
+for m in ['lerobot/vqbet_pusht', 'lerobot/diffusion_pusht', 'lerobot/act_aloha_sim_transfer_cube_human', 'lerobot/act_aloha_sim_insertion_human']:
     print(f'  Downloading {m}...')
     snapshot_download(m)
 print('All models cached.')

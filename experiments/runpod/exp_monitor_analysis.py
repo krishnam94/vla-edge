@@ -208,6 +208,24 @@ def run_monitored_episode(env, policy, device, stats, use_imagenet_norm=False, m
     }
 
 
+def compute_episode_atv(per_step):
+    """Action Total Variation: sum of absolute deltas (ACG paper, arXiv:2510.22201)."""
+    if len(per_step) < 2:
+        return 0.0
+    actions = np.array([s["action"] for s in per_step])
+    return float(np.sum(np.abs(np.diff(actions, axis=0))))
+
+
+def compute_episode_reversals(per_step):
+    """Direction reversal rate: fraction of steps where velocity sign flips."""
+    if len(per_step) < 3:
+        return 0.0
+    actions = np.array([s["action"] for s in per_step])
+    velocities = np.diff(actions, axis=0)
+    sign_changes = np.sum(np.abs(np.diff(np.sign(velocities), axis=0)) > 0)
+    return float(sign_changes / max(len(velocities) - 1, 1))
+
+
 def compute_aurocs(episodes):
     """Compute AUROC for each monitor as failure predictor."""
     from scipy.stats import mannwhitneyu
@@ -226,6 +244,8 @@ def compute_aurocs(episodes):
         "mean_jerk": lambda e: e["jerk_summary"].get("mean_jerk", 0),
         "jerk_rms": lambda e: e["jerk_summary"].get("jerk_rms", 0),
         "jerk_violations": lambda e: e["jerk_summary"].get("violations", 0),
+        "atv": lambda e: e.get("atv", 0),
+        "reversal_rate": lambda e: e.get("reversal_rate", 0),
     }
 
     for name, fn in metrics.items():
@@ -268,8 +288,10 @@ def main():
             m = run_monitored_episode(env, policy, args.device, stats, use_imagenet_norm=use_imagenet)
             elapsed = time.time() - t0
 
-            # Don't store per-step in final output (too large)
+            # Compute trajectory-level metrics from per-step data
             per_step = m.pop("per_step")
+            m["atv"] = compute_episode_atv(per_step)
+            m["reversal_rate"] = compute_episode_reversals(per_step)
             m["episode"] = ep
             m["elapsed_s"] = elapsed
             episodes.append(m)
