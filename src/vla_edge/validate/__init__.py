@@ -23,6 +23,7 @@ Usage:
 """
 
 from vla_edge.validate.contract import safety_contract
+from vla_edge.validate.guard import SafetyGuard
 from vla_edge.validate.monitor import ActionHealthMonitor, ActionHealthReport
 from vla_edge.validate.conformal import (
     ConformalActionMonitor,
@@ -38,6 +39,7 @@ from vla_edge.validate.violations import (
 from vla_edge.validate.stl_monitor import STLActionMonitor
 
 __all__ = [
+    "SafetyGuard",
     "safety_contract",
     "ActionHealthMonitor",
     "ActionHealthReport",

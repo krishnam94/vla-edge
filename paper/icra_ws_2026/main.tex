@@ -268,18 +268,21 @@ Bounds and velocity monitoring catches VQ-BeT's discrete-token jerkiness; stall 
 A comprehensive monitoring suite must include both types.
 
 \textbf{Practitioner workflow.}
-SafeContract enables a concrete deployment loop:
+\texttt{SafetyGuard} integrates all monitors in a single callable, calibrated from demonstration data:
 
 {\small
 \begin{verbatim}
-@safety_contract(bounds=conformal_bounds,
-    velocity_max=demo_p99, mode="warn")
+guard = SafetyGuard.from_demos(demo_actions)
+@guard.wrap
 def predict(self, obs): ...
-# Log: step=42 dim=3 viol=bounds mag=0.31
+# Every call: clip + stall + jerk + p-value
+report = guard.get_summary()
 \end{verbatim}
 }
 \vspace{-2mm}
-\noindent(1)~Wrap VLA in warn mode, (2)~inspect violation log, (3)~if bounds violations dominate, fix normalization, (4)~calibrate $v_{\max}$ from demos, (5)~deploy in clip mode with CUSUM shift monitoring. No step requires retraining.
+\noindent\texttt{from\_demos} computes conformal bounds and data-driven velocity limits automatically.
+Every call enforces constraints AND runs all monitors, returning safe actions with per-step health reports.
+No hand-tuning, no model internals, no retraining.
 
 \textbf{What monitoring is and is not for.}
 The null result on failure prediction (AUROC${=}$0.54 for velocity alone) indicates that no single monitor predicts task failure.

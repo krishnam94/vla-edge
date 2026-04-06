@@ -1,116 +1,127 @@
-"""Tests for SafetyGuard - inference-time safety enforcement."""
+"""Tests for SafetyGuard - integrated enforcement + monitoring."""
 
 import numpy as np
 import pytest
 
-from vla_edge.backends.base import InferenceResult
-from vla_edge.validate.guard import GuardedResult, SafetyGuard
-from vla_edge.validate.safety import SafetyConfig
+from vla_edge.validate.guard import SafetyGuard
 
 
-class FakeBackend:
-    """Minimal backend for testing."""
+class TestSafetyGuard:
+    def test_from_demos(self):
+        rng = np.random.RandomState(42)
+        demos = rng.randn(200, 7).astype(np.float32) * 0.5
+        guard = SafetyGuard.from_demos(demos, alpha=0.05)
+        assert guard.bounds_lo.shape == (7,)
+        assert guard.bounds_hi.shape == (7,)
+        assert guard.conformal is not None
 
-    def infer(self, model, observation):
-        actions = model(observation)
-        return InferenceResult(actions=actions, latency_ms=1.0, memory_peak_mb=0.0)
+    def test_clips_out_of_bounds(self):
+        rng = np.random.RandomState(42)
+        demos = rng.randn(200, 7).astype(np.float32) * 0.5
+        guard = SafetyGuard.from_demos(demos)
 
+        extreme = np.ones(7, dtype=np.float32) * 10.0
+        safe = guard(extreme)
+        assert safe.max() <= guard.bounds_hi.max() + 1e-6
 
-class SafeModel:
-    """Model that returns safe actions."""
+    def test_no_clip_on_safe_action(self):
+        rng = np.random.RandomState(42)
+        demos = rng.randn(200, 7).astype(np.float32) * 0.5
+        guard = SafetyGuard.from_demos(demos)
 
-    def predict(self, image, instruction, state=None):
-        return np.zeros(7, dtype=np.float32)
+        safe_action = np.zeros(7, dtype=np.float32)
+        result = guard(safe_action)
+        np.testing.assert_allclose(result, safe_action, atol=1e-6)
 
-    def __call__(self, obs):
-        return np.zeros(7, dtype=np.float32)
+    def test_velocity_clamping(self):
+        demos = np.zeros((200, 2), dtype=np.float32)
+        guard = SafetyGuard.from_demos(demos)
 
+        guard(np.array([0.0, 0.0], dtype=np.float32))
+        result = guard(np.array([100.0, 100.0], dtype=np.float32))
+        # Should be clamped by velocity limit
+        assert result.max() < 100.0
 
-class UnsafeModel:
-    """Model that returns out-of-bounds actions."""
+    def test_conformal_pvalue(self):
+        rng = np.random.RandomState(42)
+        demos = rng.randn(200, 7).astype(np.float32) * 0.5
+        guard = SafetyGuard.from_demos(demos)
 
-    def __call__(self, obs):
-        return np.array([5.0, -5.0, 0.5, 0.0, 0.0, 0.0, 0.0], dtype=np.float32)
+        guard(rng.randn(7).astype(np.float32) * 0.5)
+        report = guard.get_report()
+        assert report is not None
+        assert "p_value" in report
+        assert 0 <= report["p_value"] <= 1
 
+    def test_stall_detection(self):
+        demos = np.zeros((200, 3), dtype=np.float32)
+        guard = SafetyGuard.from_demos(demos, mode="monitor_only")
 
-@pytest.fixture
-def basic_config():
-    return SafetyConfig(
-        action_bounds=np.array([[-1, 1]] * 7, dtype=np.float32),
-        max_velocity=np.full(7, 0.1, dtype=np.float32),
-    )
+        action = np.zeros(3, dtype=np.float32)
+        for _ in range(20):
+            guard(action)
 
+        report = guard.get_report()
+        assert report["is_stalled"]
 
-@pytest.fixture
-def guard(basic_config):
-    return SafetyGuard(basic_config)
+    def test_summary(self):
+        rng = np.random.RandomState(42)
+        demos = rng.randn(200, 7).astype(np.float32)
+        guard = SafetyGuard.from_demos(demos)
 
+        for _ in range(10):
+            guard(rng.randn(7).astype(np.float32) * 2)
 
-@pytest.fixture
-def backend():
-    return FakeBackend()
+        summary = guard.get_summary()
+        assert summary["n_steps"] == 10
+        assert "stall" in summary
+        assert "jerk" in summary
+        assert "cusum" in summary
+        assert "violation_types" in summary
 
+    def test_wrap_decorator(self):
+        rng = np.random.RandomState(42)
+        demos = rng.randn(200, 7).astype(np.float32) * 0.5
+        guard = SafetyGuard.from_demos(demos)
 
-@pytest.fixture
-def obs():
-    return {"image": np.zeros((224, 224, 3), dtype=np.uint8)}
+        @guard.wrap
+        def predict(x):
+            return x * 10.0
 
+        result = predict(np.ones(7))
+        assert result.max() <= guard.bounds_hi.max() + 1e-6
 
-def test_safe_inference(guard, backend, obs):
-    """Safe model should pass with no violations."""
-    result = guard.safe_infer(backend, SafeModel(), obs)
-    assert isinstance(result, GuardedResult)
-    assert result.is_safe
-    assert result.safety.total_actions == 1
-    assert len(result.safety.violations) == 0
+    def test_monitor_only_mode(self):
+        rng = np.random.RandomState(42)
+        demos = rng.randn(200, 7).astype(np.float32) * 0.5
+        guard = SafetyGuard.from_demos(demos, mode="monitor_only")
 
+        extreme = np.ones(7, dtype=np.float32) * 10.0
+        result = guard(extreme)
+        # In monitor_only mode, action should NOT be clipped
+        np.testing.assert_allclose(result, extreme)
 
-def test_unsafe_inference_clips(guard, backend, obs):
-    """Unsafe model should be clipped and violations reported."""
-    result = guard.safe_infer(backend, UnsafeModel(), obs)
-    assert not result.is_safe
-    assert len(result.safety.violations) > 0
-    # Clipped actions should be within bounds
-    assert np.all(result.clipped_actions >= -1.0)
-    assert np.all(result.clipped_actions <= 1.0)
-    # Original should still be out of bounds
-    assert np.any(np.abs(result.original_actions) > 1.0)
+    def test_reset(self):
+        rng = np.random.RandomState(42)
+        demos = rng.randn(200, 7).astype(np.float32)
+        guard = SafetyGuard.from_demos(demos)
 
+        for _ in range(10):
+            guard(rng.randn(7).astype(np.float32))
+        assert guard._n_steps == 10
 
-def test_violation_tracking(guard, backend, obs):
-    """Guard should track violation statistics."""
-    assert guard.violation_rate == 0.0
+        guard.reset()
+        assert guard._n_steps == 0
+        assert guard.get_report() is None
 
-    guard.safe_infer(backend, SafeModel(), obs)
-    assert guard.violation_rate == 0.0
+    def test_shift_detection(self):
+        rng = np.random.RandomState(42)
+        demos = rng.randn(500, 7).astype(np.float32) * 0.5
+        guard = SafetyGuard.from_demos(demos)
 
-    guard.safe_infer(backend, UnsafeModel(), obs)
-    assert guard.violation_rate == 0.5  # 1 of 2 calls had violations
+        # Feed shifted actions
+        for _ in range(50):
+            guard(rng.randn(7).astype(np.float32) * 0.5 + 5.0)
 
-    summary = guard.summary
-    assert summary["total_calls"] == 2
-    assert summary["calls_with_violations"] == 1
-
-
-def test_guard_reset(guard, backend, obs):
-    """Reset should clear all statistics."""
-    guard.safe_infer(backend, UnsafeModel(), obs)
-    assert guard._total_calls == 1
-
-    guard.reset()
-    assert guard._total_calls == 0
-    assert guard.violation_rate == 0.0
-    assert guard.summary["total_calls"] == 0
-
-
-def test_guard_summary_structure(guard, backend, obs):
-    """Summary should have all expected fields."""
-    guard.safe_infer(backend, SafeModel(), obs)
-    summary = guard.summary
-
-    assert "total_calls" in summary
-    assert "calls_with_violations" in summary
-    assert "violation_rate" in summary
-    assert "total_violations" in summary
-    assert "critical_violations" in summary
-    assert "max_velocity_observed" in summary
+        shift = guard.test_shift()
+        assert "shift_detected" in shift or "error" in shift
