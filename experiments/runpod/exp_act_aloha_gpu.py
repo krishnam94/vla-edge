@@ -14,8 +14,21 @@ import gymnasium
 from datasets import load_dataset
 from scipy.stats import fisher_exact
 
-MODEL_ID = "lerobot/act_aloha_sim_transfer_cube_human"
-DATASET_ID = "lerobot/aloha_sim_transfer_cube_human"
+TASKS = {
+    "transfer": {
+        "model": "lerobot/act_aloha_sim_transfer_cube_human",
+        "dataset": "lerobot/aloha_sim_transfer_cube_human",
+        "env": "gym_aloha/AlohaTransferCube-v0",
+    },
+    "insertion": {
+        "model": "lerobot/act_aloha_sim_insertion_human",
+        "dataset": "lerobot/aloha_sim_insertion_human",
+        "env": "gym_aloha/AlohaInsertion-v0",
+    },
+}
+MODEL_ID = None  # set in main()
+DATASET_ID = None
+ENV_ID = None
 
 
 def compute_conformal_calibration(seed=42):
@@ -73,7 +86,7 @@ def load_policy(device="cuda"):
     print(f"  Loaded: {n:,} params on {device}")
 
     # Check normalization
-    env = gymnasium.make("gym_aloha/AlohaTransferCube-v0")
+    env = gymnasium.make(ENV_ID)
     obs, _ = env.reset(seed=9999)
     policy.reset()
 
@@ -164,8 +177,16 @@ def main():
     parser.add_argument("--n-episodes", type=int, default=100)
     parser.add_argument("--device", type=str, default="cuda")
     parser.add_argument("--seed-base", type=int, default=0)
+    parser.add_argument("--task", type=str, default="transfer", choices=["transfer", "insertion"])
     parser.add_argument("--output", type=str, default="/workspace/results/act_aloha_100ep.json")
     args = parser.parse_args()
+
+    global MODEL_ID, DATASET_ID, ENV_ID
+    task_cfg = TASKS[args.task]
+    MODEL_ID = task_cfg["model"]
+    DATASET_ID = task_cfg["dataset"]
+    ENV_ID = task_cfg["env"]
+    print(f"Task: {args.task} | Model: {MODEL_ID} | Env: {ENV_ID}")
 
     action_lo, action_hi, v_max_per_joint = compute_conformal_calibration()
     policy, is_normalized = load_policy(args.device)
@@ -178,7 +199,7 @@ def main():
         print(f"\n{'='*50}\n  {condition} ({args.n_episodes} episodes)\n{'='*50}")
         sc = contract if condition == "with_contract" else None
         for ep in range(args.n_episodes):
-            env = gymnasium.make("gym_aloha/AlohaTransferCube-v0")
+            env = gymnasium.make(ENV_ID)
             env.reset(seed=args.seed_base + ep)
             t0 = time.time()
             m = run_episode(env, policy, args.device, is_normalized, action_mean, action_std, safety_contract=sc)
