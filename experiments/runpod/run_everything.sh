@@ -16,11 +16,11 @@ echo "Start: $(date)"
 
 echo ""
 echo "=========================================="
-echo "1/5: VQ-BeT on PushT (n=50)"
+echo "1/5: VQ-BeT on PushT (n=100)"
 echo "=========================================="
 python -u experiments/runpod/exp_vqbet_pusht_gpu.py \
-    --n-episodes 50 --device cuda --seed-base 0 \
-    --output /workspace/results/vqbet_pusht_50ep.json \
+    --n-episodes 100 --device cuda --seed-base 0 \
+    --output /workspace/results/vqbet_pusht_100ep.json \
     2>&1 | tee /workspace/results/vqbet_pusht.log
 
 echo ""
@@ -47,12 +47,12 @@ python -u experiments/runpod/exp_act_aloha_gpu.py \
 
 echo ""
 echo "=========================================="
-echo "4/5: ACT on ALOHA insertion (n=50)"
+echo "4/5: ACT on ALOHA insertion (n=100)"
 echo "=========================================="
 python -u experiments/runpod/exp_act_aloha_gpu.py \
-    --n-episodes 50 --device cuda --seed-base 0 \
+    --n-episodes 100 --device cuda --seed-base 0 \
     --task insertion \
-    --output /workspace/results/act_aloha_insertion_50ep.json \
+    --output /workspace/results/act_aloha_insertion_100ep.json \
     2>&1 | tee /workspace/results/act_aloha_insertion.log
 
 # ============================================
