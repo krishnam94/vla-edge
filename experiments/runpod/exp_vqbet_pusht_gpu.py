@@ -21,10 +21,43 @@ MODEL_ID = "lerobot/vqbet_pusht"
 
 
 def load_policy(device="cuda"):
-    """Load VQ-BeT. Under lerobot 0.4.x, from_pretrained handles normalization."""
+    """Load VQ-BeT with manual config patch (from_pretrained has mlp_hidden_dim bug)."""
+    import json
+    from dataclasses import fields as dc_fields, MISSING
     from lerobot.policies.vqbet.modeling_vqbet import VQBeTPolicy
-    print(f"Loading VQ-BeT from {MODEL_ID}...")
-    policy = VQBeTPolicy.from_pretrained(MODEL_ID)
+    from lerobot.policies.vqbet.configuration_vqbet import VQBeTConfig
+    from lerobot.configs.types import FeatureType, PolicyFeature
+    from huggingface_hub import hf_hub_download
+    from safetensors.torch import load_file
+
+    print(f"Loading VQ-BeT from {MODEL_ID} (manual config patch)...")
+
+    config_path = hf_hub_download(MODEL_ID, "config.json")
+    with open(config_path) as f:
+        raw = json.load(f)
+    for field in ["mlp_hidden_dim", "type"]:
+        raw.pop(field, None)
+
+    def convert_features(d):
+        return {k: PolicyFeature(type=FeatureType[v["type"]], shape=v["shape"]) for k, v in d.items()}
+    raw["input_features"] = convert_features(raw["input_features"])
+    raw["output_features"] = convert_features(raw["output_features"])
+
+    valid = {f.name for f in dc_fields(VQBeTConfig)}
+    clean = {k: v for k, v in raw.items() if k in valid}
+    config = VQBeTConfig.__new__(VQBeTConfig)
+    for f in dc_fields(VQBeTConfig):
+        if f.name in clean:
+            setattr(config, f.name, clean[f.name])
+        elif f.default is not MISSING:
+            setattr(config, f.name, f.default)
+        elif f.default_factory is not MISSING:
+            setattr(config, f.name, f.default_factory())
+
+    policy = VQBeTPolicy(config)
+    weights_path = hf_hub_download(MODEL_ID, "model.safetensors")
+    state = load_file(weights_path)
+    policy.load_state_dict(state, strict=False)
     policy.to(device)
     policy.eval()
     n = sum(p.numel() for p in policy.parameters())
