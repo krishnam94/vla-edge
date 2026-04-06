@@ -9,7 +9,7 @@
 
 \begin{document}
 
-\title{SafeContract: Action-Space Monitoring Reveals\\Distinct Violation Patterns Across VLA Architectures}
+\title{SafeContract: Lightweight Action-Space Guardrails\\with Conformal Calibration for VLA Deployment}
 
 \author{\IEEEauthorblockN{Krishnam Gupta}
 \IEEEauthorblockA{Independent Research \\
@@ -19,13 +19,10 @@ kayjee1994@gmail.com}}
 \maketitle
 
 \begin{abstract}
-Vision-Language-Action (VLA) models predict robot actions end-to-end, yet no standardized behavioral health monitoring exists for their deployment.
-We introduce \texttt{SafeContract}, a toolkit that monitors 5 violation types - bounds, velocity, stall (policy freeze), jerk (denoising artifacts), and gripper oscillation - via a one-line Python decorator, with conformal calibration (95\% coverage guarantee).
-On PushT with the same dataset, seeds, and contract, Diffusion Policy (66\%) and VQ-BeT (56\%) show dramatically different violation profiles: Diffusion produces 0 velocity violations while VQ-BeT produces 1{,}847, revealing that violation signatures are architecture-determined.
-Closed-loop evaluation ($n{=}200$ per condition) shows no task degradation with SafeContract active ($p{=}1.0$).
-Stall detection catches Diffusion's primary failure mode - valid but useless micro-movements - which bounds and velocity monitoring structurally miss.
-Violation rate does not predict per-episode failure (AUROC${=}$0.54), but catches normalization bugs (86\%$\to$0\% after fix) and enables data-driven calibration that eliminates the degradation caused by hand-tuned thresholds.
-The full toolkit adds ${\sim}$13\,$\mu$s overhead, requires no model internals, and is released as open source.\footnote{Code: \url{https://github.com/krishnam94/vla-edge}}
+VLA models predict robot actions end-to-end, but their outputs go to motors with no standardized safety monitoring.
+We introduce \texttt{SafeContract}, a lightweight toolkit (13\,$\mu$s overhead) that monitors 5 violation types via a one-line Python decorator with conformal calibration (95\% coverage guarantee).
+On the same PushT dataset, Diffusion Policy and VQ-BeT produce dramatically different violation profiles (0 vs.\ 1{,}847 velocity violations), revealing architecture-determined behavioral signatures invisible without monitoring.
+Violation rate alone does not predict per-episode failure (AUROC${=}$0.54), but catches normalization bugs instantly and enables data-driven calibration that eliminates degradation from hand-tuned thresholds.\footnote{Code: \url{https://github.com/krishnam94/vla-edge}}
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -51,9 +48,9 @@ We show this record is rich: different tasks produce distinct violation fingerpr
 
 We introduce \texttt{SafeContract} with four contributions:
 \begin{enumerate}
-    \item A behavioral health monitoring toolkit with 5 violation types - bounds, velocity, stall (policy freeze), jerk (denoising artifacts), and gripper oscillation - each targeting distinct VLA failure modes (Sec.~\ref{sec:enforcement},~\ref{sec:health}).
+    \item A runtime action monitoring toolkit~\cite{kim2026guardrails} with 5 violation types - bounds, velocity, stall (policy freeze), jerk (denoising artifacts), and gripper oscillation - each targeting distinct VLA failure modes (Sec.~\ref{sec:enforcement},~\ref{sec:health}).
     \item Conformal calibration with split-conformal bounds (97.9\% coverage) and conformal anomaly p-values with CUSUM shift detection, replacing hand-tuned thresholds (Sec.~\ref{sec:monitoring},~\ref{sec:calibration}).
-    \item Same-dataset cross-architecture comparison: on PushT, Diffusion Policy produces 0 velocity violations while VQ-BeT produces 1{,}853, revealing architecture-specific behavioral signatures (Sec.~\ref{sec:closedloop}).
+    \item Same-dataset cross-architecture comparison: on PushT, Diffusion Policy produces 0 velocity violations while VQ-BeT produces 1{,}847, revealing architecture-specific behavioral signatures (Sec.~\ref{sec:closedloop}).
     \item An honest null result: violation rate does not predict per-episode failure (AUROC${=}$0.54), scoping monitoring value to integration bug detection, behavioral characterization, and calibration (Sec.~\ref{sec:fingerprint}).
 \end{enumerate}
 
@@ -90,7 +87,7 @@ On ALOHA demonstration data with conformal p-values feeding the CUSUM, in-distri
 
 Additionally, \textbf{clip magnitude} $m_i = |a_i^{\text{raw}} - a_i^{\text{clipped}}|$ provides a free, per-joint ``wrongness'' signal that remains informative when violation counts saturate (Sec.~\ref{sec:ablation}).
 
-\subsection{Behavioral Health Monitors}
+\subsection{Architecture-Specific Monitors}
 \label{sec:health}
 
 Bounds and velocity checks miss architecture-specific failure modes.
@@ -168,7 +165,7 @@ Without SafeContract: 56.5\% success (113/200, CI$_{95}$: [0.50, 0.63]).
 With SafeContract: 54.5\% success (109/200, CI$_{95}$: [0.48, 0.61]).
 Fisher's $p = 0.76$. SafeContract caught 1{,}847 velocity violations with no significant degradation.
 
-The architecture contrast is striking: on the same task, Diffusion produces 0 velocity violations (smooth DDPM denoising) while VQ-BeT produces 1{,}853 (discrete token transitions cause velocity spikes).
+The architecture contrast is striking: on the same task, Diffusion produces 0 velocity violations (smooth DDPM denoising) while VQ-BeT produces 1{,}847 (discrete token transitions cause velocity spikes).
 Both are within range of published baselines (Diffusion: 87.4\%, VQ-BeT: 57\%).
 
 \textbf{ACT on ALOHA} (51.6M params, $n{=}200$, conformal calibration).
@@ -265,7 +262,7 @@ Vel. violations & XX & \textbf{1{,}847} & XX & 98\%$^*$ \\
 
 \section{Discussion}
 
-SafeContract provides behavioral health monitoring for VLA deployment: 5 violation types, conformal calibration, ${\sim}$13\,$\mu$s overhead.
+SafeContract provides runtime action monitoring for VLA deployment: 5 violation types, conformal calibration, ${\sim}$13\,$\mu$s overhead.
 The central finding is that \emph{different architectures fail in fundamentally different ways}: on the same PushT task, Diffusion Policy produces 0 velocity violations while VQ-BeT produces 1{,}847.
 Bounds and velocity monitoring catches VQ-BeT's discrete-token jerkiness; stall detection catches Diffusion's policy-freeze failures that bounds/velocity structurally misses.
 A comprehensive monitoring suite must include both types.
@@ -336,6 +333,7 @@ and real-robot validation.
 \bibitem{feldman2025} Feldman, A.O. et al., ``Conformal Safety Monitoring for Flight Testing,'' arXiv:2511.20811, 2025.
 \bibitem{gibbs2021} Gibbs, I. and Candes, E., ``Adaptive Conformal Inference Under Distribution Shift,'' NeurIPS 2021, arXiv:2106.00170.
 \bibitem{acg2025} Shi, L. et al., ``Action Coherence Guidance for Flow-Matching VLAs,'' arXiv:2510.22201, 2025.
+\bibitem{kim2026guardrails} Kim, M. et al., ``Modular Safety Guardrails Are Necessary for Foundation-Model-Enabled Robots,'' arXiv:2602.04056, 2026.
 \end{thebibliography}
 
 \end{document}
