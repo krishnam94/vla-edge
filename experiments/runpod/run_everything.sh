@@ -20,7 +20,7 @@ echo "1/5: VQ-BeT on PushT (n=200)"
 echo "=========================================="
 python -u experiments/runpod/exp_vqbet_pusht_gpu.py \
     --n-episodes 200 --device cuda --seed-base 0 \
-    --output /workspace/results/vqbet_pusht_100ep.json \
+    --output /workspace/results/vqbet_pusht_200ep.json \
     2>&1 | tee /workspace/results/vqbet_pusht.log
 
 echo ""
@@ -29,7 +29,7 @@ echo "2/5: Diffusion on PushT (n=200)"
 echo "=========================================="
 python -u experiments/runpod/exp_diffusion_pusht_gpu.py \
     --n-episodes 200 --device cuda --seed-base 0 \
-    --output /workspace/results/diffusion_pusht_100ep.json \
+    --output /workspace/results/diffusion_pusht_200ep.json \
     2>&1 | tee /workspace/results/diffusion_pusht.log
 
 # ============================================
@@ -42,7 +42,7 @@ echo "3/5: ACT on ALOHA transfer-cube (n=200)"
 echo "=========================================="
 python -u experiments/runpod/exp_act_aloha_gpu.py \
     --n-episodes 200 --device cuda --seed-base 0 \
-    --output /workspace/results/act_aloha_transfer_100ep.json \
+    --output /workspace/results/act_aloha_transfer_200ep.json \
     2>&1 | tee /workspace/results/act_aloha_transfer.log
 
 echo ""
@@ -52,7 +52,7 @@ echo "=========================================="
 python -u experiments/runpod/exp_act_aloha_gpu.py \
     --n-episodes 200 --device cuda --seed-base 0 \
     --task insertion \
-    --output /workspace/results/act_aloha_insertion_100ep.json \
+    --output /workspace/results/act_aloha_insertion_200ep.json \
     2>&1 | tee /workspace/results/act_aloha_insertion.log
 
 # ============================================
