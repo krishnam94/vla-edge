@@ -1,0 +1,34 @@
+Loading Diffusion Policy from lerobot/diffusion_pusht...
+WARNING:root:Unexpected key(s) when loading model: ['normalize_inputs.buffer_observation_image.mean', 'normalize_inputs.buffer_observation_image.std', 'normalize_inputs.buffer_observation_state.max', 'normalize_inputs.buffer_observation_state.min', 'normalize_targets.buffer_action.max', 'normalize_targets.buffer_action.min', 'unnormalize_outputs.buffer_action.max', 'unnormalize_outputs.buffer_action.min']
+  Loaded: 262,709,026 params on cuda
+/usr/local/lib/python3.10/dist-packages/pygame/pkgdata.py:25: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import resource_stream, resource_exists
+  Sanity: action=[0.98 1.  ], range=[1.0, 1.0]
+  NORMALIZED
+  Action unnorm: min=[12. 25.], max=[511. 511.]
+
+==================================================
+  no_contract (100 episodes)
+==================================================
+  Ep  0: -- | cov=0.000 | viol=  0 | 26.2s
+  Ep  1: -- | cov=0.079 | viol=  0 | 26.0s
+  Ep  2: -- | cov=0.368 | viol=  0 | 26.0s
+  Ep  3: -- | cov=0.000 | viol=  0 | 26.0s
+  Ep  4: -- | cov=0.467 | viol=  0 | 26.0s
+  Ep  5: -- | cov=0.000 | viol=  0 | 26.9s
+  Ep  6: -- | cov=0.000 | viol=  0 | 30.3s
+  Ep  7: -- | cov=0.000 | viol=  0 | 30.4s
+  Ep  8: -- | cov=0.000 | viol=  0 | 30.3s
+  Ep  9: -- | cov=0.000 | viol=  0 | 30.3s
+  Ep 10: -- | cov=0.025 | viol=  0 | 30.3s
+  Ep 11: -- | cov=0.135 | viol=  0 | 30.4s
+  Ep 12: -- | cov=0.180 | viol=  0 | 30.3s
+  Ep 13: -- | cov=0.000 | viol=  0 | 30.4s
+  Ep 14: -- | cov=0.223 | viol=  0 | 26.8s
+  Ep 15: -- | cov=0.313 | viol=  0 | 26.1s
+  Ep 16: -- | cov=0.000 | viol=  0 | 26.2s
+  Ep 17: -- | cov=0.000 | viol=  0 | 26.1s
+  Ep 18: -- | cov=0.000 | viol=  0 | 26.1s
+  Ep 19: -- | cov=0.276 | viol=  0 | 26.0s
+  Ep 20: -- | cov=0.152 | viol=  0 | 26.0s
+  Ep 21: -- | cov=0.174 | viol=  0 | 26.0s

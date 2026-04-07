@@ -1,0 +1,342 @@
+
+==================================================
+  vqbet - 100 monitored episodes
+==================================================
+/usr/local/lib/python3.10/dist-packages/lerobot/policies/vqbet/vqbet_utils.py:1373: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  @autocast(enabled=False)
+number of parameters: 26.00M
+/usr/local/lib/python3.10/dist-packages/pygame/pkgdata.py:25: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import resource_stream, resource_exists
+  Ep  0: -- | cov=0.477 | vel=  7 | stall=0 | jerk=13.3 | 2.6s
+  Ep  1: -- | cov=0.671 | vel=  4 | stall=0 | jerk=8.0 | 1.7s
+  Ep  2: -- | cov=0.944 | vel= 18 | stall=0 | jerk=10.4 | 1.6s
+  Ep  3: -- | cov=0.923 | vel=  3 | stall=0 | jerk=11.7 | 1.6s
+  Ep  4: OK | cov=0.954 | vel=  4 | stall=0 | jerk=10.0 | 1.1s
+  Ep  5: OK | cov=0.951 | vel=  8 | stall=0 | jerk=12.0 | 0.8s
+  Ep  6: OK | cov=0.954 | vel=  0 | stall=0 | jerk=5.9 | 0.6s
+  Ep  7: OK | cov=0.952 | vel=  1 | stall=0 | jerk=7.1 | 0.8s
+  Ep  8: OK | cov=0.951 | vel=  3 | stall=0 | jerk=10.3 | 0.8s
+  Ep  9: -- | cov=0.046 | vel=  1 | stall=0 | jerk=11.3 | 1.6s
+  Ep 10: -- | cov=0.902 | vel= 12 | stall=0 | jerk=12.0 | 1.6s
+  Ep 11: -- | cov=0.616 | vel=  7 | stall=0 | jerk=13.1 | 1.6s
+  Ep 12: -- | cov=0.658 | vel=  2 | stall=0 | jerk=18.0 | 1.6s
+  Ep 13: -- | cov=0.520 | vel=  9 | stall=0 | jerk=20.1 | 1.5s
+  Ep 14: OK | cov=0.950 | vel=  0 | stall=0 | jerk=4.6 | 0.3s
+  Ep 15: -- | cov=0.316 | vel= 29 | stall=0 | jerk=31.1 | 1.5s
+  Ep 16: OK | cov=0.957 | vel=  0 | stall=0 | jerk=5.5 | 1.0s
+  Ep 17: OK | cov=0.963 | vel=  4 | stall=0 | jerk=10.3 | 1.0s
+  Ep 18: OK | cov=0.952 | vel=  1 | stall=0 | jerk=9.0 | 0.6s
+  Ep 19: OK | cov=0.953 | vel= 11 | stall=0 | jerk=12.3 | 1.4s
+  Ep 20: -- | cov=0.258 | vel=  8 | stall=0 | jerk=22.9 | 1.6s
+  Ep 21: -- | cov=0.941 | vel=  6 | stall=0 | jerk=13.1 | 1.6s
+  Ep 22: -- | cov=0.000 | vel=  2 | stall=0 | jerk=19.5 | 1.5s
+  Ep 23: OK | cov=0.964 | vel=  5 | stall=0 | jerk=11.3 | 1.2s
+  Ep 24: OK | cov=0.952 | vel=  0 | stall=0 | jerk=7.0 | 0.3s
+  Ep 25: -- | cov=0.007 | vel=  2 | stall=0 | jerk=13.7 | 1.5s
+  Ep 26: -- | cov=0.950 | vel=  5 | stall=0 | jerk=9.5 | 1.6s
+  Ep 27: OK | cov=0.952 | vel= 11 | stall=0 | jerk=8.7 | 1.2s
+  Ep 28: -- | cov=0.949 | vel= 23 | stall=0 | jerk=21.0 | 1.6s
+  Ep 29: OK | cov=0.977 | vel=  0 | stall=0 | jerk=8.7 | 0.7s
+  Ep 30: -- | cov=0.141 | vel=  2 | stall=0 | jerk=14.3 | 1.6s
+  Ep 31: -- | cov=0.526 | vel= 11 | stall=0 | jerk=18.4 | 1.5s
+  Ep 32: OK | cov=0.950 | vel= 12 | stall=0 | jerk=12.8 | 1.0s
+  Ep 33: -- | cov=0.947 | vel= 19 | stall=0 | jerk=12.9 | 1.4s
+  Ep 34: OK | cov=0.953 | vel=  7 | stall=0 | jerk=8.8 | 0.9s
+  Ep 35: -- | cov=0.549 | vel=  7 | stall=0 | jerk=13.3 | 1.7s
+  Ep 36: OK | cov=0.964 | vel=  8 | stall=0 | jerk=16.0 | 0.7s
+  Ep 37: -- | cov=0.644 | vel=  5 | stall=0 | jerk=10.4 | 1.6s
+  Ep 38: -- | cov=0.439 | vel= 46 | stall=0 | jerk=32.1 | 1.6s
+  Ep 39: OK | cov=0.973 | vel=  7 | stall=0 | jerk=15.1 | 1.1s
+  Ep 40: OK | cov=0.964 | vel=  1 | stall=0 | jerk=7.4 | 0.8s
+  Ep 41: -- | cov=0.892 | vel= 19 | stall=0 | jerk=16.9 | 1.6s
+  Ep 42: -- | cov=0.557 | vel= 10 | stall=0 | jerk=14.2 | 1.6s
+  Ep 43: -- | cov=0.656 | vel=  4 | stall=0 | jerk=9.1 | 1.6s
+  Ep 44: OK | cov=0.955 | vel=  7 | stall=0 | jerk=10.8 | 0.9s
+  Ep 45: -- | cov=0.530 | vel=  0 | stall=0 | jerk=11.1 | 1.6s
+  Ep 46: OK | cov=0.969 | vel=  5 | stall=0 | jerk=12.1 | 1.3s
+  Ep 47: OK | cov=0.962 | vel=  9 | stall=0.00 | jerk=11.4 | 1.5s
+  Ep 48: OK | cov=0.959 | vel= 18 | stall=0 | jerk=19.4 | 1.4s
+  Ep 49: -- | cov=0.920 | vel= 12 | stall=0 | jerk=12.2 | 1.7s
+  Ep 50: OK | cov=0.957 | vel=  6 | stall=0 | jerk=10.2 | 0.9s
+  Ep 51: -- | cov=0.943 | vel= 14 | stall=0 | jerk=12.2 | 1.6s
+  Ep 52: -- | cov=0.591 | vel= 21 | stall=0 | jerk=19.5 | 1.5s
+  Ep 53: OK | cov=0.952 | vel=  8 | stall=0 | jerk=9.4 | 1.0s
+  Ep 54: -- | cov=0.052 | vel=  5 | stall=0 | jerk=11.8 | 1.5s
+  Ep 55: -- | cov=0.514 | vel=  0 | stall=0 | jerk=11.9 | 1.7s
+  Ep 56: OK | cov=0.979 | vel=  7 | stall=0 | jerk=10.4 | 1.3s
+  Ep 57: -- | cov=0.641 | vel= 17 | stall=0 | jerk=20.2 | 1.5s
+  Ep 58: OK | cov=0.980 | vel=  3 | stall=0 | jerk=9.9 | 1.0s
+  Ep 59: -- | cov=0.357 | vel=  3 | stall=0 | jerk=17.6 | 1.6s
+  Ep 60: OK | cov=0.974 | vel=  3 | stall=0 | jerk=6.1 | 0.3s
+  Ep 61: OK | cov=0.961 | vel=  5 | stall=0 | jerk=10.2 | 1.2s
+  Ep 62: -- | cov=0.148 | vel= 25 | stall=0 | jerk=26.6 | 1.6s
+  Ep 63: OK | cov=0.965 | vel=  4 | stall=0 | jerk=10.3 | 1.4s
+  Ep 64: OK | cov=0.954 | vel=  2 | stall=0 | jerk=10.0 | 1.3s
+  Ep 65: OK | cov=0.956 | vel=  0 | stall=0 | jerk=6.4 | 0.5s
+  Ep 66: -- | cov=0.000 | vel=  5 | stall=0 | jerk=15.4 | 1.6s
+  Ep 67: OK | cov=0.950 | vel=  2 | stall=0 | jerk=6.5 | 0.8s
+  Ep 68: -- | cov=0.000 | vel=  2 | stall=0 | jerk=25.1 | 1.6s
+  Ep 69: -- | cov=0.438 | vel= 21 | stall=0 | jerk=25.2 | 1.6s
+  Ep 70: OK | cov=0.956 | vel=  7 | stall=0 | jerk=12.4 | 1.0s
+  Ep 71: -- | cov=0.466 | vel=  7 | stall=0 | jerk=15.8 | 1.6s
+  Ep 72: OK | cov=0.959 | vel=  7 | stall=0 | jerk=8.7 | 1.1s
+  Ep 73: OK | cov=0.953 | vel=  2 | stall=0 | jerk=9.5 | 1.5s
+  Ep 74: OK | cov=0.951 | vel=  0 | stall=0 | jerk=6.5 | 0.8s
+  Ep 75: OK | cov=0.961 | vel=  4 | stall=0 | jerk=10.3 | 1.2s
+  Ep 76: OK | cov=0.980 | vel=  1 | stall=0 | jerk=6.5 | 0.7s
+  Ep 77: -- | cov=0.000 | vel=  2 | stall=0 | jerk=16.8 | 1.6s
+  Ep 78: -- | cov=0.943 | vel= 11 | stall=0 | jerk=10.9 | 1.7s
+  Ep 79: OK | cov=0.964 | vel= 11 | stall=0 | jerk=12.8 | 1.5s
+  Ep 80: -- | cov=0.936 | vel=  6 | stall=0 | jerk=10.0 | 1.8s
+  Ep 81: -- | cov=0.125 | vel=  3 | stall=0 | jerk=23.2 | 1.6s
+  Ep 82: -- | cov=0.950 | vel=  5 | stall=0 | jerk=13.0 | 1.7s
+  Ep 83: -- | cov=0.938 | vel= 32 | stall=0 | jerk=24.7 | 1.6s
+  Ep 84: OK | cov=0.962 | vel=  0 | stall=0 | jerk=6.5 | 0.5s
+  Ep 85: OK | cov=0.956 | vel=  1 | stall=0 | jerk=6.6 | 0.8s
+  Ep 86: OK | cov=0.955 | vel=  4 | stall=0 | jerk=11.3 | 1.1s
+  Ep 87: -- | cov=0.465 | vel= 20 | stall=0 | jerk=21.4 | 1.7s
+  Ep 88: -- | cov=0.649 | vel=  3 | stall=0 | jerk=11.4 | 1.8s
+  Ep 89: OK | cov=0.956 | vel=  7 | stall=0 | jerk=12.0 | 1.0s
+  Ep 90: -- | cov=0.054 | vel= 12 | stall=0 | jerk=20.9 | 1.7s
+  Ep 91: -- | cov=0.516 | vel=  7 | stall=0 | jerk=12.5 | 1.6s
+  Ep 92: -- | cov=0.388 | vel=  8 | stall=0 | jerk=16.8 | 1.6s
+  Ep 93: -- | cov=0.000 | vel= 52 | stall=0 | jerk=32.3 | 1.6s
+  Ep 94: -- | cov=0.948 | vel= 14 | stall=0 | jerk=11.3 | 1.6s
+  Ep 95: OK | cov=0.974 | vel=  5 | stall=0 | jerk=11.1 | 0.8s
+  Ep 96: OK | cov=0.952 | vel=  3 | stall=0 | jerk=7.6 | 0.7s
+  Ep 97: OK | cov=0.953 | vel=  8 | stall=0 | jerk=9.2 | 0.9s
+  Ep 98: OK | cov=0.973 | vel=  2 | stall=0 | jerk=8.5 | 1.0s
+  Ep 99: -- | cov=0.243 | vel=  1 | stall=0 | jerk=16.2 | 1.8s
+
+  Summary: SR=48%, vel_viol=793, stall_steps=1, jerk_rms=21.56
+  AUROCs: {
+  "velocity_violations": {
+    "auroc": 0.6915,
+    "p_value": 0.0005
+  },
+  "stall_rate": {
+    "auroc": 0.4896,
+    "p_value": 0.8556
+  },
+  "total_stall_steps": {
+    "auroc": 0.4896,
+    "p_value": 0.8556
+  },
+  "mean_jerk": {
+    "auroc": 0.8798,
+    "p_value": 0.0
+  },
+  "jerk_rms": {
+    "auroc": 0.8045,
+    "p_value": 0.0
+  },
+  "jerk_violations": {
+    "auroc": 0.8876,
+    "p_value": 0.0
+  },
+  "atv": {
+    "auroc": 0.8942,
+    "p_value": 0.0
+  },
+  "reversal_rate": {
+    "auroc": 0.9327,
+    "p_value": 0.0
+  },
+  "mean_ser": {
+    "auroc": 0.7528,
+    "p_value": 0.0
+  },
+  "min_ser": {
+    "auroc": 0.649,
+    "p_value": 0.0052
+  },
+  "mean_prediction_error": {
+    "auroc": 0.5,
+    "p_value": 1.0
+  },
+  "min_coherence": {
+    "auroc": 0.858,
+    "p_value": 0.0
+  },
+  "reversal_rate_tmc": {
+    "auroc": 0.9075,
+    "p_value": 0.0
+  },
+  "composite_max": {
+    "auroc": 0.8251,
+    "p_value": 0.0
+  }
+}
+
+==================================================
+  diffusion - 100 monitored episodes
+==================================================
+WARNING:root:Unexpected key(s) when loading model: ['normalize_inputs.buffer_observation_image.mean', 'normalize_inputs.buffer_observation_image.std', 'normalize_inputs.buffer_observation_state.max', 'normalize_inputs.buffer_observation_state.min', 'normalize_targets.buffer_action.max', 'normalize_targets.buffer_action.min', 'unnormalize_outputs.buffer_action.max', 'unnormalize_outputs.buffer_action.min']
+  Ep  0: -- | cov=0.939 | vel=  8 | stall=0 | jerk=5.4 | 44.9s
+  Ep  1: OK | cov=0.954 | vel= 10 | stall=0 | jerk=5.2 | 24.4s
+  Ep  2: OK | cov=0.961 | vel=  2 | stall=0.01 | jerk=5.0 | 14.2s
+  Ep  3: OK | cov=0.958 | vel=  5 | stall=0 | jerk=6.7 | 17.3s
+  Ep  4: OK | cov=0.952 | vel=  2 | stall=0 | jerk=4.5 | 17.4s
+  Ep  5: OK | cov=0.954 | vel=  5 | stall=0 | jerk=6.4 | 18.3s
+  Ep  6: OK | cov=0.952 | vel=  0 | stall=0 | jerk=2.4 | 11.2s
+  Ep  7: OK | cov=0.952 | vel=  2 | stall=0 | jerk=4.5 | 13.0s
+  Ep  8: OK | cov=0.951 | vel= 11 | stall=0 | jerk=5.3 | 30.1s
+  Ep  9: -- | cov=0.501 | vel=  0 | stall=0 | jerk=3.4 | 31.5s
+  Ep 10: OK | cov=0.956 | vel=  3 | stall=0 | jerk=4.7 | 22.6s
+  Ep 11: -- | cov=0.564 | vel=  0 | stall=0 | jerk=4.4 | 31.3s
+  Ep 12: -- | cov=0.933 | vel=  6 | stall=0 | jerk=7.0 | 30.7s
+  Ep 13: -- | cov=0.560 | vel=  1 | stall=0 | jerk=4.2 | 31.7s
+  Ep 14: OK | cov=0.951 | vel=  0 | stall=0.04 | jerk=5.0 | 16.8s
+  Ep 15: -- | cov=0.938 | vel=  4 | stall=0 | jerk=4.6 | 30.8s
+  Ep 16: -- | cov=0.388 | vel=  0 | stall=0 | jerk=5.2 | 30.5s
+  Ep 17: -- | cov=0.931 | vel=  1 | stall=0 | jerk=5.3 | 30.4s
+  Ep 18: OK | cov=0.952 | vel=  5 | stall=0 | jerk=5.7 | 27.1s
+  Ep 19: OK | cov=0.953 | vel=  2 | stall=0 | jerk=4.5 | 11.5s
+  Ep 20: OK | cov=0.951 | vel=  1 | stall=0 | jerk=4.1 | 19.6s
+  Ep 21: OK | cov=0.966 | vel=  8 | stall=0 | jerk=5.7 | 30.9s
+  Ep 22: -- | cov=0.939 | vel=  1 | stall=0 | jerk=4.2 | 32.4s
+  Ep 23: -- | cov=0.948 | vel=  5 | stall=0 | jerk=5.8 | 31.7s
+  Ep 24: OK | cov=0.969 | vel=  3 | stall=0 | jerk=5.4 | 10.7s
+  Ep 25: OK | cov=0.954 | vel=  1 | stall=0 | jerk=4.9 | 17.9s
+  Ep 26: OK | cov=0.954 | vel=  4 | stall=0 | jerk=4.7 | 23.1s
+  Ep 27: -- | cov=0.937 | vel= 13 | stall=0 | jerk=6.5 | 30.8s
+  Ep 28: OK | cov=0.967 | vel=  4 | stall=0.00 | jerk=5.1 | 30.4s
+  Ep 29: OK | cov=0.963 | vel=  0 | stall=0 | jerk=3.3 | 12.1s
+  Ep 30: -- | cov=0.948 | vel=  7 | stall=0 | jerk=4.9 | 32.5s
+  Ep 31: -- | cov=0.932 | vel=  6 | stall=0 | jerk=5.0 | 33.2s
+  Ep 32: OK | cov=0.958 | vel=  9 | stall=0 | jerk=5.0 | 17.1s
+  Ep 33: -- | cov=0.797 | vel=  7 | stall=0 | jerk=4.8 | 30.7s
+  Ep 34: OK | cov=0.968 | vel=  2 | stall=0 | jerk=4.8 | 19.1s
+  Ep 35: OK | cov=0.954 | vel=  1 | stall=0 | jerk=5.0 | 18.2s
+  Ep 36: OK | cov=0.954 | vel=  5 | stall=0 | jerk=5.7 | 25.9s
+  Ep 37: OK | cov=0.983 | vel=  2 | stall=0 | jerk=4.6 | 19.9s
+  Ep 38: -- | cov=0.554 | vel=  0 | stall=0.30 | jerk=2.3 | 32.1s
+  Ep 39: OK | cov=0.950 | vel=  4 | stall=0 | jerk=5.8 | 14.6s
+  Ep 40: -- | cov=0.659 | vel=  0 | stall=0 | jerk=6.0 | 30.7s
+  Ep 41: OK | cov=0.970 | vel= 10 | stall=0 | jerk=5.5 | 25.6s
+  Ep 42: OK | cov=0.952 | vel=  2 | stall=0 | jerk=5.1 | 31.5s
+  Ep 43: OK | cov=0.956 | vel=  5 | stall=0 | jerk=5.1 | 30.2s
+  Ep 44: OK | cov=0.955 | vel=  4 | stall=0.04 | jerk=5.3 | 26.0s
+  Ep 45: -- | cov=0.931 | vel=  3 | stall=0 | jerk=4.2 | 31.8s
+  Ep 46: OK | cov=0.955 | vel=  2 | stall=0 | jerk=4.3 | 17.3s
+  Ep 47: -- | cov=0.947 | vel=  0 | stall=0 | jerk=4.8 | 30.5s
+  Ep 48: OK | cov=0.956 | vel=  9 | stall=0 | jerk=6.3 | 21.3s
+  Ep 49: OK | cov=0.951 | vel=  1 | stall=0 | jerk=5.4 | 15.6s
+  Ep 50: OK | cov=0.957 | vel=  5 | stall=0 | jerk=5.9 | 15.8s
+  Ep 51: OK | cov=0.973 | vel=  2 | stall=0 | jerk=3.6 | 16.3s
+  Ep 52: OK | cov=0.974 | vel= 11 | stall=0 | jerk=6.6 | 23.1s
+  Ep 53: OK | cov=0.955 | vel=  4 | stall=0.01 | jerk=4.7 | 15.0s
+  Ep 54: OK | cov=0.957 | vel=  4 | stall=0 | jerk=4.7 | 26.2s
+  Ep 55: -- | cov=0.930 | vel=  2 | stall=0.01 | jerk=4.2 | 31.6s
+  Ep 56: -- | cov=0.895 | vel=  1 | stall=0 | jerk=4.4 | 31.8s
+  Ep 57: OK | cov=0.958 | vel=  9 | stall=0 | jerk=5.6 | 25.2s
+  Ep 58: -- | cov=0.682 | vel=  0 | stall=0.01 | jerk=3.6 | 33.4s
+  Ep 59: -- | cov=0.932 | vel=  0 | stall=0 | jerk=4.6 | 31.9s
+  Ep 60: OK | cov=0.951 | vel=  5 | stall=0 | jerk=6.2 | 33.6s
+  Ep 61: OK | cov=0.953 | vel=  3 | stall=0 | jerk=4.8 | 21.7s
+  Ep 62: -- | cov=0.335 | vel=  0 | stall=0 | jerk=4.8 | 31.4s
+  Ep 63: -- | cov=0.647 | vel=  0 | stall=0 | jerk=3.9 | 34.8s
+  Ep 64: OK | cov=0.951 | vel=  2 | stall=0 | jerk=5.4 | 23.0s
+  Ep 65: OK | cov=0.950 | vel=  6 | stall=0 | jerk=5.3 | 17.1s
+  Ep 66: OK | cov=0.956 | vel=  0 | stall=0 | jerk=3.8 | 16.4s
+  Ep 67: -- | cov=0.933 | vel=  2 | stall=0 | jerk=4.6 | 32.7s
+  Ep 68: OK | cov=0.958 | vel=  3 | stall=0 | jerk=5.8 | 28.0s
+  Ep 69: -- | cov=0.529 | vel=  4 | stall=0 | jerk=5.6 | 31.9s
+  Ep 70: OK | cov=0.960 | vel=  3 | stall=0 | jerk=5.2 | 30.9s
+  Ep 71: OK | cov=0.962 | vel= 10 | stall=0 | jerk=5.2 | 28.5s
+  Ep 72: -- | cov=0.920 | vel= 12 | stall=0 | jerk=6.5 | 30.3s
+  Ep 73: -- | cov=0.679 | vel=  1 | stall=0 | jerk=4.0 | 31.1s
+  Ep 74: OK | cov=0.957 | vel=  1 | stall=0 | jerk=5.5 | 32.1s
+  Ep 75: OK | cov=0.953 | vel=  8 | stall=0 | jerk=5.7 | 21.7s
+  Ep 76: -- | cov=0.924 | vel= 15 | stall=0 | jerk=6.3 | 31.4s
+  Ep 77: OK | cov=0.962 | vel=  5 | stall=0 | jerk=6.7 | 25.0s
+  Ep 78: -- | cov=0.925 | vel=  3 | stall=0 | jerk=6.6 | 33.6s
+  Ep 79: OK | cov=0.955 | vel=  3 | stall=0 | jerk=4.8 | 30.3s
+  Ep 80: OK | cov=0.958 | vel=  1 | stall=0 | jerk=4.6 | 15.0s
+  Ep 81: OK | cov=0.952 | vel=  0 | stall=0 | jerk=5.1 | 21.8s
+  Ep 82: -- | cov=0.501 | vel=  0 | stall=0 | jerk=3.5 | 32.0s
+  Ep 83: -- | cov=0.424 | vel=  0 | stall=0 | jerk=4.3 | 32.1s
+  Ep 84: OK | cov=0.953 | vel=  5 | stall=0 | jerk=5.5 | 15.5s
+  Ep 85: OK | cov=0.963 | vel=  3 | stall=0 | jerk=4.3 | 25.6s
+  Ep 86: OK | cov=0.967 | vel=  1 | stall=0 | jerk=4.2 | 15.0s
+  Ep 87: -- | cov=0.428 | vel=  1 | stall=0 | jerk=4.9 | 33.3s
+  Ep 88: -- | cov=0.945 | vel=  5 | stall=0 | jerk=4.2 | 31.3s
+  Ep 89: OK | cov=0.950 | vel=  6 | stall=0 | jerk=4.5 | 25.6s
+  Ep 90: OK | cov=0.963 | vel=  1 | stall=0 | jerk=3.8 | 14.6s
+  Ep 91: -- | cov=0.693 | vel=  1 | stall=0 | jerk=4.0 | 30.6s
+  Ep 92: -- | cov=0.940 | vel=  5 | stall=0 | jerk=5.3 | 30.8s
+  Ep 93: OK | cov=0.973 | vel=  2 | stall=0 | jerk=4.5 | 17.9s
+  Ep 94: OK | cov=0.966 | vel=  1 | stall=0 | jerk=4.3 | 20.3s
+  Ep 95: OK | cov=0.956 | vel=  0 | stall=0 | jerk=4.8 | 18.4s
+  Ep 96: OK | cov=0.974 | vel=  0 | stall=0 | jerk=4.3 | 10.8s
+  Ep 97: -- | cov=0.934 | vel=  4 | stall=0 | jerk=5.5 | 32.6s
+  Ep 98: -- | cov=0.926 | vel=  9 | stall=0 | jerk=5.4 | 31.5s
+  Ep 99: -- | cov=0.947 | vel=  2 | stall=0 | jerk=3.9 | 32.2s
+
+  Summary: SR=61%, vel_viol=357, stall_steps=117, jerk_rms=8.00
+  AUROCs: {
+  "velocity_violations": {
+    "auroc": 0.4136,
+    "p_value": 0.929
+  },
+  "stall_rate": {
+    "auroc": 0.4977,
+    "p_value": 0.5359
+  },
+  "total_stall_steps": {
+    "auroc": 0.4987,
+    "p_value": 0.521
+  },
+  "mean_jerk": {
+    "auroc": 0.4136,
+    "p_value": 0.9273
+  },
+  "jerk_rms": {
+    "auroc": 0.3691,
+    "p_value": 0.9863
+  },
+  "jerk_violations": {
+    "auroc": 0.4344,
+    "p_value": 0.8982
+  },
+  "atv": {
+    "auroc": 0.7133,
+    "p_value": 0.0002
+  },
+  "reversal_rate": {
+    "auroc": 0.79,
+    "p_value": 0.0
+  },
+  "mean_ser": {
+    "auroc": 0.3401,
+    "p_value": 0.9965
+  },
+  "min_ser": {
+    "auroc": 0.4208,
+    "p_value": 0.9092
+  },
+  "mean_prediction_error": {
+    "auroc": 0.5,
+    "p_value": 1.0
+  },
+  "min_coherence": {
+    "auroc": 0.6978,
+    "p_value": 0.0004
+  },
+  "reversal_rate_tmc": {
+    "auroc": 0.7482,
+    "p_value": 0.0
+  },
+  "composite_max": {
+    "auroc": 0.6986,
+    "p_value": 0.0004
+  }
+}
+
+==================================================
+CROSS-ARCHITECTURE MONITOR COMPARISON
+==================================================
+  vqbet: SR=48%, vel=793, stall=1, jerk_rms=21.56
+  diffusion: SR=61%, vel=357, stall=117, jerk_rms=8.00
+
+Saved to /workspace/results/monitor_analysis.json

@@ -1,0 +1,430 @@
+/usr/local/lib/python3.10/dist-packages/lerobot/policies/vqbet/vqbet_utils.py:1373: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  @autocast(enabled=False)
+Loading VQ-BeT from lerobot/vqbet_pusht (manual config patch)...
+number of parameters: 26.00M
+  Loaded: 37,515,530 params on cuda
+/usr/local/lib/python3.10/dist-packages/pygame/pkgdata.py:25: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import resource_stream, resource_exists
+  Sanity check action: [0.04 0.81]
+  Action range: [0.0, 0.8]
+  Actions appear NORMALIZED [-1,1]
+  Action unnorm: min=[12. 25.], max=[511. 511.]
+  State norm: min=[13.5 32.9], max=[496.1 511. ]
+
+==================================================
+  no_contract (200 episodes)
+==================================================
+  Ep  0: -- | cov=0.584 | steps=300 | viol=  0 | 1.4s
+  Ep  1: -- | cov=0.670 | steps=300 | viol=  0 | 1.4s
+  Ep  2: -- | cov=0.897 | steps=300 | viol=  0 | 1.3s
+  Ep  3: -- | cov=0.942 | steps=300 | viol=  0 | 1.2s
+  Ep  4: OK | cov=0.951 | steps=143 | viol=  0 | 0.6s
+  Ep  5: -- | cov=0.948 | steps=300 | viol=  0 | 1.2s
+  Ep  6: OK | cov=0.958 | steps=110 | viol=  0 | 0.4s
+  Ep  7: OK | cov=0.951 | steps=159 | viol=  0 | 0.6s
+  Ep  8: OK | cov=0.984 | steps=166 | viol=  0 | 0.7s
+  Ep  9: OK | cov=0.953 | steps=263 | viol=  0 | 1.0s
+  Ep 10: -- | cov=0.366 | steps=300 | viol=  0 | 1.2s
+  Ep 11: OK | cov=0.973 | steps=215 | viol=  0 | 0.8s
+  Ep 12: -- | cov=0.899 | steps=300 | viol=  0 | 1.2s
+  Ep 13: -- | cov=0.644 | steps=300 | viol=  0 | 1.2s
+  Ep 14: OK | cov=0.952 | steps=153 | viol=  0 | 0.6s
+  Ep 15: -- | cov=0.313 | steps=300 | viol=  0 | 1.2s
+  Ep 16: OK | cov=0.958 | steps=190 | viol=  0 | 0.7s
+  Ep 17: -- | cov=0.937 | steps=300 | viol=  0 | 1.2s
+  Ep 18: OK | cov=0.952 | steps=139 | viol=  0 | 0.5s
+  Ep 19: OK | cov=0.956 | steps=127 | viol=  0 | 0.5s
+  Ep 20: -- | cov=0.259 | steps=300 | viol=  0 | 1.2s
+  Ep 21: OK | cov=0.974 | steps=163 | viol=  0 | 0.6s
+  Ep 22: -- | cov=0.000 | steps=300 | viol=  0 | 1.1s
+  Ep 23: OK | cov=0.955 | steps=260 | viol=  0 | 1.0s
+  Ep 24: OK | cov=0.958 | steps=114 | viol=  0 | 0.5s
+  Ep 25: -- | cov=0.348 | steps=300 | viol=  0 | 1.2s
+  Ep 26: OK | cov=0.965 | steps=136 | viol=  0 | 0.5s
+  Ep 27: OK | cov=0.955 | steps=149 | viol=  0 | 0.6s
+  Ep 28: -- | cov=0.943 | steps=300 | viol=  0 | 1.2s
+  Ep 29: OK | cov=0.952 | steps=134 | viol=  0 | 0.5s
+  Ep 30: -- | cov=0.110 | steps=300 | viol=  0 | 1.2s
+  Ep 31: -- | cov=0.514 | steps=300 | viol=  0 | 1.2s
+  Ep 32: OK | cov=0.950 | steps=260 | viol=  0 | 1.2s
+  Ep 33: OK | cov=0.959 | steps=238 | viol=  0 | 1.0s
+  Ep 34: OK | cov=0.980 | steps=129 | viol=  0 | 0.5s
+  Ep 35: -- | cov=0.416 | steps=300 | viol=  0 | 1.2s
+  Ep 36: OK | cov=0.961 | steps=128 | viol=  0 | 0.5s
+  Ep 37: -- | cov=0.654 | steps=300 | viol=  0 | 1.2s
+  Ep 38: -- | cov=0.438 | steps=300 | viol=  0 | 1.2s
+  Ep 39: OK | cov=0.959 | steps=249 | viol=  0 | 1.0s
+  Ep 40: -- | cov=0.949 | steps=300 | viol=  0 | 1.2s
+  Ep 41: -- | cov=0.934 | steps=300 | viol=  0 | 1.2s
+  Ep 42: OK | cov=0.956 | steps=284 | viol=  0 | 1.1s
+  Ep 43: -- | cov=0.451 | steps=300 | viol=  0 | 1.2s
+  Ep 44: OK | cov=0.954 | steps=121 | viol=  0 | 0.5s
+  Ep 45: -- | cov=0.500 | steps=300 | viol=  0 | 1.4s
+  Ep 46: -- | cov=0.681 | steps=300 | viol=  0 | 1.4s
+  Ep 47: -- | cov=0.947 | steps=300 | viol=  0 | 1.3s
+  Ep 48: OK | cov=0.950 | steps=199 | viol=  0 | 0.8s
+  Ep 49: OK | cov=0.961 | steps=209 | viol=  0 | 0.8s
+  Ep 50: OK | cov=0.954 | steps=124 | viol=  0 | 0.5s
+  Ep 51: -- | cov=0.684 | steps=300 | viol=  0 | 1.2s
+  Ep 52: -- | cov=0.674 | steps=300 | viol=  0 | 1.2s
+  Ep 53: OK | cov=0.961 | steps=161 | viol=  0 | 0.6s
+  Ep 54: -- | cov=0.000 | steps=300 | viol=  0 | 1.1s
+  Ep 55: -- | cov=0.507 | steps=300 | viol=  0 | 1.2s
+  Ep 56: OK | cov=0.950 | steps=215 | viol=  0 | 0.9s
+  Ep 57: -- | cov=0.942 | steps=300 | viol=  0 | 1.2s
+  Ep 58: -- | cov=0.930 | steps=300 | viol=  0 | 1.2s
+  Ep 59: -- | cov=0.339 | steps=300 | viol=  0 | 1.2s
+  Ep 60: -- | cov=0.949 | steps=300 | viol=  0 | 1.2s
+  Ep 61: -- | cov=0.191 | steps=300 | viol=  0 | 1.2s
+  Ep 62: -- | cov=0.149 | steps=300 | viol=  0 | 1.2s
+  Ep 63: -- | cov=0.946 | steps=300 | viol=  0 | 1.2s
+  Ep 64: OK | cov=0.966 | steps=206 | viol=  0 | 0.8s
+  Ep 65: OK | cov=0.956 | steps=100 | viol=  0 | 0.4s
+  Ep 66: -- | cov=0.000 | steps=300 | viol=  0 | 1.2s
+  Ep 67: -- | cov=0.895 | steps=300 | viol=  0 | 1.2s
+  Ep 68: -- | cov=0.000 | steps=300 | viol=  0 | 1.2s
+  Ep 69: -- | cov=0.949 | steps=300 | viol=  0 | 1.2s
+  Ep 70: -- | cov=0.939 | steps=300 | viol=  0 | 1.2s
+  Ep 71: -- | cov=0.477 | steps=300 | viol=  0 | 1.2s
+  Ep 72: OK | cov=0.950 | steps=202 | viol=  0 | 0.8s
+  Ep 73: -- | cov=0.934 | steps=300 | viol=  0 | 1.2s
+  Ep 74: OK | cov=0.953 | steps=239 | viol=  0 | 0.9s
+  Ep 75: -- | cov=0.943 | steps=300 | viol=  0 | 1.2s
+  Ep 76: OK | cov=0.951 | steps=281 | viol=  0 | 1.1s
+  Ep 77: -- | cov=0.000 | steps=300 | viol=  0 | 1.2s
+  Ep 78: -- | cov=0.936 | steps=300 | viol=  0 | 1.2s
+  Ep 79: -- | cov=0.553 | steps=300 | viol=  0 | 1.2s
+  Ep 80: -- | cov=0.261 | steps=300 | viol=  0 | 1.2s
+  Ep 81: -- | cov=0.126 | steps=300 | viol=  0 | 1.2s
+  Ep 82: OK | cov=0.950 | steps=172 | viol=  0 | 0.7s
+  Ep 83: OK | cov=0.954 | steps=180 | viol=  0 | 0.7s
+  Ep 84: OK | cov=0.959 | steps= 86 | viol=  0 | 0.4s
+  Ep 85: OK | cov=0.955 | steps=150 | viol=  0 | 0.6s
+  Ep 86: OK | cov=0.951 | steps= 70 | viol=  0 | 0.3s
+  Ep 87: -- | cov=0.424 | steps=300 | viol=  0 | 1.2s
+  Ep 88: -- | cov=0.659 | steps=300 | viol=  0 | 1.2s
+  Ep 89: OK | cov=0.965 | steps=160 | viol=  0 | 0.6s
+  Ep 90: -- | cov=0.054 | steps=300 | viol=  0 | 1.2s
+  Ep 91: -- | cov=0.943 | steps=300 | viol=  0 | 1.2s
+  Ep 92: -- | cov=0.588 | steps=300 | viol=  0 | 1.2s
+  Ep 93: -- | cov=0.000 | steps=300 | viol=  0 | 1.1s
+  Ep 94: OK | cov=0.959 | steps=229 | viol=  0 | 0.9s
+  Ep 95: OK | cov=0.962 | steps=108 | viol=  0 | 0.4s
+  Ep 96: OK | cov=0.955 | steps=182 | viol=  0 | 0.7s
+  Ep 97: OK | cov=0.974 | steps=164 | viol=  0 | 0.7s
+  Ep 98: OK | cov=0.951 | steps=195 | viol=  0 | 0.8s
+  Ep 99: -- | cov=0.577 | steps=300 | viol=  0 | 1.2s
+  Ep 100: OK | cov=0.951 | steps=254 | viol=  0 | 1.0s
+  Ep 101: -- | cov=0.932 | steps=300 | viol=  0 | 1.2s
+  Ep 102: OK | cov=0.952 | steps=135 | viol=  0 | 0.5s
+  Ep 103: OK | cov=0.952 | steps=252 | viol=  0 | 1.0s
+  Ep 104: OK | cov=0.957 | steps=181 | viol=  0 | 0.7s
+  Ep 105: OK | cov=0.952 | steps=250 | viol=  0 | 1.0s
+  Ep 106: -- | cov=0.025 | steps=300 | viol=  0 | 1.2s
+  Ep 107: OK | cov=0.954 | steps=266 | viol=  0 | 1.1s
+  Ep 108: -- | cov=0.947 | steps=300 | viol=  0 | 1.2s
+  Ep 109: -- | cov=0.077 | steps=300 | viol=  0 | 1.2s
+  Ep 110: OK | cov=0.969 | steps=121 | viol=  0 | 0.5s
+  Ep 111: -- | cov=0.472 | steps=300 | viol=  0 | 1.2s
+  Ep 112: OK | cov=0.967 | steps=271 | viol=  0 | 1.1s
+  Ep 113: OK | cov=0.977 | steps=187 | viol=  0 | 0.7s
+  Ep 114: OK | cov=0.965 | steps=120 | viol=  0 | 0.5s
+  Ep 115: -- | cov=0.000 | steps=300 | viol=  0 | 1.2s
+  Ep 116: OK | cov=0.958 | steps=186 | viol=  0 | 0.7s
+  Ep 117: OK | cov=0.960 | steps= 91 | viol=  0 | 0.4s
+  Ep 118: -- | cov=0.939 | steps=300 | viol=  0 | 1.2s
+  Ep 119: OK | cov=0.950 | steps=208 | viol=  0 | 0.8s
+  Ep 120: OK | cov=0.954 | steps=116 | viol=  0 | 0.5s
+  Ep 121: OK | cov=0.966 | steps=270 | viol=  0 | 1.1s
+  Ep 122: OK | cov=0.958 | steps=139 | viol=  0 | 0.6s
+  Ep 123: OK | cov=0.960 | steps= 58 | viol=  0 | 0.2s
+  Ep 124: OK | cov=0.957 | steps=109 | viol=  0 | 0.4s
+  Ep 125: OK | cov=0.955 | steps=142 | viol=  0 | 0.6s
+  Ep 126: -- | cov=0.000 | steps=300 | viol=  0 | 1.1s
+  Ep 127: OK | cov=0.962 | steps=144 | viol=  0 | 0.6s
+  Ep 128: OK | cov=0.954 | steps=219 | viol=  0 | 0.9s
+  Ep 129: OK | cov=0.958 | steps= 86 | viol=  0 | 0.3s
+  Ep 130: -- | cov=0.940 | steps=300 | viol=  0 | 1.2s
+  Ep 131: OK | cov=0.957 | steps=125 | viol=  0 | 0.5s
+  Ep 132: -- | cov=0.061 | steps=300 | viol=  0 | 1.2s
+  Ep 133: OK | cov=0.953 | steps=164 | viol=  0 | 0.7s
+  Ep 134: OK | cov=0.958 | steps=183 | viol=  0 | 0.7s
+  Ep 135: OK | cov=0.952 | steps=213 | viol=  0 | 0.9s
+  Ep 136: OK | cov=0.950 | steps=180 | viol=  0 | 0.7s
+  Ep 137: OK | cov=0.951 | steps=196 | viol=  0 | 0.8s
+  Ep 138: -- | cov=0.000 | steps=300 | viol=  0 | 1.2s
+  Ep 139: OK | cov=0.958 | steps=179 | viol=  0 | 0.7s
+  Ep 140: OK | cov=0.975 | steps=143 | viol=  0 | 0.6s
+  Ep 141: OK | cov=0.951 | steps=185 | viol=  0 | 0.7s
+  Ep 142: -- | cov=0.404 | steps=300 | viol=  0 | 1.2s
+  Ep 143: OK | cov=0.958 | steps=112 | viol=  0 | 0.5s
+  Ep 144: OK | cov=0.973 | steps=114 | viol=  0 | 0.5s
+  Ep 145: OK | cov=0.957 | steps=220 | viol=  0 | 0.9s
+  Ep 146: OK | cov=0.956 | steps=229 | viol=  0 | 0.9s
+  Ep 147: OK | cov=0.960 | steps=126 | viol=  0 | 0.5s
+  Ep 148: OK | cov=0.970 | steps=149 | viol=  0 | 0.6s
+  Ep 149: -- | cov=0.660 | steps=300 | viol=  0 | 1.2s
+  Ep 150: -- | cov=0.000 | steps=300 | viol=  0 | 1.2s
+  Ep 151: OK | cov=0.951 | steps=111 | viol=  0 | 0.4s
+  Ep 152: -- | cov=0.136 | steps=300 | viol=  0 | 1.2s
+  Ep 153: OK | cov=0.972 | steps=253 | viol=  0 | 1.0s
+  Ep 154: -- | cov=0.549 | steps=300 | viol=  0 | 1.2s
+  Ep 155: OK | cov=0.961 | steps=202 | viol=  0 | 0.8s
+  Ep 156: OK | cov=0.959 | steps=197 | viol=  0 | 0.8s
+  Ep 157: -- | cov=0.912 | steps=300 | viol=  0 | 1.2s
+  Ep 158: OK | cov=0.955 | steps=132 | viol=  0 | 0.5s
+  Ep 159: -- | cov=0.000 | steps=300 | viol=  0 | 1.2s
+  Ep 160: -- | cov=0.672 | steps=300 | viol=  0 | 1.2s
+  Ep 161: -- | cov=0.572 | steps=300 | viol=  0 | 1.2s
+  Ep 162: OK | cov=0.951 | steps=217 | viol=  0 | 0.9s
+  Ep 163: OK | cov=0.958 | steps=102 | viol=  0 | 0.4s
+  Ep 164: OK | cov=0.950 | steps=195 | viol=  0 | 0.8s
+  Ep 165: -- | cov=0.000 | steps=300 | viol=  0 | 1.1s
+  Ep 166: OK | cov=0.963 | steps=126 | viol=  0 | 0.5s
+  Ep 167: OK | cov=0.960 | steps=144 | viol=  0 | 0.6s
+  Ep 168: -- | cov=0.662 | steps=300 | viol=  0 | 1.4s
+  Ep 169: OK | cov=0.956 | steps=187 | viol=  0 | 0.8s
+  Ep 170: OK | cov=0.956 | steps=236 | viol=  0 | 0.9s
+  Ep 171: OK | cov=0.957 | steps=119 | viol=  0 | 0.5s
+  Ep 172: -- | cov=0.200 | steps=300 | viol=  0 | 1.3s
+  Ep 173: OK | cov=0.955 | steps=237 | viol=  0 | 0.9s
+  Ep 174: OK | cov=0.967 | steps=101 | viol=  0 | 0.4s
+  Ep 175: OK | cov=0.960 | steps=154 | viol=  0 | 0.6s
+  Ep 176: OK | cov=0.952 | steps=279 | viol=  0 | 1.1s
+  Ep 177: -- | cov=0.651 | steps=300 | viol=  0 | 1.2s
+  Ep 178: OK | cov=0.964 | steps=166 | viol=  0 | 0.7s
+  Ep 179: OK | cov=0.951 | steps=248 | viol=  0 | 1.0s
+  Ep 180: -- | cov=0.945 | steps=300 | viol=  0 | 1.2s
+  Ep 181: OK | cov=0.954 | steps=222 | viol=  0 | 0.9s
+  Ep 182: -- | cov=0.949 | steps=300 | viol=  0 | 1.2s
+  Ep 183: OK | cov=0.954 | steps=118 | viol=  0 | 0.5s
+  Ep 184: -- | cov=0.010 | steps=300 | viol=  0 | 1.2s
+  Ep 185: OK | cov=0.964 | steps=112 | viol=  0 | 0.5s
+  Ep 186: -- | cov=0.133 | steps=300 | viol=  0 | 1.2s
+  Ep 187: OK | cov=0.957 | steps=210 | viol=  0 | 0.8s
+  Ep 188: OK | cov=0.965 | steps=169 | viol=  0 | 0.7s
+  Ep 189: OK | cov=0.950 | steps=244 | viol=  0 | 1.0s
+  Ep 190: -- | cov=0.190 | steps=300 | viol=  0 | 1.2s
+  Ep 191: OK | cov=0.950 | steps= 94 | viol=  0 | 0.4s
+  Ep 192: OK | cov=0.951 | steps=183 | viol=  0 | 0.7s
+  Ep 193: OK | cov=0.958 | steps=241 | viol=  0 | 1.0s
+  Ep 194: -- | cov=0.339 | steps=300 | viol=  0 | 1.2s
+  Ep 195: OK | cov=0.976 | steps=200 | viol=  0 | 0.8s
+  Ep 196: OK | cov=0.967 | steps=197 | viol=  0 | 0.8s
+  Ep 197: OK | cov=0.964 | steps= 86 | viol=  0 | 0.3s
+  Ep 198: -- | cov=0.948 | steps=300 | viol=  0 | 1.2s
+  Ep 199: OK | cov=0.956 | steps=161 | viol=  0 | 0.6s
+
+==================================================
+  with_contract (200 episodes)
+==================================================
+  Ep  0: -- | cov=0.549 | steps=300 | viol= 10 | 1.2s
+  Ep  1: -- | cov=0.671 | steps=300 | viol=  5 | 1.2s
+  Ep  2: -- | cov=0.939 | steps=300 | viol= 26 | 1.2s
+  Ep  3: -- | cov=0.945 | steps=300 | viol=  7 | 1.2s
+  Ep  4: -- | cov=0.950 | steps=300 | viol= 13 | 1.2s
+  Ep  5: OK | cov=0.953 | steps=120 | viol=  4 | 0.5s
+  Ep  6: OK | cov=0.969 | steps=110 | viol=  0 | 0.4s
+  Ep  7: OK | cov=0.951 | steps=140 | viol=  2 | 0.6s
+  Ep  8: -- | cov=0.949 | steps=300 | viol= 20 | 1.2s
+  Ep  9: OK | cov=0.976 | steps=292 | viol= 12 | 1.2s
+  Ep 10: OK | cov=0.957 | steps=264 | viol=  3 | 1.1s
+  Ep 11: OK | cov=0.961 | steps=246 | viol=  5 | 1.0s
+  Ep 12: -- | cov=0.661 | steps=300 | viol=  8 | 1.2s
+  Ep 13: -- | cov=0.884 | steps=300 | viol=  9 | 1.2s
+  Ep 14: OK | cov=0.951 | steps= 60 | viol=  0 | 0.2s
+  Ep 15: -- | cov=0.313 | steps=300 | viol= 48 | 1.2s
+  Ep 16: OK | cov=0.954 | steps=191 | viol=  0 | 0.8s
+  Ep 17: -- | cov=0.924 | steps=300 | viol= 14 | 1.2s
+  Ep 18: OK | cov=0.956 | steps=111 | viol=  1 | 0.4s
+  Ep 19: OK | cov=0.957 | steps=180 | viol=  5 | 0.7s
+  Ep 20: -- | cov=0.257 | steps=300 | viol=  3 | 1.2s
+  Ep 21: OK | cov=0.962 | steps=143 | viol=  3 | 0.6s
+  Ep 22: -- | cov=0.000 | steps=300 | viol=  9 | 1.2s
+  Ep 23: -- | cov=0.944 | steps=300 | viol= 15 | 1.2s
+  Ep 24: OK | cov=0.953 | steps= 49 | viol=  0 | 0.2s
+  Ep 25: -- | cov=0.007 | steps=300 | viol=  2 | 1.2s
+  Ep 26: -- | cov=0.950 | steps=300 | viol= 18 | 1.2s
+  Ep 27: OK | cov=0.955 | steps=234 | viol= 12 | 0.9s
+  Ep 28: OK | cov=0.968 | steps=227 | viol=  9 | 0.9s
+  Ep 29: OK | cov=0.963 | steps=161 | viol=  1 | 0.7s
+  Ep 30: -- | cov=0.135 | steps=300 | viol=  2 | 1.2s
+  Ep 31: -- | cov=0.516 | steps=300 | viol=  1 | 1.2s
+  Ep 32: -- | cov=0.932 | steps=300 | viol= 20 | 1.2s
+  Ep 33: OK | cov=0.951 | steps=169 | viol=  5 | 0.7s
+  Ep 34: OK | cov=0.958 | steps=130 | viol=  1 | 0.5s
+  Ep 35: -- | cov=0.605 | steps=300 | viol= 11 | 1.2s
+  Ep 36: OK | cov=0.961 | steps=151 | viol=  6 | 0.6s
+  Ep 37: -- | cov=0.535 | steps=300 | viol=  8 | 1.2s
+  Ep 38: -- | cov=0.435 | steps=300 | viol= 46 | 1.2s
+  Ep 39: OK | cov=0.950 | steps= 91 | viol=  1 | 0.4s
+  Ep 40: OK | cov=0.969 | steps=151 | viol=  1 | 0.6s
+  Ep 41: -- | cov=0.948 | steps=300 | viol= 12 | 1.2s
+  Ep 42: -- | cov=0.162 | steps=300 | viol= 38 | 1.2s
+  Ep 43: -- | cov=0.673 | steps=300 | viol=  9 | 1.2s
+  Ep 44: OK | cov=0.968 | steps=191 | viol=  4 | 0.8s
+  Ep 45: -- | cov=0.510 | steps=300 | viol=  0 | 1.2s
+  Ep 46: -- | cov=0.435 | steps=300 | viol=  5 | 1.2s
+  Ep 47: -- | cov=0.923 | steps=300 | viol= 26 | 1.2s
+  Ep 48: OK | cov=0.958 | steps=240 | viol= 16 | 1.0s
+  Ep 49: OK | cov=0.957 | steps=169 | viol=  3 | 0.7s
+  Ep 50: OK | cov=0.950 | steps=252 | viol= 21 | 1.0s
+  Ep 51: -- | cov=0.666 | steps=300 | viol=  6 | 1.2s
+  Ep 52: -- | cov=0.382 | steps=300 | viol=  6 | 1.2s
+  Ep 53: OK | cov=0.950 | steps=176 | viol=  4 | 0.7s
+  Ep 54: OK | cov=0.952 | steps=226 | viol= 10 | 0.9s
+  Ep 55: -- | cov=0.514 | steps=300 | viol=  0 | 1.2s
+  Ep 56: OK | cov=0.950 | steps=223 | viol= 11 | 0.9s
+  Ep 57: -- | cov=0.837 | steps=300 | viol=  6 | 1.2s
+  Ep 58: -- | cov=0.201 | steps=300 | viol=  9 | 1.2s
+  Ep 59: -- | cov=0.344 | steps=300 | viol=  4 | 1.2s
+  Ep 60: OK | cov=0.965 | steps= 68 | viol=  3 | 0.3s
+  Ep 61: OK | cov=0.959 | steps=249 | viol= 12 | 1.0s
+  Ep 62: -- | cov=0.140 | steps=300 | viol= 50 | 1.2s
+  Ep 63: -- | cov=0.783 | steps=300 | viol=  7 | 1.2s
+  Ep 64: OK | cov=0.958 | steps=220 | viol=  7 | 0.9s
+  Ep 65: OK | cov=0.970 | steps= 96 | viol=  0 | 0.4s
+  Ep 66: -- | cov=0.000 | steps=300 | viol=  5 | 1.2s
+  Ep 67: OK | cov=0.966 | steps=173 | viol= 12 | 0.7s
+  Ep 68: -- | cov=0.000 | steps=300 | viol=  2 | 1.2s
+  Ep 69: -- | cov=0.546 | steps=300 | viol=  2 | 1.2s
+  Ep 70: OK | cov=0.954 | steps=285 | viol= 18 | 1.1s
+  Ep 71: -- | cov=0.459 | steps=300 | viol=  5 | 1.2s
+  Ep 72: OK | cov=0.954 | steps=246 | viol= 20 | 1.0s
+  Ep 73: -- | cov=0.948 | steps=300 | viol=  4 | 1.2s
+  Ep 74: OK | cov=0.957 | steps=163 | viol=  4 | 0.7s
+  Ep 75: -- | cov=0.365 | steps=300 | viol= 31 | 1.2s
+  Ep 76: OK | cov=0.960 | steps=136 | viol=  3 | 0.6s
+  Ep 77: -- | cov=0.000 | steps=300 | viol=  7 | 1.2s
+  Ep 78: OK | cov=0.954 | steps=245 | viol= 16 | 1.0s
+  Ep 79: OK | cov=0.964 | steps=181 | viol=  6 | 0.7s
+  Ep 80: -- | cov=0.615 | steps=300 | viol=  1 | 1.2s
+  Ep 81: -- | cov=0.129 | steps=300 | viol=  4 | 1.2s
+  Ep 82: OK | cov=0.967 | steps=135 | viol=  1 | 0.6s
+  Ep 83: -- | cov=0.920 | steps=300 | viol= 16 | 1.2s
+  Ep 84: OK | cov=0.967 | steps= 86 | viol=  0 | 0.4s
+  Ep 85: -- | cov=0.928 | steps=300 | viol= 35 | 1.2s
+  Ep 86: OK | cov=0.958 | steps=221 | viol=  9 | 0.9s
+  Ep 87: -- | cov=0.903 | steps=300 | viol= 15 | 1.2s
+  Ep 88: -- | cov=0.596 | steps=300 | viol=  7 | 1.2s
+  Ep 89: OK | cov=0.957 | steps=174 | viol= 15 | 0.7s
+  Ep 90: -- | cov=0.054 | steps=300 | viol= 14 | 1.2s
+  Ep 91: -- | cov=0.513 | steps=300 | viol=  6 | 1.2s
+  Ep 92: -- | cov=0.557 | steps=300 | viol= 14 | 1.2s
+  Ep 93: -- | cov=0.000 | steps=300 | viol= 53 | 1.2s
+  Ep 94: OK | cov=0.952 | steps=212 | viol=  4 | 0.9s
+  Ep 95: OK | cov=0.970 | steps=143 | viol=  8 | 0.6s
+  Ep 96: OK | cov=0.973 | steps=291 | viol= 14 | 1.2s
+  Ep 97: OK | cov=0.958 | steps=162 | viol=  8 | 0.7s
+  Ep 98: OK | cov=0.984 | steps=152 | viol=  6 | 0.6s
+  Ep 99: -- | cov=0.917 | steps=300 | viol=  2 | 1.2s
+  Ep 100: -- | cov=0.950 | steps=300 | viol= 21 | 1.2s
+  Ep 101: -- | cov=0.945 | steps=300 | viol= 22 | 1.2s
+  Ep 102: -- | cov=0.913 | steps=300 | viol=  1 | 1.2s
+  Ep 103: -- | cov=0.626 | steps=300 | viol=  0 | 1.2s
+  Ep 104: OK | cov=0.951 | steps=189 | viol= 12 | 0.8s
+  Ep 105: -- | cov=0.918 | steps=300 | viol= 16 | 1.2s
+  Ep 106: -- | cov=0.027 | steps=300 | viol=  0 | 1.2s
+  Ep 107: -- | cov=0.449 | steps=300 | viol= 23 | 1.2s
+  Ep 108: -- | cov=0.509 | steps=300 | viol= 25 | 1.2s
+  Ep 109: -- | cov=0.080 | steps=300 | viol=  0 | 1.2s
+  Ep 110: OK | cov=0.958 | steps=121 | viol=  1 | 0.5s
+  Ep 111: -- | cov=0.621 | steps=300 | viol= 16 | 1.2s
+  Ep 112: OK | cov=0.957 | steps=240 | viol=  3 | 1.0s
+  Ep 113: OK | cov=0.952 | steps=254 | viol=  8 | 1.0s
+  Ep 114: OK | cov=0.973 | steps=130 | viol=  1 | 0.5s
+  Ep 115: -- | cov=0.000 | steps=300 | viol=  0 | 1.2s
+  Ep 116: OK | cov=0.955 | steps=125 | viol=  9 | 0.5s
+  Ep 117: OK | cov=0.966 | steps=125 | viol=  4 | 0.5s
+  Ep 118: OK | cov=0.952 | steps=153 | viol=  1 | 0.6s
+  Ep 119: OK | cov=0.953 | steps=187 | viol=  1 | 0.8s
+  Ep 120: OK | cov=0.953 | steps= 97 | viol=  3 | 0.4s
+  Ep 121: OK | cov=0.977 | steps=144 | viol=  6 | 0.7s
+  Ep 122: OK | cov=0.953 | steps=119 | viol=  2 | 0.6s
+  Ep 123: OK | cov=0.959 | steps= 58 | viol=  0 | 0.3s
+  Ep 124: OK | cov=0.970 | steps=111 | viol=  4 | 0.5s
+  Ep 125: OK | cov=0.955 | steps=139 | viol=  4 | 0.7s
+  Ep 126: -- | cov=0.000 | steps=300 | viol=  7 | 1.3s
+  Ep 127: OK | cov=0.954 | steps=192 | viol=  1 | 0.8s
+  Ep 128: OK | cov=0.958 | steps=127 | viol=  3 | 0.5s
+  Ep 129: OK | cov=0.951 | steps= 88 | viol=  4 | 0.4s
+  Ep 130: OK | cov=0.974 | steps=276 | viol= 11 | 1.1s
+  Ep 131: OK | cov=0.966 | steps=241 | viol=  2 | 1.0s
+  Ep 132: OK | cov=0.963 | steps= 94 | viol=  4 | 0.4s
+  Ep 133: -- | cov=0.193 | steps=300 | viol= 21 | 1.2s
+  Ep 134: OK | cov=0.952 | steps=221 | viol= 12 | 0.9s
+  Ep 135: -- | cov=0.929 | steps=300 | viol= 57 | 1.2s
+  Ep 136: OK | cov=0.957 | steps=115 | viol=  3 | 0.5s
+  Ep 137: OK | cov=0.950 | steps=176 | viol=  7 | 0.7s
+  Ep 138: -- | cov=0.000 | steps=300 | viol=  0 | 1.2s
+  Ep 139: OK | cov=0.953 | steps=176 | viol=  4 | 0.7s
+  Ep 140: OK | cov=0.957 | steps=124 | viol=  0 | 0.5s
+  Ep 141: OK | cov=0.968 | steps= 71 | viol=  2 | 0.3s
+  Ep 142: -- | cov=0.365 | steps=300 | viol=  3 | 1.2s
+  Ep 143: OK | cov=0.965 | steps=112 | viol=  6 | 0.5s
+  Ep 144: OK | cov=0.960 | steps=261 | viol= 20 | 1.1s
+  Ep 145: OK | cov=0.952 | steps=143 | viol=  2 | 0.6s
+  Ep 146: OK | cov=0.964 | steps=300 | viol= 12 | 1.3s
+  Ep 147: -- | cov=0.942 | steps=300 | viol= 31 | 1.2s
+  Ep 148: OK | cov=0.962 | steps=149 | viol=  3 | 0.6s
+  Ep 149: -- | cov=0.668 | steps=300 | viol=  8 | 1.2s
+  Ep 150: -- | cov=0.000 | steps=300 | viol= 29 | 1.2s
+  Ep 151: OK | cov=0.960 | steps=111 | viol=  2 | 0.5s
+  Ep 152: -- | cov=0.934 | steps=300 | viol= 27 | 1.2s
+  Ep 153: OK | cov=0.966 | steps=169 | viol=  2 | 0.7s
+  Ep 154: -- | cov=0.031 | steps=300 | viol=  7 | 1.2s
+  Ep 155: -- | cov=0.931 | steps=300 | viol= 25 | 1.2s
+  Ep 156: OK | cov=0.962 | steps=174 | viol=  6 | 0.7s
+  Ep 157: -- | cov=0.588 | steps=300 | viol= 36 | 1.2s
+  Ep 158: OK | cov=0.963 | steps=275 | viol= 14 | 1.1s
+  Ep 159: -- | cov=0.000 | steps=300 | viol=  2 | 1.2s
+  Ep 160: -- | cov=0.689 | steps=300 | viol=  3 | 1.2s
+  Ep 161: -- | cov=0.686 | steps=300 | viol= 11 | 1.2s
+  Ep 162: OK | cov=0.953 | steps=158 | viol=  1 | 0.6s
+  Ep 163: OK | cov=0.964 | steps=176 | viol=  8 | 0.7s
+  Ep 164: -- | cov=0.938 | steps=300 | viol=  8 | 1.2s
+  Ep 165: -- | cov=0.000 | steps=300 | viol=  1 | 1.7s
+  Ep 166: OK | cov=0.957 | steps=226 | viol=  8 | 1.4s
+  Ep 167: OK | cov=0.978 | steps=143 | viol=  3 | 0.9s
+  Ep 168: -- | cov=0.678 | steps=300 | viol= 10 | 1.6s
+  Ep 169: OK | cov=0.970 | steps=144 | viol=  2 | 0.7s
+  Ep 170: OK | cov=0.969 | steps=257 | viol=  7 | 1.1s
+  Ep 171: OK | cov=0.952 | steps=198 | viol=  9 | 0.8s
+  Ep 172: -- | cov=0.199 | steps=300 | viol=  0 | 1.3s
+  Ep 173: OK | cov=0.955 | steps=260 | viol= 15 | 1.1s
+  Ep 174: OK | cov=0.956 | steps= 98 | viol=  4 | 0.4s
+  Ep 175: OK | cov=0.952 | steps=134 | viol=  9 | 0.5s
+  Ep 176: -- | cov=0.948 | steps=300 | viol= 18 | 1.2s
+  Ep 177: -- | cov=0.608 | steps=300 | viol=  8 | 1.3s
+  Ep 178: OK | cov=0.965 | steps=163 | viol=  8 | 0.7s
+  Ep 179: OK | cov=0.960 | steps=200 | viol=  6 | 0.8s
+  Ep 180: OK | cov=0.950 | steps=242 | viol= 19 | 1.0s
+  Ep 181: OK | cov=0.963 | steps=102 | viol=  0 | 0.4s
+  Ep 182: -- | cov=0.633 | steps=300 | viol=  9 | 1.2s
+  Ep 183: OK | cov=0.952 | steps=114 | viol= 13 | 0.5s
+  Ep 184: -- | cov=0.010 | steps=300 | viol= 34 | 1.2s
+  Ep 185: OK | cov=0.959 | steps=112 | viol=  4 | 0.5s
+  Ep 186: -- | cov=0.567 | steps=300 | viol=  5 | 1.2s
+  Ep 187: OK | cov=0.957 | steps=128 | viol=  0 | 0.5s
+  Ep 188: -- | cov=0.000 | steps=300 | viol= 11 | 1.2s
+  Ep 189: OK | cov=0.955 | steps=154 | viol=  4 | 0.6s
+  Ep 190: OK | cov=0.968 | steps=237 | viol=  2 | 1.0s
+  Ep 191: OK | cov=0.964 | steps=168 | viol=  5 | 0.7s
+  Ep 192: OK | cov=0.959 | steps=145 | viol=  4 | 0.6s
+  Ep 193: -- | cov=0.947 | steps=300 | viol=  6 | 1.3s
+  Ep 194: OK | cov=0.952 | steps=122 | viol=  4 | 0.5s
+  Ep 195: OK | cov=0.959 | steps=176 | viol=  7 | 0.7s
+  Ep 196: OK | cov=0.953 | steps=170 | viol=  1 | 0.7s
+  Ep 197: OK | cov=0.962 | steps=146 | viol=  8 | 0.6s
+  Ep 198: -- | cov=0.545 | steps=300 | viol=  5 | 1.3s
+  Ep 199: OK | cov=0.954 | steps=226 | viol=  9 | 1.0s
+
+==================================================
+SUMMARY
+  no_contract: 56% (113/200)
+    CI: [0.496, 0.632], Violations: 0
+  with_contract: 55% (109/200)
+    CI: [0.476, 0.613], Violations: 1847
+  Fisher p = 0.7628
+
+Saved to /workspace/results/vqbet_pusht_200ep.json

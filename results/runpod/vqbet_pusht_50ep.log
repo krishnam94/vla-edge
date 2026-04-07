@@ -1,0 +1,31 @@
+/usr/local/lib/python3.10/dist-packages/lerobot/policies/vqbet/vqbet_utils.py:1373: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  @autocast(enabled=False)
+Loading VQ-BeT from lerobot/vqbet_pusht...
+Traceback (most recent call last):
+  File "/workspace/vla-edge/experiments/runpod/exp_vqbet_pusht_gpu.py", line 271, in <module>
+    main()
+  File "/workspace/vla-edge/experiments/runpod/exp_vqbet_pusht_gpu.py", line 170, in main
+    policy, is_normalized = load_policy(args.device)
+  File "/workspace/vla-edge/experiments/runpod/exp_vqbet_pusht_gpu.py", line 27, in load_policy
+    policy = VQBeTPolicy.from_pretrained(MODEL_ID)
+  File "/usr/local/lib/python3.10/dist-packages/lerobot/policies/pretrained.py", line 96, in from_pretrained
+    config = PreTrainedConfig.from_pretrained(
+  File "/usr/local/lib/python3.10/dist-packages/lerobot/configs/policies.py", line 211, in from_pretrained
+    orig_config = draccus.parse(cls, config_file, args=[])
+  File "/usr/local/lib/python3.10/dist-packages/draccus/argparsing.py", line 211, in parse
+    return parser.parse_args(args)
+  File "/usr/local/lib/python3.10/dist-packages/draccus/argparsing.py", line 102, in parse_args
+    args, _ = self.parse_known_args(args, namespace, is_parse_args=True)
+  File "/usr/local/lib/python3.10/dist-packages/draccus/argparsing.py", line 136, in parse_known_args
+    parsed_t = self._postprocessing(parsed_args)
+  File "/usr/local/lib/python3.10/dist-packages/draccus/argparsing.py", line 180, in _postprocessing
+    cfg = decoding.decode(self.config_class, deflat_d)
+  File "/usr/local/lib/python3.10/dist-packages/draccus/parsers/registry_utils.py", line 78, in wrapper
+    return base_func(*args, **kw)
+  File "/usr/local/lib/python3.10/dist-packages/draccus/parsers/decoding.py", line 48, in decode
+    return get_decoding_fn(cls)(raw_value, ())  # type: ignore
+  File "/usr/local/lib/python3.10/dist-packages/draccus/parsers/decoding.py", line 201, in decode_choice_class
+    return decode_dataclass(subcls, raw_value, path)
+  File "/usr/local/lib/python3.10/dist-packages/draccus/parsers/decoding.py", line 149, in decode_dataclass
+    raise DecodingError(path, f"The fields {formatted_keys} are not valid for {stringify_type(cls)}")
+draccus.utils.DecodingError: The fields `mlp_hidden_dim` are not valid for VQBeTConfig
