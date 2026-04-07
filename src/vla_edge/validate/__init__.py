@@ -37,6 +37,14 @@ from vla_edge.validate.violations import (
     GripperOscillationDetector,
 )
 from vla_edge.validate.stl_monitor import STLActionMonitor
+from vla_edge.validate.signals import (
+    LinearPredictabilityMonitor,
+    CorrelationDivergenceMonitor,
+    SpectralEnergyMonitor,
+    MomentumCoherenceMonitor,
+    LatencyMonitor,
+    ActionEnergyMonitor,
+)
 
 __all__ = [
     "SafetyGuard",
@@ -51,4 +59,10 @@ __all__ = [
     "JerkMonitor",
     "GripperOscillationDetector",
     "STLActionMonitor",
+    "LinearPredictabilityMonitor",
+    "CorrelationDivergenceMonitor",
+    "SpectralEnergyMonitor",
+    "MomentumCoherenceMonitor",
+    "LatencyMonitor",
+    "ActionEnergyMonitor",
 ]
