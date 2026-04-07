@@ -21,7 +21,7 @@ kayjee1994@gmail.com}}
 \begin{abstract}
 VLA models predict robot actions end-to-end, but their outputs go to motors with no standardized safety monitoring.
 We introduce \texttt{SafeContract}, a lightweight toolkit (13\,$\mu$s overhead) that monitors multiple violation types via a one-line Python decorator with conformal calibration (95\% coverage guarantee).
-On the same PushT dataset ($n{=}200$), Diffusion Policy and VQ-BeT show dramatically different behavioral signatures: Diffusion produces 0 velocity violations while VQ-BeT produces 1{,}847.
+On the same PushT dataset ($n{=}200$), VQ-BeT produces 2.4$\times$ more violations than Diffusion (1{,}847 vs.\ 772), revealing architecture-determined behavioral signatures.
 Direction reversal rate predicts task failure with AUROC${=}$0.93 (VQ-BeT) and 0.79 (Diffusion), while jerk monitoring is predictive only for discrete-token architectures (0.88 VQ-BeT vs.\ 0.43 Diffusion).
 No single monitor is universally best; architecture-matched monitoring is necessary.\footnote{Code: \url{https://github.com/krishnam94/vla-edge}}
 \end{abstract}
@@ -166,7 +166,7 @@ Without SafeContract: 56.5\% success (113/200, CI$_{95}$: [0.50, 0.63]).
 With SafeContract: 54.5\% success (109/200, CI$_{95}$: [0.48, 0.61]).
 Fisher's $p = 0.76$. SafeContract caught 1{,}847 velocity violations with no significant degradation.
 
-The architecture contrast is striking: on the same task, Diffusion produces 0 velocity violations (smooth DDPM denoising) while VQ-BeT produces 1{,}847 (discrete token transitions cause velocity spikes).
+The architecture contrast is striking: on the same task, VQ-BeT produces 2.4$\times$ more violations than Diffusion (1{,}847 vs.\ 772), reflecting discrete token transitions versus smooth DDPM denoising.
 Both are within range of published baselines (Diffusion: 87.4\%, VQ-BeT: 57\%).
 
 \textbf{ACT on ALOHA} (51.6M params, $n{=}200$, conformal calibration).
@@ -185,12 +185,19 @@ SmolVLA closed-loop on LIBERO achieved 0\% task success due to checkpoint compat
 \textbf{Failure prediction.}
 Direction reversal rate predicts task failure with AUROC${=}$0.93 on VQ-BeT and 0.79 on Diffusion ($p < 0.001$ both).
 Jerk monitoring is strongly predictive for VQ-BeT (AUROC${=}$0.88) but not for Diffusion (0.43), confirming that discrete-token architectures require jerk-based monitors while smooth architectures do not.
-Velocity violations alone achieve only AUROC${=}$0.69 (VQ-BeT) and 0.41 (Diffusion) - the previously reported null (0.54 on ACT) reflected using the wrong monitor, not a fundamental limit of action-space monitoring.
+Velocity violations alone achieve only AUROC${=}$0.69 (VQ-BeT) and 0.41 (Diffusion) - the previously reported null (0.54 on ACT) reflected using the wrong monitor, not a fundamental limit of action-space monitoring (Fig.~\ref{fig:auroc}).
 
 \begin{figure}[t]
     \centering
-    \includegraphics[width=\columnwidth]{figures/fig_closed_loop.pdf}
-    \caption{Closed-loop evaluation: ACT on ALOHA sim with conformal calibration ($n{=}20$). SafeContract catches 1{,}570 violations with no degradation ($p{=}1.0$). Diffusion on PushT ($n{=}50$): 66\% vs 62\%, 195 violations ($p{=}0.84$).}
+    \includegraphics[width=\columnwidth]{figures/fig_auroc_comparison.pdf}
+    \caption{Architecture-matched failure prediction (PushT, $n{=}100$). Reversal rate predicts failure with AUROC${=}$0.93 (VQ-BeT) and 0.79 (Diffusion). Jerk monitoring is predictive only for discrete-token architectures. No single monitor is universally best.}
+    \label{fig:auroc}
+\end{figure}
+
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=\columnwidth]{figures/fig_pusht_comparison.pdf}
+    \caption{Same-dataset closed-loop comparison on PushT ($n{=}200$ per condition). SafeContract catches 772 (Diffusion) and 1{,}847 (VQ-BeT) violations with no significant task degradation ($p{=}0.92$ and $p{=}0.76$).}
     \label{fig:closedloop}
 \end{figure}
 
@@ -267,7 +274,7 @@ Vel. violations & 772 & \textbf{1{,}847} & XX & 98\%$^*$ \\
 \section{Discussion}
 
 SafeContract provides runtime action monitoring for VLA deployment: 5 violation types, conformal calibration, ${\sim}$13\,$\mu$s overhead.
-The central finding is that \emph{different architectures fail in fundamentally different ways}: on the same PushT task, Diffusion Policy produces 0 velocity violations while VQ-BeT produces 1{,}847.
+The central finding is that \emph{different architectures fail in fundamentally different ways}: on PushT, VQ-BeT produces 2.4$\times$ more violations than Diffusion (1{,}847 vs.\ 772), and the monitors that predict failure differ by architecture.
 Bounds and velocity monitoring catches VQ-BeT's discrete-token jerkiness; stall detection catches Diffusion's policy-freeze failures that bounds/velocity structurally misses.
 A comprehensive monitoring suite must include both types.
 
