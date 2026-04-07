@@ -31,6 +31,14 @@ from scipy.stats import fisher_exact
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))
 from vla_edge.validate.violations import StallDetector, JerkMonitor
 from vla_edge.validate.conformal import ConformalActionMonitor
+try:
+    from vla_edge.validate.signals import (
+        SpectralEnergyMonitor, LinearPredictabilityMonitor, MomentumCoherenceMonitor
+    )
+    HAS_SIGNALS = True
+except ImportError:
+    HAS_SIGNALS = False
+    print("WARNING: signals module not found, running without SER/LPS/TMC")
 
 # PushT contract
 CONTRACT = {
@@ -119,6 +127,9 @@ def run_monitored_episode(env, policy, device, stats, use_imagenet_norm=False, m
     # Initialize monitors
     stall = StallDetector(movement_threshold=2.0, stall_window=10)
     jerk = JerkMonitor(jerk_limit=50.0)
+    spectral = SpectralEnergyMonitor(window_size=32) if HAS_SIGNALS else None
+    lps = LinearPredictabilityMonitor() if HAS_SIGNALS else None
+    momentum = MomentumCoherenceMonitor(momentum_window=5) if HAS_SIGNALS else None
 
     per_step = []
     prev_action = None
@@ -174,6 +185,11 @@ def run_monitored_episode(env, policy, device, stats, use_imagenet_norm=False, m
         # Monitor: jerk
         jerk_report = jerk.update(action_np)
 
+        # New monitors (if available)
+        ser_val = spectral.update(action_np)["ser"] if spectral else 1.0
+        lps_err = lps.update(action_np)["prediction_error"] if lps else 0.0
+        coherence = momentum.update(action_np)["coherence"] if momentum else 1.0
+
         per_step.append({
             "action": action_np.tolist(),
             "bounds_viol": bounds_viol,
@@ -182,6 +198,9 @@ def run_monitored_episode(env, policy, device, stats, use_imagenet_norm=False, m
             "movement": stall_report["movement_norm"],
             "max_jerk": jerk_report["max_jerk"],
             "jerk_viol": jerk_report["jerk_violation"],
+            "ser": ser_val,
+            "prediction_error": lps_err,
+            "coherence": coherence,
         })
 
         prev_action = action_np.copy()
@@ -204,6 +223,9 @@ def run_monitored_episode(env, policy, device, stats, use_imagenet_norm=False, m
         "velocity_violations": total_vel_viol,
         "stall_summary": stall.get_summary(),
         "jerk_summary": jerk.get_summary(),
+        "spectral_summary": spectral.get_summary() if spectral else {},
+        "lps_summary": lps.get_summary() if lps else {},
+        "momentum_summary": momentum.get_summary() if momentum else {},
         "per_step": per_step,
     }
 
@@ -246,6 +268,12 @@ def compute_aurocs(episodes):
         "jerk_violations": lambda e: e["jerk_summary"].get("violations", 0),
         "atv": lambda e: e.get("atv", 0),
         "reversal_rate": lambda e: e.get("reversal_rate", 0),
+        # New signal monitors
+        "mean_ser": lambda e: 1.0 - e.get("spectral_summary", {}).get("mean_ser", 1.0),  # invert: higher = worse
+        "min_ser": lambda e: 1.0 - e.get("spectral_summary", {}).get("min_ser", 1.0),
+        "mean_prediction_error": lambda e: e.get("lps_summary", {}).get("mean_prediction_error", 0),
+        "min_coherence": lambda e: -e.get("momentum_summary", {}).get("min_coherence", 1.0),  # invert: lower coherence = worse
+        "reversal_rate_tmc": lambda e: e.get("momentum_summary", {}).get("reversal_rate", 0),
     }
 
     for name, fn in metrics.items():
@@ -257,6 +285,31 @@ def compute_aurocs(episodes):
             results[name] = {"auroc": round(auroc, 4), "p_value": round(p, 4)}
         except Exception as ex:
             results[name] = {"error": str(ex)}
+
+    # Composite AUROC: max of normalized metrics across all monitors
+    try:
+        all_metric_fns = {k: v for k, v in metrics.items() if k in results and "auroc" in results.get(k, {})}
+        if len(all_metric_fns) >= 3:
+            # Normalize each metric to [0,1] using min-max across all episodes
+            all_eps = successes + failures
+            composite_scores = []
+            for ep in all_eps:
+                normalized = []
+                for name, fn in all_metric_fns.items():
+                    vals = [fn(e) for e in all_eps]
+                    v = fn(ep)
+                    v_min, v_max = min(vals), max(vals)
+                    norm = (v - v_min) / (v_max - v_min + 1e-10)
+                    normalized.append(norm)
+                composite_scores.append(max(normalized))  # max-aggregation
+
+            s_composite = composite_scores[:len(successes)]
+            f_composite = composite_scores[len(successes):]
+            u, p = mannwhitneyu(f_composite, s_composite, alternative="greater")
+            composite_auroc = u / (len(f_composite) * len(s_composite))
+            results["composite_max"] = {"auroc": round(composite_auroc, 4), "p_value": round(p, 4)}
+    except Exception as ex:
+        results["composite_max"] = {"error": str(ex)}
 
     return results
 
