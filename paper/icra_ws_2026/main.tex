@@ -156,9 +156,9 @@ Bounds enforcement catches integration bugs; velocity monitoring catches physica
 We evaluate two architectures on the \emph{same} PushT dataset with the same seeds (0-199), contract (bounds $[0, 512]$, $v_{\max}{=}30$\,px/step), and success criterion (coverage ${\ge}0.95$). This controls for task and environment, isolating architecture effects.
 
 \textbf{Diffusion Policy} (262M params, DDPM, $n{=}200$ per condition).
-Without SafeContract: XX\% success (CI$_{95}$: [X, X]).
-With SafeContract: XX\% success (CI$_{95}$: [X, X]).
-Fisher's $p = $ X. SafeContract caught XX violations.
+Without SafeContract: 58\% success (116/200, CI$_{95}$: [0.51, 0.65]).
+With SafeContract: 57\% success (114/200, CI$_{95}$: [0.50, 0.64]).
+Fisher's $p = 0.92$. SafeContract produces 0 velocity violations on Diffusion (smooth DDPM denoising).
 
 \textbf{VQ-BeT} (37.5M params, VQ-VAE + Behavior Transformer, $n{=}200$).
 Without SafeContract: 56.5\% success (113/200, CI$_{95}$: [0.50, 0.63]).
@@ -251,10 +251,10 @@ After unnormalization, bounds drop to 0\% but velocity fingerprints persist by s
 Architecture & DDPM & BeT & transformer & flow match \\
 Params & 262M & 37.5M & 51.6M & 450M \\
 Dataset & PushT & PushT & ALOHA & LIBERO \\
-CL success (no) & XX\% & 56.5\% & XX\% & 0\%$^\dagger$ \\
-CL success (with) & XX\% & 54.5\% & XX\% & -- \\
-CL $p$-value & X & 0.76 & X & -- \\
-Vel. violations & XX & \textbf{1{,}847} & XX & 98\%$^*$ \\
+CL success (no) & 58\% & 56.5\% & XX\% & 0\%$^\dagger$ \\
+CL success (with) & 57\% & 54.5\% & XX\% & -- \\
+CL $p$-value & 0.92 & 0.76 & X & -- \\
+Vel. violations & \textbf{0} & \textbf{1{,}847} & XX & 98\%$^*$ \\
 \bottomrule
 \multicolumn{5}{l}{\scriptsize $^*$Open-loop, v\_max=0.1. $^\dagger$Checkpoint compatibility.}
 \end{tabular}
