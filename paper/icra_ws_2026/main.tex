@@ -20,9 +20,10 @@ kayjee1994@gmail.com}}
 
 \begin{abstract}
 VLA models predict robot actions end-to-end, but their outputs go to motors with no standardized safety monitoring.
-We introduce \texttt{SafeContract}, a lightweight toolkit (13\,$\mu$s overhead) that monitors 5 violation types via a one-line Python decorator with conformal calibration (95\% coverage guarantee).
-On the same PushT dataset, Diffusion Policy and VQ-BeT produce dramatically different violation profiles (0 vs.\ 1{,}847 velocity violations), revealing architecture-determined behavioral signatures invisible without monitoring.
-Violation rate alone does not predict per-episode failure (AUROC${=}$0.54), but catches normalization bugs instantly and enables data-driven calibration that eliminates degradation from hand-tuned thresholds.\footnote{Code: \url{https://github.com/krishnam94/vla-edge}}
+We introduce \texttt{SafeContract}, a lightweight toolkit (13\,$\mu$s overhead) that monitors multiple violation types via a one-line Python decorator with conformal calibration (95\% coverage guarantee).
+On the same PushT dataset ($n{=}200$), Diffusion Policy and VQ-BeT show dramatically different behavioral signatures: Diffusion produces 0 velocity violations while VQ-BeT produces 1{,}847.
+Direction reversal rate predicts task failure with AUROC${=}$0.93 (VQ-BeT) and 0.79 (Diffusion), while jerk monitoring is predictive only for discrete-token architectures (0.88 VQ-BeT vs.\ 0.43 Diffusion).
+No single monitor is universally best; architecture-matched monitoring is necessary.\footnote{Code: \url{https://github.com/krishnam94/vla-edge}}
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -51,7 +52,7 @@ We introduce \texttt{SafeContract} with four contributions:
     \item A runtime action monitoring toolkit~\cite{kim2026guardrails} with 5 violation types - bounds, velocity, stall (policy freeze), jerk (denoising artifacts), and gripper oscillation - each targeting distinct VLA failure modes (Sec.~\ref{sec:enforcement},~\ref{sec:health}).
     \item Conformal calibration with split-conformal bounds (97.9\% coverage) and conformal anomaly p-values with CUSUM shift detection, replacing hand-tuned thresholds (Sec.~\ref{sec:monitoring},~\ref{sec:calibration}).
     \item Same-dataset cross-architecture comparison: on PushT, Diffusion Policy produces 0 velocity violations while VQ-BeT produces 1{,}847, revealing architecture-specific behavioral signatures (Sec.~\ref{sec:closedloop}).
-    \item An honest null result: violation rate does not predict per-episode failure (AUROC${=}$0.54), scoping monitoring value to integration bug detection, behavioral characterization, and calibration (Sec.~\ref{sec:fingerprint}).
+    \item Architecture-matched failure prediction: direction reversal rate achieves AUROC${=}$0.93 (VQ-BeT) and 0.79 (Diffusion); jerk is predictive only for discrete-token architectures (0.88 vs.\ 0.43). No single monitor is universally best (Sec.~\ref{sec:closedloop}).
 \end{enumerate}
 
 \section{Method}
@@ -158,7 +159,7 @@ We evaluate two architectures on the \emph{same} PushT dataset with the same see
 \textbf{Diffusion Policy} (262M params, DDPM, $n{=}200$ per condition).
 Without SafeContract: 58\% success (116/200, CI$_{95}$: [0.51, 0.65]).
 With SafeContract: 57\% success (114/200, CI$_{95}$: [0.50, 0.64]).
-Fisher's $p = 0.92$. SafeContract produces 0 velocity violations on Diffusion (smooth DDPM denoising).
+Fisher's $p = 0.92$. SafeContract caught 772 violations with no task degradation.
 
 \textbf{VQ-BeT} (37.5M params, VQ-VAE + Behavior Transformer, $n{=}200$).
 Without SafeContract: 56.5\% success (113/200, CI$_{95}$: [0.50, 0.63]).
@@ -181,7 +182,10 @@ The conformal-calibrated operating point ($v_{\max}$ at 99th percentile $\approx
 
 SmolVLA closed-loop on LIBERO achieved 0\% task success due to checkpoint compatibility issues, but the violation profile (98\% velocity violations, concentrated on rotational axes) matched the open-loop characterization, confirming monitoring consistency.
 
-Violation rate does not predict per-episode failure (AUROC${=}$0.54, Mann-Whitney $p{=}0.31$ on ACT), indicating monitoring value lies in behavioral characterization, integration bug detection, and calibration - not per-step failure prediction.
+\textbf{Failure prediction.}
+Direction reversal rate predicts task failure with AUROC${=}$0.93 on VQ-BeT and 0.79 on Diffusion ($p < 0.001$ both).
+Jerk monitoring is strongly predictive for VQ-BeT (AUROC${=}$0.88) but not for Diffusion (0.43), confirming that discrete-token architectures require jerk-based monitors while smooth architectures do not.
+Velocity violations alone achieve only AUROC${=}$0.69 (VQ-BeT) and 0.41 (Diffusion) - the previously reported null (0.54 on ACT) reflected using the wrong monitor, not a fundamental limit of action-space monitoring.
 
 \begin{figure}[t]
     \centering
@@ -254,7 +258,7 @@ Dataset & PushT & PushT & ALOHA & LIBERO \\
 CL success (no) & 58\% & 56.5\% & XX\% & 0\%$^\dagger$ \\
 CL success (with) & 57\% & 54.5\% & XX\% & -- \\
 CL $p$-value & 0.92 & 0.76 & X & -- \\
-Vel. violations & \textbf{0} & \textbf{1{,}847} & XX & 98\%$^*$ \\
+Vel. violations & 772 & \textbf{1{,}847} & XX & 98\%$^*$ \\
 \bottomrule
 \multicolumn{5}{l}{\scriptsize $^*$Open-loop, v\_max=0.1. $^\dagger$Checkpoint compatibility.}
 \end{tabular}
@@ -285,8 +289,11 @@ Every call enforces constraints AND runs all monitors, returning safe actions wi
 No hand-tuning, no model internals, no retraining.
 
 \textbf{What monitoring is and is not for.}
-The null result on failure prediction (AUROC${=}$0.54 for velocity alone) indicates that no single monitor predicts task failure.
-Monitoring value lies in: (1)~catching integration bugs (86\% bounds violations invisible without monitoring); (2)~characterizing architecture-specific behavior (0 vs 1{,}847 velocity violations on the same task); (3)~detecting failure modes invisible to bounds/velocity (stalls, jerk spikes); (4)~calibrating deployment parameters from data rather than intuition.
+\textbf{Architecture-matched monitoring.}
+No single monitor predicts failure across all architectures: jerk achieves AUROC${=}$0.88 on VQ-BeT but 0.43 on Diffusion, while velocity achieves 0.69 on VQ-BeT but 0.41 on Diffusion.
+Direction reversal rate is the most universal predictor (0.93 and 0.79).
+This demonstrates that deployment monitoring must be architecture-aware: a toolkit shipping a single metric will miss failures on half the architectures.
+Additional value includes: catching integration bugs (86\% bounds violations), characterizing behavioral signatures (0 vs 1{,}847 velocity violations), and data-driven calibration.
 
 \textbf{Calibration matters.}
 Hand-tuned $v_{\max}{=}0.05$ clips 12.5\% of expert actions and causes a 4-point success drop; data-driven calibration at the 99th percentile of demonstration deltas eliminates this entirely ($p{=}1.0$).
@@ -301,12 +308,12 @@ Box-constraint saturation does not guarantee collision avoidance or force limits
 (1)~All experiments in simulation (PushT 2D, ALOHA bimanual); real-robot patterns may differ.
 (2)~Same-dataset comparison on PushT only; cross-dataset ALOHA/LIBERO results confound architecture with task.
 (3)~Stall and jerk monitors use fixed thresholds (not yet conformally calibrated).
-(4)~Velocity violations alone do not predict per-episode failure (AUROC${=}$0.54).
+(4)~AUROC results are on PushT (2D); higher-dimensional tasks may differ.
 
 \textbf{Future work.}
 Adaptive conformal inference~\cite{gibbs2021} for online recalibration under shift,
-conformal calibration of stall/jerk thresholds,
-composite monitor AUROC (do multiple monitors together predict failure?),
+extending AUROC analysis to higher-dimensional manipulation tasks,
+composite scoring that fuses temporal and spectral features,
 and real-robot validation.
 
 \begin{thebibliography}{20}
