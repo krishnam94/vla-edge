@@ -51,7 +51,7 @@ We introduce \texttt{SafeContract} with four contributions:
 \begin{enumerate}
     \item A runtime action monitoring toolkit~\cite{kim2026guardrails} with 5 violation types - bounds, velocity, stall (policy freeze), jerk (denoising artifacts), and gripper oscillation - each targeting distinct VLA failure modes (Sec.~\ref{sec:enforcement},~\ref{sec:health}).
     \item Conformal calibration with split-conformal bounds (97.9\% coverage) and conformal anomaly p-values with CUSUM shift detection, replacing hand-tuned thresholds (Sec.~\ref{sec:monitoring},~\ref{sec:calibration}).
-    \item Same-dataset cross-architecture comparison: on PushT, Diffusion Policy produces 0 velocity violations while VQ-BeT produces 1{,}847, revealing architecture-specific behavioral signatures (Sec.~\ref{sec:closedloop}).
+    \item Same-dataset cross-architecture comparison ($n{=}200$): on PushT, VQ-BeT produces 2.4$\times$ more violations than Diffusion (1{,}847 vs.\ 772), and different monitors predict failure for each (Sec.~\ref{sec:closedloop}).
     \item Architecture-matched failure prediction: direction reversal rate achieves AUROC${=}$0.93 (VQ-BeT) and 0.79 (Diffusion); jerk is predictive only for discrete-token architectures (0.88 vs.\ 0.43). No single monitor is universally best (Sec.~\ref{sec:closedloop}).
 \end{enumerate}
 
@@ -169,10 +169,9 @@ Fisher's $p = 0.76$. SafeContract caught 1{,}847 velocity violations with no sig
 The architecture contrast is striking: on the same task, VQ-BeT produces 2.4$\times$ more violations than Diffusion (1{,}847 vs.\ 772), reflecting discrete token transitions versus smooth DDPM denoising.
 Both are within range of published baselines (Diffusion: 87.4\%, VQ-BeT: 57\%).
 
-\textbf{ACT on ALOHA} (51.6M params, $n{=}200$, conformal calibration).
-Results: XX\%/XX\%, $p{=}$X. Data-driven $v_{\max}$ at 99th percentile eliminates the degradation caused by hand-tuned thresholds.
+On ALOHA with ACT (51.6M params, conformal calibration), prior experiments ($n{=}50$) showed that data-driven $v_{\max}$ at the 99th percentile eliminates the degradation caused by hand-tuned thresholds ($p{=}1.0$).
 
-Across both architectures, SafeContract monitors and enforces without statistically significant task degradation ($p{=}1.0$ and $p{=}0.84$).
+Across both PushT architectures, SafeContract monitors and enforces without statistically significant task degradation ($p{=}0.92$ and $p{=}0.76$).
 
 \textbf{Enforcement strictness operating envelope.}
 We sweep $v_{\max} \in \{0.01, 0.02, 0.05, 0.1, 0.2\}$ on ACT ($n{=}20$ per level).
@@ -250,24 +249,27 @@ After unnormalization, bounds drop to 0\% but velocity fingerprints persist by s
 
 \begin{table}[t]
 \centering
-\caption{Same-dataset comparison on PushT ($n{=}200$, same seeds and contract) plus cross-dataset results.}
+\caption{Same-dataset comparison on PushT ($n{=}200$, same seeds/contract) with failure prediction AUROCs ($n{=}100$).}
 \label{tab:crossarch}
 \footnotesize
-\setlength{\tabcolsep}{3pt}
-\begin{tabular}{lrr|rr}
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lrr}
 \toprule
- & \multicolumn{2}{c|}{\textbf{PushT (same dataset)}} & \multicolumn{2}{c}{\textbf{Other}} \\
- & \textbf{Diffusion} & \textbf{VQ-BeT} & \textbf{ACT} & \textbf{SmolVLA} \\
+ & \textbf{Diffusion} & \textbf{VQ-BeT} \\
 \midrule
-Architecture & DDPM & BeT & transformer & flow match \\
-Params & 262M & 37.5M & 51.6M & 450M \\
-Dataset & PushT & PushT & ALOHA & LIBERO \\
-CL success (no) & 58\% & 56.5\% & XX\% & 0\%$^\dagger$ \\
-CL success (with) & 57\% & 54.5\% & XX\% & -- \\
-CL $p$-value & 0.92 & 0.76 & X & -- \\
-Vel. violations & 772 & \textbf{1{,}847} & XX & 98\%$^*$ \\
+Architecture & DDPM & BeT \\
+Params & 262M & 37.5M \\
+CL success (no contract) & 58\% & 56.5\% \\
+CL success (with contract) & 57\% & 54.5\% \\
+Fisher's $p$ & 0.92 & 0.76 \\
+Violations & 772 & \textbf{1{,}847} \\
+\midrule
+AUROC: reversal rate & 0.79 & \textbf{0.93} \\
+AUROC: jerk & 0.43 & \textbf{0.89} \\
+AUROC: momentum coherence & 0.70 & \textbf{0.86} \\
+AUROC: spectral energy & 0.34 & \textbf{0.75} \\
+AUROC: velocity & 0.41 & 0.69 \\
 \bottomrule
-\multicolumn{5}{l}{\scriptsize $^*$Open-loop, v\_max=0.1. $^\dagger$Checkpoint compatibility.}
 \end{tabular}
 \end{table}
 
