@@ -140,6 +140,9 @@ def main():
     contract = {"action_lo": np.array([0.0, 0.0]), "action_hi": np.array([512.0, 512.0]), "v_max": 30.0}
 
     results = {"no_contract": [], "with_contract": []}
+    out_path = Path(args.output)
+    out_path.parent.mkdir(exist_ok=True, parents=True)
+
     for condition in ["no_contract", "with_contract"]:
         print(f"\n{'='*50}\n  {condition} ({args.n_episodes} episodes)\n{'='*50}")
         sc = contract if condition == "with_contract" else None
@@ -153,6 +156,13 @@ def main():
             st = "OK" if m["success"] else "--"
             print(f"  Ep {ep:2d}: {st} | cov={m['max_coverage']:.3f} | viol={m['violations']:3d} | {m['elapsed_s']:.1f}s")
             env.close()
+
+        # Save after each condition completes (incremental)
+        partial = {"experiment": "Diffusion PushT (partial)", "episodes": results,
+                   "config": {"model": MODEL_ID, "n_episodes": args.n_episodes, "condition_done": condition}}
+        with open(str(out_path) + ".partial", "w") as f:
+            json.dump(partial, f, indent=2, default=str)
+        print(f"  Saved partial results ({condition} done)")
 
     summary = {}
     for cond in ["no_contract", "with_contract"]:

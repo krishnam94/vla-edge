@@ -209,6 +209,14 @@ def main():
             print(f"  Ep {ep:2d}: {st} | viol={m['violations']:4d} | {m['elapsed_s']:.1f}s")
             env.close()
 
+        # Save after each condition completes
+        partial = {"experiment": f"ACT ALOHA {args.task} (partial)", "episodes": results,
+                   "config": {"model": MODEL_ID, "task": args.task, "condition_done": condition}}
+        Path(args.output + ".partial").parent.mkdir(exist_ok=True, parents=True)
+        with open(args.output + ".partial", "w") as f:
+            json.dump(partial, f, indent=2, default=str)
+        print(f"  Saved partial results ({condition} done)")
+
     summary = {}
     for cond in ["no_contract", "with_contract"]:
         eps = results[cond]; successes = sum(1 for e in eps if e["success"])

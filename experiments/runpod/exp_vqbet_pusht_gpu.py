@@ -247,6 +247,13 @@ def main():
                   f"steps={metrics['steps']:3d} | viol={metrics['violations']:3d} | {elapsed:.1f}s")
             env.close()
 
+        # Save after each condition completes
+        partial = {"experiment": "VQ-BeT PushT (partial)", "episodes": results,
+                   "config": {"model": MODEL_ID, "condition_done": condition}}
+        with open(args.output + ".partial", "w") as f:
+            json.dump(partial, f, indent=2, default=str)
+        print(f"  Saved partial results ({condition} done)")
+
     # Summary
     summary = {}
     for cond in ["no_contract", "with_contract"]:
