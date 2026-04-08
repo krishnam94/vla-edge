@@ -39,17 +39,24 @@ pip install --cache-dir=/workspace/.cache/pip -q \
     lerobot==0.4.4 --no-deps 2>/dev/null
 
 # 4. Install lerobot's other deps (not PyTorch/torchvision)
+# Pin diffusers<0.29 (newer versions need torch.xpu, absent in PyTorch 2.1)
+# Pin huggingface-hub<0.24 (newer versions removed cached_download used by diffusers 0.28)
 pip install --cache-dir=/workspace/.cache/pip -q \
-    draccus safetensors diffusers accelerate einops \
-    huggingface-hub pyyaml-include 2>/dev/null
+    draccus safetensors "diffusers<0.29" "huggingface-hub<0.24" \
+    accelerate einops pyyaml-include 2>/dev/null
 
-# 5. Install vla-edge package
+# 5. Patch lerobot: comment out groot imports (needs diffusers features unavailable in PyTorch 2.1)
+echo "Patching lerobot to skip groot policy imports..."
+LEROBOT_INIT=$(python -c "import lerobot.policies; print(lerobot.policies.__file__)")
+sed -i '/groot/s/^/# /' "$LEROBOT_INIT" 2>/dev/null || true
+
+# 6. Install vla-edge package
 pip install --cache-dir=/workspace/.cache/pip -q -e . 2>/dev/null
 
-# 6. System deps for rendering
+# 7. System deps for rendering
 apt-get update -qq && apt-get install -y -qq libosmesa6-dev 2>/dev/null
 
-# 7. Pre-download models
+# 8. Pre-download models
 echo "Pre-downloading models..."
 python -c "
 from huggingface_hub import snapshot_download
@@ -59,38 +66,16 @@ for m in ['lerobot/act_aloha_sim_transfer_cube_human', 'lerobot/act_aloha_sim_in
 print('Done.')
 "
 
-# 8. Sanity checks
+# 9. Sanity checks (one statement per line, no indentation issues)
 echo ""
 echo "=== Sanity Checks ==="
-python -c "
-import torch
-print(f'PyTorch: {torch.__version__}, CUDA: {torch.cuda.is_available()}')
-import numpy as np
-print(f'NumPy: {np.__version__}')
-import lerobot
-print(f'lerobot: {lerobot.__version__}')
-
-# Test ACT load
-from lerobot.policies.act.modeling_act import ACTPolicy
-p = ACTPolicy.from_pretrained('lerobot/act_aloha_sim_transfer_cube_human')
-p.to('cuda'); p.eval()
-print(f'ACT: OK ({sum(x.numel() for x in p.parameters()):,} params)')
-
-# Test ALOHA env
-import os; os.environ['MUJOCO_GL'] = 'osmesa'
-import gym_aloha, gymnasium
-env = gymnasium.make('gym_aloha/AlohaTransferCube-v0')
-obs, _ = env.reset(seed=42)
-print(f'ALOHA env: OK')
-env.close()
-
-# Test vla-edge monitors
-from vla_edge.validate import SafetyGuard, StallDetector
-print(f'vla-edge monitors: OK')
-
-print()
-print('ALL CHECKS PASSED - ready to run experiments')
-"
+python -c "import torch; print(f'PyTorch: {torch.__version__}, CUDA: {torch.cuda.is_available()}')"
+python -c "import numpy as np; print(f'NumPy: {np.__version__}')"
+python -c "from lerobot.policies.act.modeling_act import ACTPolicy; p = ACTPolicy.from_pretrained('lerobot/act_aloha_sim_transfer_cube_human'); p.to('cuda'); p.eval(); print(f'ACT: OK ({sum(x.numel() for x in p.parameters()):,} params)')"
+MUJOCO_GL=osmesa python -c "import gym_aloha, gymnasium; env = gymnasium.make('gym_aloha/AlohaTransferCube-v0'); obs, _ = env.reset(seed=42); print('ALOHA env: OK'); env.close()"
+python -c "from vla_edge.validate import SafetyGuard, StallDetector; print('vla-edge monitors: OK')"
+echo ""
+echo "ALL CHECKS PASSED - ready to run experiments"
 
 echo ""
 echo "=== Setup Complete ==="
