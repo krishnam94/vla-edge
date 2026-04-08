@@ -20,10 +20,10 @@ kayjee1994@gmail.com}}
 
 \begin{abstract}
 VLA models predict robot actions end-to-end from vision and language, but what happens between the model's output layer and the robot's motors is largely unstudied.
-We present the first systematic characterization of how different VLA architectures fail at the action level.
+We present a controlled characterization of how different VLA architectures fail at the action level.
 Running VQ-BeT and Diffusion Policy on the same PushT dataset ($n{=}200$, same seeds), we find that VQ-BeT produces 2.4$\times$ more velocity violations than Diffusion (1{,}847 vs.\ 772), that jerk monitoring predicts failure for discrete-token architectures (AUROC${=}$0.88) but not smooth denoisers (0.43), and that direction reversal rate is the most universal predictor (0.93 and 0.79).
 No single monitor is universally best - this is not a limitation of monitoring but a property of VLA architectures that deployment infrastructure must accommodate.
-We introduce \texttt{SafeContract}, a training-free, black-box action monitoring toolkit (13\,$\mu$s overhead) with conformal calibration, enabling architecture-matched failure prediction without model access or retraining.\footnote{Code: \url{https://github.com/krishnam94/vla-edge}}
+We introduce \texttt{SafeContract}, a training-free, black-box action monitoring toolkit with conformal calibration, enabling architecture-matched failure prediction without model access or retraining.\footnote{Code: \url{https://github.com/krishnam94/vla-edge}}
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -39,14 +39,13 @@ LeRobot's~\cite{lerobot} \texttt{EEBoundsAndSafety} processor is imperative, unc
 The implicit assumption is that if the model is good enough, the actions will be safe enough.
 We show this assumption is wrong - and that it is wrong in \emph{architecture-specific} ways.
 
-Running two architectures (VQ-BeT and Diffusion Policy) on the \emph{same} PushT dataset with the same seeds, we find that VQ-BeT produces 2.4$\times$ more velocity violations than Diffusion (1{,}847 vs.\ 772), that jerk monitoring predicts failure for discrete-token architectures (AUROC${=}$0.88) but not for smooth denoisers (0.43), and that direction reversal rate is the most universal failure predictor (0.93 and 0.79).
-No single monitor is universally best.
-This is not a limitation of monitoring - it is a property of VLA architectures that deployment infrastructure must accommodate.
+Comparing VQ-BeT and Diffusion Policy on the \emph{same} PushT dataset ($n{=}200$, same seeds), we find architecture-determined failure signatures: VQ-BeT produces 2.4$\times$ more velocity violations (1{,}847 vs.\ 772), jerk predicts failure only for discrete-token models (AUROC${=}$0.88 vs.\ 0.43), and direction reversal rate is the most universal predictor (0.93 and 0.79).
+Effective deployment monitoring must be architecture-aware.
 
 We introduce \texttt{SafeContract}, a training-free, black-box action monitoring toolkit with three contributions:
 \begin{enumerate}
     \item \textbf{Architecture-specific failure signatures.} Same-dataset comparison ($n{=}200$) reveals that VQ-BeT and Diffusion fail in fundamentally different ways, and that the monitors predicting failure differ by architecture (Sec.~\ref{sec:closedloop}).
-    \item \textbf{Architecture-matched failure prediction.} Direction reversal rate achieves AUROC${=}$0.93 (VQ-BeT) and 0.79 (Diffusion); jerk is predictive only for discrete-token models (0.88 vs.\ 0.43). Velocity violations alone yield only 0.69 and 0.41 - the previously reported null reflected using the wrong monitor, not a fundamental limit (Sec.~\ref{sec:closedloop}).
+    \item \textbf{Architecture-matched failure prediction.} Direction reversal rate achieves AUROC${=}$0.93 (VQ-BeT) and 0.79 (Diffusion); jerk is predictive only for discrete-token models (0.88 vs.\ 0.43). Velocity violations alone yield only 0.69 and 0.41, suggesting that monitor selection matters more than the monitoring paradigm itself (Sec.~\ref{sec:closedloop}).
     \item \textbf{Conformal calibration.} Split-conformal bounds (97.9\% coverage), data-driven velocity limits, and CUSUM shift detection~\cite{page1954} replace hand-tuned thresholds with statistical guarantees~\cite{vovk2005} (Sec.~\ref{sec:monitoring},~\ref{sec:calibration}).
 \end{enumerate}
 
@@ -97,6 +96,11 @@ StallDetector flags when $\|\mathbf{a}_t - \mathbf{a}_{t-1}\|_2 < \tau$ for $w$ 
 The third derivative of the action trajectory detects denoising artifacts in flow-matching/diffusion policies and chunk boundary discontinuities in action-chunked policies~\cite{acg2025}.
 JerkRMS provides a continuous smoothness metric beyond binary velocity checks.
 
+\noindent\textbf{Direction reversal rate.}
+For each joint $j$, a reversal occurs when $\text{sign}(a_{t,j} - a_{t-1,j}) \neq \text{sign}(a_{t-1,j} - a_{t-2,j})$.
+The episode reversal rate is the fraction of (timestep, joint) pairs exhibiting a sign change, averaged over all joints.
+High reversal rates indicate indecisive or oscillatory behavior - the policy repeatedly changes direction rather than progressing toward the goal.
+
 \noindent\textbf{Gripper oscillation.}
 Rapid open/close cycling (more than $k$ flips in $w$ steps) signals grasp indecision, a common failure in bimanual manipulation.
 Individual transitions pass velocity checks, but the pattern is pathological.
@@ -138,7 +142,7 @@ Kim et al.~\cite{kim2026guardrails} argue that modular guardrails are necessary 
 
 \section{Experiments}
 
-Platform: Apple M3, CPU, Python 3.12. Full contract overhead: ${\sim}$13\,$\mu$s (5{,}000 iterations), 0.000075\% of SmolVLA inference time.
+Platform: Apple M3, CPU, Python 3.12. Full monitoring overhead is negligible: $<$0.001\% of typical VLA inference time (${\sim}$13\,$\mu$s per call).
 
 \subsection{VLAs Produce Unsafe Actions (EXP-A)}
 \label{sec:exp_a}
@@ -191,12 +195,11 @@ The sweep is underpowered for precise operating curves but confirms the expected
 \textbf{Failure prediction.}
 Direction reversal rate predicts task failure with AUROC${=}$0.93 on VQ-BeT and 0.79 on Diffusion ($p < 0.001$ both).
 Jerk monitoring is strongly predictive for VQ-BeT (AUROC${=}$0.88) but not for Diffusion (0.43), confirming that discrete-token architectures require jerk-based monitors while smooth architectures do not.
-Velocity violations alone achieve only AUROC${=}$0.69 (VQ-BeT) and 0.41 (Diffusion) - the previously reported null (0.54 on ACT) reflected using the wrong monitor, not a fundamental limit of action-space monitoring (Fig.~\ref{fig:auroc}).
+Velocity violations alone achieve only AUROC${=}$0.69 (VQ-BeT) and 0.41 (Diffusion), suggesting that a previously reported null result (AUROC${=}$0.54 on ACT using only velocity) may have reflected suboptimal monitor selection rather than a fundamental limit of action-space monitoring (Fig.~\ref{fig:auroc}).
 
 \textbf{Baseline comparison.}
 A trivial baseline (total violation count per episode exceeding a threshold) achieves AUROC${=}$0.72 on VQ-BeT and 0.45 on Diffusion.
-Architecture-matched monitors improve substantially over this baseline: reversal rate gains +0.21 on VQ-BeT and +0.34 on Diffusion, confirming that monitor selection - not just violation counting - drives predictive power.
-Importantly, VQ-BeT's near-50\% success rate does not trivially inflate AUROCs: the violation-count baseline achieves only 0.72, and the architecture-specific gain (+0.21) holds regardless of the absolute success rate.
+Architecture-matched monitors improve substantially: reversal rate gains +0.21 on VQ-BeT and +0.34 on Diffusion over this baseline, confirming that monitor selection - not just violation counting - drives predictive power.
 
 \begin{figure}[t]
     \centering
@@ -278,9 +281,11 @@ Violations & 772 & \textbf{1{,}847} \\
 \midrule
 AUROC: reversal rate & 0.79 & \textbf{0.93} \\
 AUROC: jerk & 0.43 & \textbf{0.89} \\
+AUROC: stall rate & \textbf{0.65} & 0.52 \\
 AUROC: momentum coherence & 0.70 & \textbf{0.86} \\
 AUROC: spectral energy & 0.34 & \textbf{0.75} \\
 AUROC: velocity & 0.41 & 0.69 \\
+AUROC: violation count (baseline) & 0.45 & 0.72 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -288,13 +293,14 @@ AUROC: velocity & 0.41 & 0.69 \\
 \section{Discussion}
 
 The central finding is that \emph{different VLA architectures fail in fundamentally different ways}, and the monitors that predict failure are architecture-specific.
-On PushT, VQ-BeT produces 2.4$\times$ more violations than Diffusion (1{,}847 vs.\ 772); jerk predicts failure for discrete-token models (AUROC${=}$0.88) but not smooth denoisers (0.43); stall detection catches Diffusion's policy-freeze failures that bounds/velocity structurally misses.
+On PushT, VQ-BeT produces 2.4$\times$ more violations than Diffusion (1{,}847 vs.\ 772); jerk predicts failure for discrete-token models (AUROC${=}$0.88) but not smooth denoisers (0.43); conversely, stall detection is the only monitor more predictive for Diffusion than VQ-BeT (0.65 vs.\ 0.52), capturing policy-freeze failures invisible to bounds/velocity monitoring.
 A deployment toolkit shipping a single monitor will miss failures on architectures it was not designed for.
 
 \textbf{Implications for VLA deployment.}
 The architecture-matched monitoring result has a practical consequence: practitioners must select monitors based on their VLA architecture, not use a one-size-fits-all approach.
 For discrete-token models (VQ-BeT, OpenVLA), jerk and reversal rate are the strongest predictors.
 For smooth denoisers (Diffusion, flow-matching), stall detection and momentum coherence matter more.
+Given a new VLA deployment, the practitioner runs \texttt{from\_demos()} on their demonstration data, wraps \texttt{predict()}, and monitors the CUSUM alarm during rollout; if the alarm fires persistently, they should reduce $v_{\max}$ or switch to a fallback controller.
 \texttt{SafetyGuard} integrates all monitors in a single callable, calibrated from demonstration data:
 
 {\small
@@ -309,6 +315,11 @@ report = guard.get_summary()
 \vspace{-2mm}
 \noindent No hand-tuning, no model internals, no retraining.
 Training-free and black-box: unlike SAFE~\cite{safe2025} and FIPER~\cite{fiper2025}, which require training auxiliary models, SafeContract monitors only the action output stream.
+
+\textbf{Defense in depth.}
+Action-space monitoring forms the innermost layer of a defense-in-depth strategy.
+It composes naturally with CBF-based workspace constraints~\cite{aegis} for obstacle avoidance and task-level monitors~\cite{sentinel} for progress tracking.
+SafeContract fills the action-level gap that is currently missing from this stack - the layer between model output and actuator command.
 
 \textbf{Calibration matters.}
 Hand-tuned $v_{\max}{=}0.05$ clips 12.5\% of expert actions and causes a 4-point success drop; data-driven calibration at the 99th percentile of demonstration deltas eliminates this entirely ($p{=}1.0$).
