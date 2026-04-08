@@ -38,17 +38,15 @@ echo "Installing lerobot 0.4.4 (no-deps to avoid PyTorch conflict)..."
 pip install --cache-dir=/workspace/.cache/pip -q \
     lerobot==0.4.4 --no-deps 2>/dev/null
 
-# 4. Install lerobot's other deps (not PyTorch/torchvision)
-# Pin diffusers<0.29 (newer versions need torch.xpu, absent in PyTorch 2.1)
-# Pin huggingface-hub<0.24 (newer versions removed cached_download used by diffusers 0.28)
-pip install --cache-dir=/workspace/.cache/pip -q \
-    draccus safetensors "diffusers<0.29" "huggingface-hub<0.24" \
-    accelerate einops pyyaml-include 2>/dev/null
-
-# 5. Patch lerobot: comment out groot imports (needs diffusers features unavailable in PyTorch 2.1)
+# 4. Patch lerobot FIRST: comment out groot imports (groot->diffusers->torch.xpu breaks PyTorch 2.1)
+# Must patch before any lerobot import, using known path directly
 echo "Patching lerobot to skip groot policy imports..."
-LEROBOT_INIT=$(python -c "import lerobot.policies; print(lerobot.policies.__file__)")
-sed -i '/groot/s/^/# /' "$LEROBOT_INIT" 2>/dev/null || true
+sed -i '/groot/s/^/# /' /usr/local/lib/python3.10/dist-packages/lerobot/policies/__init__.py 2>/dev/null || true
+
+# 5. Install lerobot's other deps (not PyTorch/torchvision, not diffusers - only ACT needs these)
+pip install --cache-dir=/workspace/.cache/pip -q \
+    draccus safetensors accelerate einops \
+    huggingface-hub pyyaml-include 2>/dev/null
 
 # 6. Install vla-edge package
 pip install --cache-dir=/workspace/.cache/pip -q -e . 2>/dev/null
