@@ -38,10 +38,15 @@ echo "Installing lerobot 0.4.4 (no-deps to avoid PyTorch conflict)..."
 pip install --cache-dir=/workspace/.cache/pip -q \
     lerobot==0.4.4 --no-deps 2>/dev/null
 
-# 4. Patch lerobot FIRST: comment out groot imports (groot->diffusers->torch.xpu breaks PyTorch 2.1)
-# Must patch before any lerobot import, using known path directly
-echo "Patching lerobot to skip groot policy imports..."
-sed -i '/groot/s/^/# /' /usr/local/lib/python3.10/dist-packages/lerobot/policies/__init__.py 2>/dev/null || true
+# 4. Patch lerobot: replace policies/__init__.py to only export ACT
+# lerobot 0.4.4 imports ALL policies (groot, pi0, diffusion, etc.) which pull in
+# incompatible deps (diffusers->torch.xpu, serial, torchcodec, etc.)
+# We only need ACT, so replace the entire __init__ with just ACT exports.
+echo "Patching lerobot to only export ACT policy..."
+cat > /usr/local/lib/python3.10/dist-packages/lerobot/policies/__init__.py << 'PATCH'
+from .act.configuration_act import ACTConfig as ACTConfig
+from .act.modeling_act import ACTPolicy as ACTPolicy
+PATCH
 
 # 5. Install lerobot's other deps (not PyTorch/torchvision, not diffusers - only ACT needs these)
 # huggingface-hub>=0.25 required for HfHubHTTPError used by lerobot 0.4.4
