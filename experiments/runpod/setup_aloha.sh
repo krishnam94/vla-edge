@@ -48,11 +48,13 @@ from .act.configuration_act import ACTConfig as ACTConfig
 from .act.modeling_act import ACTPolicy as ACTPolicy
 PATCH
 
-# 5. Install lerobot's other deps (not PyTorch/torchvision, not diffusers - only ACT needs these)
+# 5. Install lerobot's other deps (not PyTorch/torchvision, not diffusers)
 # huggingface-hub>=0.25 required for HfHubHTTPError used by lerobot 0.4.4
+# pyserial, termcolor, etc. needed by lerobot's deep import chain (ACT -> pretrained -> configs -> robots -> motors)
 pip install --cache-dir=/workspace/.cache/pip -q \
     draccus safetensors accelerate einops \
-    "huggingface-hub>=0.25" pyyaml-include 2>/dev/null
+    "huggingface-hub>=0.25" pyyaml-include \
+    pyserial termcolor jsonlines opencv-python-headless deepdiff 2>/dev/null
 
 # 6. Install vla-edge package
 pip install --cache-dir=/workspace/.cache/pip -q -e . 2>/dev/null
