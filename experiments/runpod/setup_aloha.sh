@@ -44,9 +44,10 @@ echo "Patching lerobot to skip groot policy imports..."
 sed -i '/groot/s/^/# /' /usr/local/lib/python3.10/dist-packages/lerobot/policies/__init__.py 2>/dev/null || true
 
 # 5. Install lerobot's other deps (not PyTorch/torchvision, not diffusers - only ACT needs these)
+# huggingface-hub>=0.25 required for HfHubHTTPError used by lerobot 0.4.4
 pip install --cache-dir=/workspace/.cache/pip -q \
     draccus safetensors accelerate einops \
-    huggingface-hub pyyaml-include 2>/dev/null
+    "huggingface-hub>=0.25" pyyaml-include 2>/dev/null
 
 # 6. Install vla-edge package
 pip install --cache-dir=/workspace/.cache/pip -q -e . 2>/dev/null
