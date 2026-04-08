@@ -54,7 +54,10 @@ PATCH
 pip install --cache-dir=/workspace/.cache/pip -q \
     draccus safetensors accelerate einops \
     "huggingface-hub>=0.25" pyyaml-include \
-    pyserial termcolor jsonlines opencv-python-headless deepdiff 2>/dev/null
+    pyserial termcolor jsonlines opencv-python-headless deepdiff av 2>/dev/null
+
+# 5b. Force numpy<2 LAST (transitive deps may upgrade it)
+pip install --cache-dir=/workspace/.cache/pip -q "numpy<2" 2>/dev/null
 
 # 6. Install vla-edge package
 pip install --cache-dir=/workspace/.cache/pip -q -e . 2>/dev/null
