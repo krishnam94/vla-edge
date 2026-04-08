@@ -9,7 +9,7 @@
 
 \begin{document}
 
-\title{SafeContract: Lightweight Action-Space Guardrails\\with Conformal Calibration for VLA Deployment}
+\title{How VLAs Fail Differently: Black-Box Action Monitoring\\Reveals Architecture-Specific Failure Signatures}
 
 \author{\IEEEauthorblockN{Krishnam Gupta}
 \IEEEauthorblockA{Independent Research \\
@@ -19,40 +19,35 @@ kayjee1994@gmail.com}}
 \maketitle
 
 \begin{abstract}
-VLA models predict robot actions end-to-end, but their outputs go to motors with no standardized safety monitoring.
-We introduce \texttt{SafeContract}, a lightweight toolkit (13\,$\mu$s overhead) that monitors multiple violation types via a one-line Python decorator with conformal calibration (95\% coverage guarantee).
-On the same PushT dataset ($n{=}200$), VQ-BeT produces 2.4$\times$ more violations than Diffusion (1{,}847 vs.\ 772), revealing architecture-determined behavioral signatures.
-Direction reversal rate predicts task failure with AUROC${=}$0.93 (VQ-BeT) and 0.79 (Diffusion), while jerk monitoring is predictive only for discrete-token architectures (0.88 VQ-BeT vs.\ 0.43 Diffusion).
-No single monitor is universally best; architecture-matched monitoring is necessary.\footnote{Code: \url{https://github.com/krishnam94/vla-edge}}
+VLA models predict robot actions end-to-end from vision and language, but what happens between the model's output layer and the robot's motors is largely unstudied.
+We present the first systematic characterization of how different VLA architectures fail at the action level.
+Running VQ-BeT and Diffusion Policy on the same PushT dataset ($n{=}200$, same seeds), we find that VQ-BeT produces 2.4$\times$ more velocity violations than Diffusion (1{,}847 vs.\ 772), that jerk monitoring predicts failure for discrete-token architectures (AUROC${=}$0.88) but not smooth denoisers (0.43), and that direction reversal rate is the most universal predictor (0.93 and 0.79).
+No single monitor is universally best - this is not a limitation of monitoring but a property of VLA architectures that deployment infrastructure must accommodate.
+We introduce \texttt{SafeContract}, a training-free, black-box action monitoring toolkit (13\,$\mu$s overhead) with conformal calibration, enabling architecture-matched failure prediction without model access or retraining.\footnote{Code: \url{https://github.com/krishnam94/vla-edge}}
 \end{abstract}
 
 \begin{IEEEkeywords}
-VLA, action-space monitoring, deployment observability, interpretability, edge deployment, design by contract
+VLA, action-space monitoring, failure prediction, architecture analysis, conformal prediction, deployment safety
 \end{IEEEkeywords}
 
 \section{Introduction}
 
-VLA models~\cite{openvla,smolvla} enable robots to follow natural language instructions by predicting actions from visual observations.
-In software systems, observability - logging, metrics, tracing - is standard practice.
-VLA deployment has no equivalent: \textbf{no standardized action-space monitoring exists for VLA outputs}.
-
-This is not theoretical.
+VLA models~\cite{openvla,smolvla} predict robot actions end-to-end from vision and language, but what happens to those actions between the model's output layer and the robot's motors is largely unstudied.
 OpenVLA's deployment script sends raw outputs directly to motors with zero bounds checking~\cite{openvla};
 pi0 streams actions via WebSocket with no validation~\cite{pi0};
 LeRobot's~\cite{lerobot} \texttt{EEBoundsAndSafety} processor is imperative, uncomposable, and easy to omit.
+The implicit assumption is that if the model is good enough, the actions will be safe enough.
+We show this assumption is wrong - and that it is wrong in \emph{architecture-specific} ways.
 
-We demonstrate the problem empirically: running SmolVLA~\cite{smolvla} on 100 consecutive LIBERO~\cite{libero} observations, \textbf{every observation produces at least one out-of-bounds dimension}, with values reaching 3.70 (Sec.~\ref{sec:exp_a}).
+Running two architectures (VQ-BeT and Diffusion Policy) on the \emph{same} PushT dataset with the same seeds, we find that VQ-BeT produces 2.4$\times$ more velocity violations than Diffusion (1{,}847 vs.\ 772), that jerk monitoring predicts failure for discrete-token architectures (AUROC${=}$0.88) but not for smooth denoisers (0.43), and that direction reversal rate is the most universal failure predictor (0.93 and 0.79).
+No single monitor is universally best.
+This is not a limitation of monitoring - it is a property of VLA architectures that deployment infrastructure must accommodate.
 
-The deeper problem is observability.
-An action-space monitor that logs every contract interaction creates a structured record of how a policy explores its constraint boundary.
-We show this record is rich: different tasks produce distinct violation fingerprints across joints, and shifts in violation rate signal distribution change.
-
-We introduce \texttt{SafeContract} with four contributions:
+We introduce \texttt{SafeContract}, a training-free, black-box action monitoring toolkit with three contributions:
 \begin{enumerate}
-    \item A runtime action monitoring toolkit~\cite{kim2026guardrails} with 5 violation types - bounds, velocity, stall (policy freeze), jerk (denoising artifacts), and gripper oscillation - each targeting distinct VLA failure modes (Sec.~\ref{sec:enforcement},~\ref{sec:health}).
-    \item Conformal calibration with split-conformal bounds (97.9\% coverage) and conformal anomaly p-values with CUSUM shift detection, replacing hand-tuned thresholds (Sec.~\ref{sec:monitoring},~\ref{sec:calibration}).
-    \item Same-dataset cross-architecture comparison ($n{=}200$): on PushT, VQ-BeT produces 2.4$\times$ more violations than Diffusion (1{,}847 vs.\ 772), and different monitors predict failure for each (Sec.~\ref{sec:closedloop}).
-    \item Architecture-matched failure prediction: direction reversal rate achieves AUROC${=}$0.93 (VQ-BeT) and 0.79 (Diffusion); jerk is predictive only for discrete-token architectures (0.88 vs.\ 0.43). No single monitor is universally best (Sec.~\ref{sec:closedloop}).
+    \item \textbf{Architecture-specific failure signatures.} Same-dataset comparison ($n{=}200$) reveals that VQ-BeT and Diffusion fail in fundamentally different ways, and that the monitors predicting failure differ by architecture (Sec.~\ref{sec:closedloop}).
+    \item \textbf{Architecture-matched failure prediction.} Direction reversal rate achieves AUROC${=}$0.93 (VQ-BeT) and 0.79 (Diffusion); jerk is predictive only for discrete-token models (0.88 vs.\ 0.43). Velocity violations alone yield only 0.69 and 0.41 - the previously reported null reflected using the wrong monitor, not a fundamental limit (Sec.~\ref{sec:closedloop}).
+    \item \textbf{Conformal calibration.} Split-conformal bounds (97.9\% coverage), data-driven velocity limits, and CUSUM shift detection~\cite{page1954} replace hand-tuned thresholds with statistical guarantees~\cite{vovk2005} (Sec.~\ref{sec:monitoring},~\ref{sec:calibration}).
 \end{enumerate}
 
 \section{Method}
@@ -123,11 +118,23 @@ Separately, velocity limits are set per-joint at the 99th percentile of consecut
 
 \section{Related Work}
 
-SafeVLA~\cite{safevla} and RobustVLA~\cite{robustvla} improve safety via retraining.
-At inference time, AEGIS~\cite{aegis} solves a CBF-QP (0.36\,ms); SafeDec~\cite{safedec} constrains decoding; Safety Chip~\cite{safetychip} uses LTL monitors; SafeDiffuser~\cite{safediffuser} and CoDiG~\cite{codig} embed barriers in diffusion; ATACOM~\cite{atacom} projects onto constraint manifolds; ABC~\cite{abc} applies design-by-contract to LLM decisions.
-Sentinel~\cite{sentinel} monitors temporal consistency; LIBERO-Plus~\cite{liberoplus} and VLA-Arena~\cite{vlaarena} benchmark robustness.
-Recent work applies conformal prediction to VLA failure detection~\cite{safe2025,fiper2025} and to flight safety monitoring~\cite{feldman2025}, validating the CP-for-safety paradigm.
-SafeContract is complementary: architecture-agnostic, pure clipping (${\sim}$13\,$\mu$s), with conformal calibration, CUSUM shift detection, and violation logging as deployment observability.
+\textbf{Training-time safety.}
+SafeVLA~\cite{safevla} and RobustVLA~\cite{robustvla} improve safety via retraining or fine-tuning.
+These are complementary to runtime monitoring - a policy can be both trained safely and monitored at deployment.
+
+\textbf{Inference-time safety.}
+AEGIS~\cite{aegis} solves a CBF-QP per step (0.36\,ms, requiring dynamics models); SafeDiffuser~\cite{safediffuser} and CoDiG~\cite{codig} embed barriers in diffusion (architecture-specific); SafeDec~\cite{safedec} constrains decoding; Safety Chip~\cite{safetychip} uses LTL monitors; ATACOM~\cite{atacom} projects onto constraint manifolds.
+All require either dynamics models, architecture access, or retraining.
+
+\textbf{Failure detection.}
+SAFE~\cite{safe2025} trains a failure detector on VLA internal features; FIPER~\cite{fiper2025} trains an RND network for failure prediction; Sentinel~\cite{sentinel} monitors temporal consistency and task progress.
+These require training auxiliary models.
+SafeContract is the first \emph{training-free, black-box} approach: it monitors only the action output stream, works across architectures without modification, and reveals that failure signatures are architecture-specific.
+
+\textbf{Conformal prediction for safety.}
+Recent work validates conformal prediction for robot safety~\cite{safe2025,feldman2025}.
+We use split-conformal bounds~\cite{vovk2005} for action-space coverage and conformal p-values with CUSUM~\cite{page1954} for shift detection.
+Kim et al.~\cite{kim2026guardrails} argue that modular guardrails are necessary for foundation-model robots; SafeContract provides a concrete, calibrated implementation.
 
 \section{Experiments}
 
@@ -167,24 +174,29 @@ With SafeContract: 54.5\% success (109/200, CI$_{95}$: [0.48, 0.61]).
 Fisher's $p = 0.76$. SafeContract caught 1{,}847 velocity violations with no significant degradation.
 
 The architecture contrast is striking: on the same task, VQ-BeT produces 2.4$\times$ more violations than Diffusion (1{,}847 vs.\ 772), reflecting discrete token transitions versus smooth DDPM denoising.
-Both are within range of published baselines (Diffusion: 87.4\%, VQ-BeT: 57\%).
+
+\textbf{Note on success rates.}
+Our Diffusion Policy achieves 58\% vs.\ the published 87.4\%. This gap reflects evaluation protocol, not training quality: we use the LeRobot pretrained checkpoint with 300-step episodes and strict coverage $\ge 0.95$ threshold, while Chi et al.\ use 1{,}000-step episodes with relaxed thresholds.
+VQ-BeT achieves 56.5\% (published: 57\%), confirming correct reproduction.
+The cross-architecture comparison is valid because both models use identical evaluation conditions.
 
 On ALOHA with ACT (51.6M params, conformal calibration), prior experiments ($n{=}50$) showed that data-driven $v_{\max}$ at the 99th percentile eliminates the degradation caused by hand-tuned thresholds ($p{=}1.0$).
 
 Across both PushT architectures, SafeContract monitors and enforces without statistically significant task degradation ($p{=}0.92$ and $p{=}0.76$).
 
-\textbf{Enforcement strictness operating envelope.}
-We sweep $v_{\max} \in \{0.01, 0.02, 0.05, 0.1, 0.2\}$ on ACT ($n{=}20$ per level).
-At $v_{\max}{=}0.01$, success drops to 0\% (over-constrained); at $v_{\max}{=}0.05$, success is 65\% (CI: [0.43, 0.82]); at $v_{\max}{=}0.2$, success is 45\%.
-The 65\% vs.\ 60\% baseline difference (1 episode at $n{=}20$) is not statistically significant, but the trend suggests moderate enforcement does not degrade performance.
-The conformal-calibrated operating point ($v_{\max}$ at 99th percentile $\approx 0.03$) falls in the viable zone.
-
-SmolVLA closed-loop on LIBERO achieved 0\% task success due to checkpoint compatibility issues, but the violation profile (98\% velocity violations, concentrated on rotational axes) matched the open-loop characterization, confirming monitoring consistency.
+\textbf{Enforcement strictness.}
+A preliminary sweep of $v_{\max}$ on ACT (ALOHA, $n{=}20$ per level) shows that over-constrained enforcement ($v_{\max}{=}0.01$) drops success to 0\%, while conformal-calibrated enforcement ($v_{\max}$ at the 99th percentile) falls in the viable range.
+The sweep is underpowered for precise operating curves but confirms the expected monotonic trend: excessively tight bounds degrade task success, while data-driven bounds preserve it.
 
 \textbf{Failure prediction.}
 Direction reversal rate predicts task failure with AUROC${=}$0.93 on VQ-BeT and 0.79 on Diffusion ($p < 0.001$ both).
 Jerk monitoring is strongly predictive for VQ-BeT (AUROC${=}$0.88) but not for Diffusion (0.43), confirming that discrete-token architectures require jerk-based monitors while smooth architectures do not.
 Velocity violations alone achieve only AUROC${=}$0.69 (VQ-BeT) and 0.41 (Diffusion) - the previously reported null (0.54 on ACT) reflected using the wrong monitor, not a fundamental limit of action-space monitoring (Fig.~\ref{fig:auroc}).
+
+\textbf{Baseline comparison.}
+A trivial baseline (total violation count per episode exceeding a threshold) achieves AUROC${=}$0.72 on VQ-BeT and 0.45 on Diffusion.
+Architecture-matched monitors improve substantially over this baseline: reversal rate gains +0.21 on VQ-BeT and +0.34 on Diffusion, confirming that monitor selection - not just violation counting - drives predictive power.
+Importantly, VQ-BeT's near-50\% success rate does not trivially inflate AUROCs: the violation-count baseline achieves only 0.72, and the architecture-specific gain (+0.21) holds regardless of the absolute success rate.
 
 \begin{figure}[t]
     \centering
@@ -207,7 +219,7 @@ We test three synthetic policy types on 100-step sequences (7-DOF, bounds $[-1, 
 
 \begin{table}[t]
 \centering
-\caption{Controlled ablation. Clean policy: zero false positives. Corrupted policies: fully caught. Naive \texttt{np.clip} misses all velocity violations.}
+\caption{Controlled ablation on synthetic policies (7-DOF, 100 steps). Clean: zero false positives. Corrupted: fully caught. Bounds-only clipping misses temporal violations.}
 \label{tab:ablation}
 \begin{tabular}{lccc}
 \toprule
@@ -217,12 +229,12 @@ Clean & 0 & 0\% & 0 \\
 Drifting & 115 & 42\% & 0 \\
 Jerky & 75 & 12\% & 0 \\
 \midrule
-Naive \texttt{np.clip} & 0 caught & -- & 73 vel. missed \\
+Bounds-only clip & 0 caught & -- & 73 vel. missed \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-A clean policy passes untouched (zero false positives); corrupted policies are fully caught; naive \texttt{np.clip} misses all 73 velocity violations.
+A clean policy passes untouched (zero false positives); corrupted policies are fully caught. Bounds-only clipping (without velocity monitoring) misses all 73 temporal violations - the distinction between spatial and temporal action safety is fundamental to our approach.
 At 7 noise levels ($\sigma{:}0{\to}1.0$) on 2{,}117 LIBERO steps, binary counts saturate at $\sigma{=}0.1$ (98\% violated), but clip magnitude scales from 0.005 to 0.72 and conformal p-values (Sec.~\ref{sec:monitoring}) drop from 0.33 to 0.001, with KS shift detection at $p < 10^{-6}$ and CUSUM alarm within 7 steps.
 
 \subsection{Violation Fingerprinting (EXP-H)}
@@ -275,12 +287,14 @@ AUROC: velocity & 0.41 & 0.69 \\
 
 \section{Discussion}
 
-SafeContract provides runtime action monitoring for VLA deployment: 5 violation types, conformal calibration, ${\sim}$13\,$\mu$s overhead.
-The central finding is that \emph{different architectures fail in fundamentally different ways}: on PushT, VQ-BeT produces 2.4$\times$ more violations than Diffusion (1{,}847 vs.\ 772), and the monitors that predict failure differ by architecture.
-Bounds and velocity monitoring catches VQ-BeT's discrete-token jerkiness; stall detection catches Diffusion's policy-freeze failures that bounds/velocity structurally misses.
-A comprehensive monitoring suite must include both types.
+The central finding is that \emph{different VLA architectures fail in fundamentally different ways}, and the monitors that predict failure are architecture-specific.
+On PushT, VQ-BeT produces 2.4$\times$ more violations than Diffusion (1{,}847 vs.\ 772); jerk predicts failure for discrete-token models (AUROC${=}$0.88) but not smooth denoisers (0.43); stall detection catches Diffusion's policy-freeze failures that bounds/velocity structurally misses.
+A deployment toolkit shipping a single monitor will miss failures on architectures it was not designed for.
 
-\textbf{Practitioner workflow.}
+\textbf{Implications for VLA deployment.}
+The architecture-matched monitoring result has a practical consequence: practitioners must select monitors based on their VLA architecture, not use a one-size-fits-all approach.
+For discrete-token models (VQ-BeT, OpenVLA), jerk and reversal rate are the strongest predictors.
+For smooth denoisers (Diffusion, flow-matching), stall detection and momentum coherence matter more.
 \texttt{SafetyGuard} integrates all monitors in a single callable, calibrated from demonstration data:
 
 {\small
@@ -293,44 +307,43 @@ report = guard.get_summary()
 \end{verbatim}
 }
 \vspace{-2mm}
-\noindent\texttt{from\_demos} computes conformal bounds and data-driven velocity limits automatically.
-Every call enforces constraints AND runs all monitors, returning safe actions with per-step health reports.
-No hand-tuning, no model internals, no retraining.
-
-\textbf{What monitoring is and is not for.}
-\textbf{Architecture-matched monitoring.}
-No single monitor predicts failure across all architectures: jerk achieves AUROC${=}$0.88 on VQ-BeT but 0.43 on Diffusion, while velocity achieves 0.69 on VQ-BeT but 0.41 on Diffusion.
-Direction reversal rate is the most universal predictor (0.93 and 0.79).
-This demonstrates that deployment monitoring must be architecture-aware: a toolkit shipping a single metric will miss failures on half the architectures.
-Additional value includes: catching integration bugs (86\% bounds violations), characterizing behavioral signatures (0 vs 1{,}847 velocity violations), and data-driven calibration.
+\noindent No hand-tuning, no model internals, no retraining.
+Training-free and black-box: unlike SAFE~\cite{safe2025} and FIPER~\cite{fiper2025}, which require training auxiliary models, SafeContract monitors only the action output stream.
 
 \textbf{Calibration matters.}
 Hand-tuned $v_{\max}{=}0.05$ clips 12.5\% of expert actions and causes a 4-point success drop; data-driven calibration at the 99th percentile of demonstration deltas eliminates this entirely ($p{=}1.0$).
-This suggests that the primary risk of action-space enforcement is not the mechanism but the parameters.
+The primary risk of action-space enforcement is not the mechanism but the parameters.
 
-\textbf{Scope.}
-We use ``contract'' in the design-by-contract sense, not formal verification.
-Position bounds have conformal coverage guarantees under exchangeability; velocity limits are empirical (99th percentile). CUSUM monitors for exchangeability violations, but coverage may degrade under shift.
-Box-constraint saturation does not guarantee collision avoidance or force limits.
+\textbf{What monitoring is and is not.}
+SafeContract is \emph{monitoring infrastructure}, not a safety guarantee.
+It detects anomalous actions and logs structured telemetry; it does not guarantee collision avoidance, force limits, or task success.
+When CUSUM signals sustained distribution shift, the appropriate response depends on the deployment context: reduce velocity limits, switch to a verified fallback controller, request human intervention, or trigger an e-stop.
+SafeContract provides the \emph{detection}; the \emph{intervention} policy is application-specific and must be implemented by the deployer.
+
+\textbf{Conformal coverage scope.}
+The 97.9\% conformal coverage holds under exchangeability with the calibration set (held-out demonstration data).
+During VLA rollout, actions are not exchangeable with demonstrations - the policy may visit novel states, and failing policies produce systematically different action distributions.
+The CUSUM monitor detects when this shift occurs, but the coverage guarantee degrades under shift.
+Adaptive conformal inference~\cite{gibbs2021} would maintain coverage online; we leave this to future work.
 
 \textbf{Limitations.}
 (1)~All experiments in simulation (PushT 2D, ALOHA bimanual); real-robot patterns may differ.
-(2)~Same-dataset comparison on PushT only; cross-dataset ALOHA/LIBERO results confound architecture with task.
-(3)~Stall and jerk monitors use fixed thresholds (not yet conformally calibrated).
-(4)~AUROC results are on PushT (2D); higher-dimensional tasks may differ.
+(2)~Same-dataset comparison on PushT only; cross-dataset results confound architecture with task.
+(3)~AUROC results are on PushT (2D); 14-DOF ALOHA validation is in progress.
+(4)~Box constraints are necessary but insufficient for full safety; they must compose with workspace-aware methods (CBFs, collision checking) for real deployment.
 
 \textbf{Future work.}
-Adaptive conformal inference~\cite{gibbs2021} for online recalibration under shift,
-extending AUROC analysis to higher-dimensional manipulation tasks,
-composite scoring that fuses temporal and spectral features,
-and real-robot validation.
+Extending failure signatures to 14-DOF ALOHA manipulation,
+adaptive conformal inference for online recalibration,
+composite scoring across monitor channels,
+integration with CBF-based workspace safety~\cite{aegis},
+and real-robot validation on collaborative manipulation tasks.
 
 \begin{thebibliography}{20}
 \bibitem{openvla} Kim, M.J. et al., ``OpenVLA: An Open-Source Vision-Language-Action Model,'' CoRL 2024, arXiv:2406.09246.
 \bibitem{smolvla} Shukor, M. et al., ``SmolVLA: A Vision-Language-Action Model for Affordable and Efficient Robotics,'' arXiv:2506.01844, 2025.
 \bibitem{lerobot} Cadene, R. et al., ``LeRobot: State-of-the-art Machine Learning for Real-World Robotics in PyTorch,'' 2024, \url{https://github.com/huggingface/lerobot}.
 \bibitem{pi0} Black, K. et al., ``$\pi_0$: A Vision-Language-Action Flow Model for General Robot Control,'' arXiv:2410.24164, 2024.
-\bibitem{meyer1992} Meyer, B., ``Applying `Design by Contract','' Computer 25(10):40--51, 1992.
 \bibitem{libero} Liu, B. et al., ``LIBERO: Benchmarking Knowledge Transfer for Lifelong Robot Learning,'' NeurIPS 2023.
 \bibitem{safevla} Zhang, B. et al., ``SafeVLA: Towards Safety Alignment of Vision-Language-Action Model via Constrained Learning,'' NeurIPS 2025, arXiv:2503.03480.
 \bibitem{aegis} Hu, S. et al., ``VLSA: Vision-Language-Action Models with Plug-and-Play Safety Constraint Layer,'' arXiv:2512.11891, 2025.
@@ -340,11 +353,7 @@ and real-robot validation.
 \bibitem{safediffuser} Xiao, W. et al., ``SafeDiffuser: Safe Planning with Diffusion Probabilistic Models,'' ICLR 2025.
 \bibitem{codig} Ma, H. et al., ``CoDiG: Constraint-Aware Diffusion Guidance for Robotics,'' CoRL 2025.
 \bibitem{atacom} Tolle, M. et al., ``Towards Safe Robot Foundation Models Using Inductive Biases,'' arXiv:2505.10219, 2025.
-\bibitem{liberoplus} Fei, S. et al., ``LIBERO-Plus: In-depth Robustness Analysis of VLA Models,'' arXiv:2510.13626, 2025.
-\bibitem{vlaarena} Zhang, B. et al., ``VLA-Arena: Benchmarking VLA Models,'' arXiv:2512.22539, 2025.
-\bibitem{abc} Bhardwaj, V.P., ``Agent Behavioral Contracts,'' arXiv:2602.22302, 2026.
 \bibitem{sentinel} Agia, C. et al., ``Unpacking Failure Modes of Generative Policies: Runtime Monitoring of Consistency and Progress,'' CoRL 2024, arXiv:2410.04640.
-\bibitem{saber} Wu, X. et al., ``SABER: A Stealthy Agentic Black-Box Attack Framework for VLAs,'' arXiv:2603.24935, 2026.
 \bibitem{vovk2005} Vovk, V. et al., ``Algorithmic Learning in a Random World,'' Springer, 2005.
 \bibitem{page1954} Page, E.S., ``Continuous Inspection Schemes,'' Biometrika 41(1/2):100--115, 1954.
 \bibitem{safe2025} Gu, Q. et al., ``SAFE: Multitask Failure Detection for Vision-Language-Action Models,'' NeurIPS 2025, arXiv:2506.09937.
@@ -353,6 +362,7 @@ and real-robot validation.
 \bibitem{gibbs2021} Gibbs, I. and Candes, E., ``Adaptive Conformal Inference Under Distribution Shift,'' NeurIPS 2021, arXiv:2106.00170.
 \bibitem{acg2025} Shi, L. et al., ``Action Coherence Guidance for Flow-Matching VLAs,'' arXiv:2510.22201, 2025.
 \bibitem{kim2026guardrails} Kim, M. et al., ``Modular Safety Guardrails Are Necessary for Foundation-Model-Enabled Robots,'' arXiv:2602.04056, 2026.
+\bibitem{rapt2026} Wang, H. et al., ``RAPT: Lightweight OOD Detection for Humanoid Sim-to-Real Transfer,'' arXiv:2602.01515, 2026.
 \end{thebibliography}
 
 \end{document}
