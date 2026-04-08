@@ -80,7 +80,7 @@ The statistic $S_t = \max(0, S_{t-1} + \mathbf{1}[p_t < \alpha] - \alpha)$ accum
 An alarm fires when $S_t > h$; the average run length under the null is $O(e^h / \alpha)$, giving a formal false-alarm bound that EWMA cannot provide.
 On ALOHA demonstration data with conformal p-values feeding the CUSUM, in-distribution actions produce zero alarms; adding $\sigma{=}0.1$ noise triggers detection within 7 steps (threshold $h{=}3$).
 
-Additionally, \textbf{clip magnitude} $m_i = |a_i^{\text{raw}} - a_i^{\text{clipped}}|$ provides a free, per-joint ``wrongness'' signal that remains informative when violation counts saturate (Sec.~\ref{sec:ablation}).
+Additionally, \textbf{clip magnitude} $m_i = |a_i^{\text{raw}} - a_i^{\text{clipped}}|$ provides a free, per-joint ``wrongness'' signal that remains informative when violation counts saturate.
 
 \subsection{Architecture-Specific Monitors}
 \label{sec:health}
@@ -215,53 +215,6 @@ Architecture-matched monitors improve substantially: reversal rate gains +0.21 o
     \label{fig:closedloop}
 \end{figure}
 
-\subsection{Controlled Ablation (EXP-G)}
-\label{sec:ablation}
-
-We test three synthetic policy types on 100-step sequences (7-DOF, bounds $[-1, 1]$, $v_{\max} = 0.1$):
-
-\begin{table}[t]
-\centering
-\caption{Controlled ablation on synthetic policies (7-DOF, 100 steps). Clean: zero false positives. Corrupted: fully caught. Bounds-only clipping misses temporal violations.}
-\label{tab:ablation}
-\begin{tabular}{lccc}
-\toprule
-Policy Type & Violations & Modified (\%) & Post-contract OOB \\
-\midrule
-Clean & 0 & 0\% & 0 \\
-Drifting & 115 & 42\% & 0 \\
-Jerky & 75 & 12\% & 0 \\
-\midrule
-Bounds-only clip & 0 caught & -- & 73 vel. missed \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-A clean policy passes untouched (zero false positives); corrupted policies are fully caught. Bounds-only clipping (without velocity monitoring) misses all 73 temporal violations - the distinction between spatial and temporal action safety is fundamental to our approach.
-At 7 noise levels ($\sigma{:}0{\to}1.0$) on 2{,}117 LIBERO steps, binary counts saturate at $\sigma{=}0.1$ (98\% violated), but clip magnitude scales from 0.005 to 0.72 and conformal p-values (Sec.~\ref{sec:monitoring}) drop from 0.33 to 0.001, with KS shift detection at $p < 10^{-6}$ and CUSUM alarm within 7 steps.
-
-\subsection{Violation Fingerprinting (EXP-H)}
-\label{sec:fingerprint}
-
-Violation patterns are informative, not just corrective.
-
-\textbf{Synthetic validation.}
-Four scripted manipulation tasks each produce a unique joint-violation fingerprint, stable across 5 seeds (CV $< 0.15$).
-Five of six task pairs are statistically distinguishable ($p < 0.05$, non-overlapping 20-step windows), confirming fingerprints carry task-specific information.
-
-\begin{figure}[t]
-    \centering
-    \includegraphics[width=\columnwidth]{figures/fig_normalized_fingerprints.pdf}
-    \caption{Normalized violation fingerprints. Left: bounds violations vanish after unnormalization. Right: velocity fingerprints persist and differ by task.}
-    \label{fig:fingerprint}
-\end{figure}
-
-\textbf{130 LIBERO tasks.}
-Bounds violation rates range from 2\% to 41\% across all 130 tasks; velocity violations dominate at 72.4\% on the 90-task diverse set.
-After unnormalization, bounds drop to 0\% but velocity fingerprints persist by suite (\emph{spatial} x=83\%, \emph{object} y=85\%, \emph{goal} z=78\%).
-
-\textbf{Cross-architecture comparison.}
-
 \begin{table}[t]
 \centering
 \caption{Same-dataset comparison on PushT ($n{=}200$, same seeds/contract) with failure prediction AUROCs ($n{=}100$).}
@@ -316,26 +269,10 @@ report = guard.get_summary()
 \noindent No hand-tuning, no model internals, no retraining.
 Training-free and black-box: unlike SAFE~\cite{safe2025} and FIPER~\cite{fiper2025}, which require training auxiliary models, SafeContract monitors only the action output stream.
 
-\textbf{Defense in depth.}
-Action-space monitoring forms the innermost layer of a defense-in-depth strategy.
-It composes naturally with CBF-based workspace constraints~\cite{aegis} for obstacle avoidance and task-level monitors~\cite{sentinel} for progress tracking.
-SafeContract fills the action-level gap that is currently missing from this stack - the layer between model output and actuator command.
-
-\textbf{Calibration matters.}
-Hand-tuned $v_{\max}{=}0.05$ clips 12.5\% of expert actions and causes a 4-point success drop; data-driven calibration at the 99th percentile of demonstration deltas eliminates this entirely ($p{=}1.0$).
-The primary risk of action-space enforcement is not the mechanism but the parameters.
-
-\textbf{What monitoring is and is not.}
-SafeContract is \emph{monitoring infrastructure}, not a safety guarantee.
-It detects anomalous actions and logs structured telemetry; it does not guarantee collision avoidance, force limits, or task success.
-When CUSUM signals sustained distribution shift, the appropriate response depends on the deployment context: reduce velocity limits, switch to a verified fallback controller, request human intervention, or trigger an e-stop.
-SafeContract provides the \emph{detection}; the \emph{intervention} policy is application-specific and must be implemented by the deployer.
-
-\textbf{Conformal coverage scope.}
-The 97.9\% conformal coverage holds under exchangeability with the calibration set (held-out demonstration data).
-During VLA rollout, actions are not exchangeable with demonstrations - the policy may visit novel states, and failing policies produce systematically different action distributions.
-The CUSUM monitor detects when this shift occurs, but the coverage guarantee degrades under shift.
-Adaptive conformal inference~\cite{gibbs2021} would maintain coverage online; we leave this to future work.
+\textbf{Scope.}
+SafeContract is \emph{monitoring infrastructure}, not a safety guarantee - it composes with CBF-based workspace constraints~\cite{aegis} and task-level monitors~\cite{sentinel} as the innermost layer of a defense-in-depth stack.
+Hand-tuned $v_{\max}{=}0.05$ clips 12.5\% of expert actions; data-driven calibration at the 99th percentile eliminates this ($p{=}1.0$).
+The 97.9\% conformal coverage holds under exchangeability with calibration data; during rollout, coverage degrades under distribution shift. CUSUM detects when this occurs; adaptive conformal inference~\cite{gibbs2021} would maintain coverage online.
 
 \textbf{Limitations.}
 (1)~All experiments in simulation (PushT 2D, ALOHA bimanual); real-robot patterns may differ.
