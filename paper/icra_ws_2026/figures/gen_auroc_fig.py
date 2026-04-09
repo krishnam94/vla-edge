@@ -6,7 +6,7 @@ import numpy as np
 # Verified data from monitor_analysis.json
 monitors = ['Reversal', 'ATV', 'Jerk', 'Coherence', 'Spectral', 'Velocity']
 vqbet =    [0.93,       0.89,  0.88,  0.86,        0.75,       0.69]
-diffusion = [0.79,       0.71,  0.43,  0.70,        0.34,       0.41]
+diffusion = [0.79,       0.71,  0.41,  0.70,        0.34,       0.41]
 
 x = np.arange(len(monitors))
 width = 0.35

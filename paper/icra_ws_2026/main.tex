@@ -22,7 +22,7 @@ kayjee1994@gmail.com}}
 We discover that VLA architectures fail in fundamentally different, predictable ways at the motor-command level.
 Running VQ-BeT, Diffusion Policy, and ACT on identical evaluation protocols ($n{=}450$ episodes across PushT and ALOHA 14-DOF bimanual manipulation), we find:
 (1)~direction reversal rate is a universal failure predictor across all three architectures (AUROC${=}$0.93, 0.79, 0.91; $p < 0.001$);
-(2)~jerk monitoring is predictive only for discrete-token architectures, following a discrete-to-continuous gradient (0.88, 0.43, 0.69);
+(2)~jerk monitoring is predictive only for discrete-token architectures, following a discrete-to-continuous gradient (0.88, 0.41, 0.69);
 (3)~velocity violations alone are non-predictive everywhere (0.41--0.69);
 and (4)~ACT produces \emph{zero} velocity violations without enforcement, yet still fails 38\% of the time, proving that bounds and velocity monitoring are insufficient for continuous-family VLAs.
 These results establish a two-family pattern: VLA architectures partition into discrete and continuous families with distinct, predictable failure signatures.
@@ -49,7 +49,7 @@ Using black-box action monitoring across three architectures, two tasks, and 450
 
 \begin{enumerate}
     \item \textbf{Direction reversal rate is a universal failure predictor.} It achieves AUROC${=}$0.93 (VQ-BeT), 0.79 (Diffusion), and 0.91 (ACT on 14-DOF ALOHA), all with $p < 0.001$. No other monitor is this consistent.
-    \item \textbf{Jerk monitoring follows a discrete-to-continuous gradient.} Jerk predicts failure for discrete-token VQ-BeT (0.88), partially for chunk-based ACT (0.69), and not at all for continuous Diffusion (0.43). This is a property of the architecture, not the task.
+    \item \textbf{Jerk monitoring follows a discrete-to-continuous gradient.} Jerk predicts failure for discrete-token VQ-BeT (0.88), partially for chunk-based ACT (0.69), and not at all for continuous Diffusion (0.41). This is a property of the architecture, not the task.
     \item \textbf{Velocity monitoring is non-predictive everywhere.} AUROC ranges from 0.41 to 0.69 across all architectures, yet velocity checking is the most common safety mechanism in VLA deployment code.
     \item \textbf{Continuous-family VLAs can fail without any velocity violation.} ACT on ALOHA produces exactly zero velocity violations across 50 unmonitored episodes, yet fails 38\% of the time. Bounds and velocity monitoring, the standard approach, is blind to this entire failure mode.
 \end{enumerate}
@@ -160,7 +160,7 @@ This is a strong negative result: for continuous-family VLAs, the most common sa
 \label{sec:failure_prediction}
 
 We compute per-episode health metrics on a diagnostic subset ($n{=}100$ for PushT, $n{=}50$ for ALOHA) and measure AUROC for predicting task failure.
-Table~\ref{tab:crossarch} reports all results; the key findings are:
+Table~\ref{tab:crossarch} and Figs.~\ref{fig:auroc}--\ref{fig:closedloop} report all results; the key findings are:
 
 \textbf{Direction reversal rate is the universal winner.}
 It achieves the highest AUROC on all three architectures: 0.93 on VQ-BeT, 0.79 on Diffusion, and 0.91 on ACT/ALOHA ($p < 0.001$ all three).
@@ -168,7 +168,7 @@ This is the only monitor that works across both families and across 2D and 14-DO
 A high reversal rate indicates the policy is oscillating rather than progressing - an architecture-agnostic signature of indecision.
 
 \textbf{Jerk follows a discrete-to-continuous gradient.}
-Jerk AUROC: 0.88 (VQ-BeT, discrete tokens), 0.69 (ACT, continuous chunks with boundary effects), 0.43 (Diffusion, continuous denoising).
+Jerk AUROC: 0.88 (VQ-BeT, discrete tokens), 0.69 (ACT, continuous chunks with boundary effects), 0.41 (Diffusion, continuous denoising).
 This gradient is not task-dependent; it reflects the action generation mechanism.
 Discrete-token models produce quantization jumps between codebook entries that manifest as high jerk.
 Diffusion's iterative denoising smooths these away.
@@ -188,7 +188,7 @@ Stall detection is non-predictive for all three architectures in our experiments
 \begin{figure}[t]
     \centering
     \includegraphics[width=\columnwidth]{figures/fig_auroc_comparison.pdf}
-    \caption{Architecture-matched failure prediction (PushT, $n{=}100$). Reversal rate predicts failure across both architectures (0.93 and 0.79). Jerk is predictive only for discrete-token VQ-BeT (0.88 vs.\ 0.43). No single monitor is universally best.}
+    \caption{Architecture-matched failure prediction (PushT, $n{=}100$). Reversal rate predicts failure across both architectures (0.93 and 0.79). Jerk is predictive only for discrete-token VQ-BeT (0.88 vs.\ 0.41). No single monitor is universally best.}
     \label{fig:auroc}
 \end{figure}
 
@@ -249,10 +249,10 @@ Our results reveal a consistent pattern: VLA architectures partition into two fa
 The \emph{discrete family} (autoregressive, VQ-VAE) produces quantization artifacts that manifest as high jerk, high reversal rates, and velocity spikes.
 Jerk and reversal rate are strongly predictive (AUROC $>$ 0.85).
 The \emph{continuous family} (diffusion, flow matching, action chunking) produces smooth trajectories where the primary failure mode is not constraint violation but behavioral error - wrong actions that look physically valid.
-Reversal rate remains predictive (0.79--0.91), but jerk drops to chance (0.43 for pure diffusion).
+Reversal rate remains predictive (0.79--0.91), but jerk drops to chance (0.41 for pure diffusion).
 
 ACT on ALOHA sits between the families: as a continuous model with chunk boundary effects, its jerk AUROC (0.69) is intermediate.
-The gradient VQ-BeT (0.88) $\rightarrow$ ACT (0.69) $\rightarrow$ Diffusion (0.43) tracks the discrete-to-continuous spectrum of action generation.
+The gradient VQ-BeT (0.88) $\rightarrow$ ACT (0.69) $\rightarrow$ Diffusion (0.41) tracks the discrete-to-continuous spectrum of action generation.
 
 \textbf{The zero-violation problem.}
 The ACT result is perhaps the most practically significant.
