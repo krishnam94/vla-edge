@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
-"""ACT on ALOHA - GPU version for lerobot 0.4.x. n=100, conformal calibration."""
+"""ACT on ALOHA - GPU version for lerobot 0.4.x. n=100, conformal calibration.
+
+Key fix (2026-04-08): lerobot 0.5.x moved normalization from model submodules
+to a processor pipeline. Pretrained 0.4.x checkpoints lose their normalization
+buffers on load. We must manually normalize inputs (images, qpos) and
+unnormalize outputs (actions) using stats from the safetensors file.
+"""
 
 import argparse
 import json
@@ -77,7 +83,16 @@ def compute_conformal_calibration(seed=42):
 
 
 def load_policy(device="cuda"):
+    """Load ACT policy and all normalization stats from safetensors.
+
+    lerobot 0.5.x drops normalization buffers on load, so we extract them
+    manually from the raw checkpoint. Returns the policy plus all six
+    normalization tensors (img mean/std, state mean/std, action mean/std).
+    """
     from lerobot.policies.act.modeling_act import ACTPolicy
+    from huggingface_hub import hf_hub_download
+    from safetensors.torch import load_file
+
     print(f"Loading ACT from {MODEL_ID}...")
     policy = ACTPolicy.from_pretrained(MODEL_ID)
     policy.to(device)
@@ -85,16 +100,37 @@ def load_policy(device="cuda"):
     n = sum(p.numel() for p in policy.parameters())
     print(f"  Loaded: {n:,} params on {device}")
 
-    # Check normalization
+    # Extract all normalization stats from raw safetensors
+    ckpt_path = hf_hub_download(MODEL_ID, "model.safetensors")
+    state = load_file(ckpt_path)
+
+    norm_stats = {}
+    norm_stats["img_mean"] = state["normalize_inputs.buffer_observation_images_top.mean"].to(device)
+    norm_stats["img_std"] = state["normalize_inputs.buffer_observation_images_top.std"].to(device)
+    norm_stats["state_mean"] = state["normalize_inputs.buffer_observation_state.mean"].to(device)
+    norm_stats["state_std"] = state["normalize_inputs.buffer_observation_state.std"].to(device)
+    norm_stats["action_mean"] = state["unnormalize_outputs.buffer_action.mean"].to(device)
+    norm_stats["action_std"] = state["unnormalize_outputs.buffer_action.std"].to(device)
+
+    print(f"  Normalization stats loaded from safetensors")
+    print(f"  Image mean shape: {norm_stats['img_mean'].shape}")
+    print(f"  State mean shape: {norm_stats['state_mean'].shape}")
+    print(f"  Action mean range: [{norm_stats['action_mean'].min():.3f}, {norm_stats['action_mean'].max():.3f}]")
+
+    # Sanity check: run one forward pass with proper normalization
     env = gymnasium.make(ENV_ID)
     obs, _ = env.reset(seed=9999)
     policy.reset()
 
     img = torch.from_numpy(obs["top"]).float().to(device) / 255.0
-    img = img.permute(2, 0, 1).unsqueeze(0)
-    qpos = torch.from_numpy(
-        env.unwrapped._env.task.get_qpos(env.unwrapped._env.physics).astype(np.float32)
-    ).to(device).unsqueeze(0)
+    img = img.permute(2, 0, 1)
+    img = (img - norm_stats["img_mean"]) / (norm_stats["img_std"] + 1e-8)
+    img = img.unsqueeze(0)
+
+    qpos_raw = env.unwrapped._env.task.get_qpos(env.unwrapped._env.physics).astype(np.float32)
+    qpos = torch.from_numpy(qpos_raw).float().to(device)
+    qpos = (qpos - norm_stats["state_mean"]) / (norm_stats["state_std"] + 1e-8)
+    qpos = qpos.unsqueeze(0)
 
     obs_dict = {"observation.images.top": img, "observation.state": qpos}
     with torch.inference_mode():
@@ -102,27 +138,27 @@ def load_policy(device="cuda"):
 
     action_np = action.detach().cpu().numpy()
     if action_np.ndim > 1: action_np = action_np[0]
-    print(f"  Sanity: action range=[{action_np.min():.3f}, {action_np.max():.3f}]")
+    # Unnormalize action
+    action_unnorm = action_np * norm_stats["action_std"].cpu().numpy() + norm_stats["action_mean"].cpu().numpy()
+    print(f"  Sanity: normalized action range=[{action_np.min():.3f}, {action_np.max():.3f}]")
+    print(f"  Sanity: unnormalized action range=[{action_unnorm.min():.3f}, {action_unnorm.max():.3f}]")
 
-    is_normalized = action_np.max() < 2.0 and action_np.min() > -2.0
-    print(f"  {'NORMALIZED' if is_normalized else 'RAW'}")
     env.close()
-    return policy, is_normalized
+    return policy, norm_stats
 
 
-def get_unnorm_stats():
-    from huggingface_hub import hf_hub_download
-    from safetensors.torch import load_file
-    state = load_file(hf_hub_download(MODEL_ID, "model.safetensors"))
-    action_mean = state.get("unnormalize_outputs.buffer_action.mean")
-    action_std = state.get("unnormalize_outputs.buffer_action.std")
-    if action_mean is not None:
-        print(f"  Action unnorm: mean_range=[{action_mean.min():.3f}, {action_mean.max():.3f}]")
-    return action_mean, action_std
+def run_episode(env, policy, device, norm_stats,
+                safety_contract=None, max_steps=400):
+    """Run one episode with proper input normalization and output unnormalization.
 
-
-def run_episode(env, policy, device, is_normalized, action_mean, action_std,
-                safety_contract=None, max_steps=300):
+    Args:
+        env: ALOHA gymnasium environment (already reset with seed)
+        policy: ACTPolicy instance
+        device: torch device string
+        norm_stats: dict with img_mean/std, state_mean/std, action_mean/std
+        safety_contract: optional dict with action_lo, action_hi, v_max
+        max_steps: maximum steps per episode (400 matches gym-aloha default)
+    """
     obs, info = env.reset()
     policy.reset()
     total_reward = 0.0
@@ -132,11 +168,17 @@ def run_episode(env, policy, device, is_normalized, action_mean, action_std,
     prev_action = None
 
     for step in range(max_steps):
+        # Normalize image: uint8 -> [0,1] -> dataset mean/std normalization
         img = torch.from_numpy(obs["top"]).float().to(device) / 255.0
-        img = img.permute(2, 0, 1).unsqueeze(0)
-        qpos = torch.from_numpy(
-            env.unwrapped._env.task.get_qpos(env.unwrapped._env.physics).astype(np.float32)
-        ).to(device).unsqueeze(0)
+        img = img.permute(2, 0, 1)  # (3, H, W)
+        img = (img - norm_stats["img_mean"]) / (norm_stats["img_std"] + 1e-8)
+        img = img.unsqueeze(0)  # (1, 3, H, W)
+
+        # Normalize qpos state
+        qpos_raw = env.unwrapped._env.task.get_qpos(env.unwrapped._env.physics).astype(np.float32)
+        qpos = torch.from_numpy(qpos_raw).float().to(device)
+        qpos = (qpos - norm_stats["state_mean"]) / (norm_stats["state_std"] + 1e-8)
+        qpos = qpos.unsqueeze(0)  # (1, 14)
 
         with torch.inference_mode():
             action = policy.select_action({"observation.images.top": img, "observation.state": qpos})
@@ -144,8 +186,8 @@ def run_episode(env, policy, device, is_normalized, action_mean, action_std,
         action_np = action.detach().cpu().numpy()
         if action_np.ndim > 1: action_np = action_np[0]
 
-        if is_normalized and action_mean is not None:
-            action_np = action_np * action_std.numpy() + action_mean.numpy()
+        # Unnormalize action: model outputs normalized, convert to joint positions
+        action_np = action_np * norm_stats["action_std"].cpu().numpy() + norm_stats["action_mean"].cpu().numpy()
 
         original = action_np.copy()
 
@@ -189,8 +231,7 @@ def main():
     print(f"Task: {args.task} | Model: {MODEL_ID} | Env: {ENV_ID}")
 
     action_lo, action_hi, v_max_per_joint = compute_conformal_calibration()
-    policy, is_normalized = load_policy(args.device)
-    action_mean, action_std = get_unnorm_stats()
+    policy, norm_stats = load_policy(args.device)
 
     contract = {"action_lo": action_lo, "action_hi": action_hi, "v_max": v_max_per_joint}
 
@@ -202,7 +243,7 @@ def main():
             env = gymnasium.make(ENV_ID)
             env.reset(seed=args.seed_base + ep)
             t0 = time.time()
-            m = run_episode(env, policy, args.device, is_normalized, action_mean, action_std, safety_contract=sc)
+            m = run_episode(env, policy, args.device, norm_stats, safety_contract=sc)
             m["episode"] = ep; m["seed"] = args.seed_base + ep; m["elapsed_s"] = time.time() - t0
             results[condition].append(m)
             st = "OK" if m["success"] else "--"

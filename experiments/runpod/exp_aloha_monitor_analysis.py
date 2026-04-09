@@ -5,6 +5,10 @@ The generalization test: do monitors that predict failure on PushT (2D)
 also work on ALOHA (14-DOF bimanual manipulation)?
 
 Key question: does reversal rate AUROC > 0.70 on ALOHA?
+
+Key fix (2026-04-08): lerobot 0.5.x drops normalization buffers on load.
+We manually normalize inputs (images, qpos) and unnormalize outputs (actions)
+using stats from the safetensors file. Without this, the model gets 0% success.
 """
 
 import argparse
@@ -82,6 +86,11 @@ def compute_conformal_calibration(seed=42):
 
 
 def load_policy(device="cuda"):
+    """Load ACT policy and all normalization stats from safetensors.
+
+    lerobot 0.5.x drops normalization buffers on load, so we extract them
+    manually from the raw checkpoint.
+    """
     from lerobot.policies.act.modeling_act import ACTPolicy
     from huggingface_hub import hf_hub_download
     from safetensors.torch import load_file
@@ -91,13 +100,22 @@ def load_policy(device="cuda"):
     policy.to(device)
     policy.eval()
 
-    state = load_file(hf_hub_download(MODEL_ID, "model.safetensors"))
-    action_mean = state.get("unnormalize_outputs.buffer_action.mean")
-    action_std = state.get("unnormalize_outputs.buffer_action.std")
+    # Extract all normalization stats from raw safetensors
+    ckpt_path = hf_hub_download(MODEL_ID, "model.safetensors")
+    state = load_file(ckpt_path)
+
+    norm_stats = {}
+    norm_stats["img_mean"] = state["normalize_inputs.buffer_observation_images_top.mean"].to(device)
+    norm_stats["img_std"] = state["normalize_inputs.buffer_observation_images_top.std"].to(device)
+    norm_stats["state_mean"] = state["normalize_inputs.buffer_observation_state.mean"].to(device)
+    norm_stats["state_std"] = state["normalize_inputs.buffer_observation_state.std"].to(device)
+    norm_stats["action_mean"] = state["unnormalize_outputs.buffer_action.mean"].to(device)
+    norm_stats["action_std"] = state["unnormalize_outputs.buffer_action.std"].to(device)
 
     n = sum(p.numel() for p in policy.parameters())
     print(f"  Loaded: {n:,} params")
-    return policy, action_mean, action_std
+    print(f"  Normalization stats loaded from safetensors")
+    return policy, norm_stats
 
 
 def compute_episode_atv(per_step):
@@ -116,8 +134,14 @@ def compute_episode_reversals(per_step):
     return float(sign_changes / max(len(velocities) - 1, 1))
 
 
-def run_monitored_episode(env, policy, device, action_mean, action_std,
-                          action_lo, action_hi, v_max, max_steps=300):
+def run_monitored_episode(env, policy, device, norm_stats,
+                          action_lo, action_hi, v_max, max_steps=400):
+    """Run one monitored episode with proper input/output normalization.
+
+    Args:
+        norm_stats: dict with img_mean/std, state_mean/std, action_mean/std
+        max_steps: 400 matches gym-aloha default
+    """
     obs, info = env.reset()
     policy.reset()
 
@@ -134,11 +158,17 @@ def run_monitored_episode(env, policy, device, action_mean, action_std,
     total_vel_viol = 0
 
     for step in range(max_steps):
+        # Normalize image: uint8 -> [0,1] -> dataset mean/std normalization
         img = torch.from_numpy(obs["top"]).float().to(device) / 255.0
-        img = img.permute(2, 0, 1).unsqueeze(0)
-        qpos = torch.from_numpy(
-            env.unwrapped._env.task.get_qpos(env.unwrapped._env.physics).astype(np.float32)
-        ).to(device).unsqueeze(0)
+        img = img.permute(2, 0, 1)  # (3, H, W)
+        img = (img - norm_stats["img_mean"]) / (norm_stats["img_std"] + 1e-8)
+        img = img.unsqueeze(0)  # (1, 3, H, W)
+
+        # Normalize qpos state
+        qpos_raw = env.unwrapped._env.task.get_qpos(env.unwrapped._env.physics).astype(np.float32)
+        qpos = torch.from_numpy(qpos_raw).float().to(device)
+        qpos = (qpos - norm_stats["state_mean"]) / (norm_stats["state_std"] + 1e-8)
+        qpos = qpos.unsqueeze(0)  # (1, 14)
 
         with torch.inference_mode():
             action = policy.select_action({"observation.images.top": img, "observation.state": qpos})
@@ -147,9 +177,8 @@ def run_monitored_episode(env, policy, device, action_mean, action_std,
         if action_np.ndim > 1:
             action_np = action_np[0]
 
-        # Unnormalize (MEAN_STD for ACT)
-        if action_mean is not None and action_np.max() < 2.0:
-            action_np = action_np * action_std.numpy() + action_mean.numpy()
+        # Unnormalize action: model outputs normalized, convert to joint positions
+        action_np = action_np * norm_stats["action_std"].cpu().numpy() + norm_stats["action_mean"].cpu().numpy()
 
         # Bounds check
         bounds_viol = not np.all((action_np >= action_lo) & (action_np <= action_hi))
@@ -252,7 +281,7 @@ def main():
     os.environ["MUJOCO_GL"] = "osmesa"
 
     action_lo, action_hi, v_max = compute_conformal_calibration()
-    policy, action_mean, action_std = load_policy(args.device)
+    policy, norm_stats = load_policy(args.device)
 
     # Calibrate LPS from demo data if available
     if HAS_SIGNALS:
@@ -271,7 +300,7 @@ def main():
         env.reset(seed=ep)
 
         t0 = time.time()
-        m = run_monitored_episode(env, policy, args.device, action_mean, action_std,
+        m = run_monitored_episode(env, policy, args.device, norm_stats,
                                   action_lo, action_hi, v_max)
         elapsed = time.time() - t0
 
