@@ -268,17 +268,16 @@ SafeContract is \emph{monitoring infrastructure}, not a safety guarantee - it co
 Hand-tuned $v_{\max}{=}0.05$ clips 12.5\% of expert actions; data-driven calibration at the 99th percentile eliminates this ($p{=}1.0$).
 The 97.9\% conformal coverage holds under exchangeability with calibration data; during rollout, coverage degrades under distribution shift. CUSUM detects when this occurs; adaptive conformal inference~\cite{gibbs2021} would maintain coverage online.
 
-\textbf{Limitations.}
-(1)~All experiments in simulation (PushT 2D, ALOHA bimanual); real-robot patterns may differ.
-(2)~Same-dataset comparison on PushT only; cross-dataset results confound architecture with task.
-(3)~AUROC results are on PushT (2D); 14-DOF ALOHA validation is in progress.
-(4)~Box constraints are necessary but insufficient for full safety; they must compose with workspace-aware methods (CBFs, collision checking) for real deployment.
+\textbf{Limitations and boundaries.}
+(1)~All experiments in simulation (PushT 2D); real-robot patterns may differ.
+(2)~Two of eleven known VLA architecture types tested; autoregressive (OpenVLA) and flow matching (pi0) are untested.
+(3)~Emerging hybrid architectures (AR reasoning + diffusion actions) can produce physically valid trajectories toward wrong targets - invisible to any action-space monitor. SafeContract addresses physical safety; semantic correctness requires complementary perception~\cite{fiper2025} and task-level~\cite{sentinel} monitoring.
 
-\textbf{Future work} includes extending failure signatures to 14-DOF ALOHA manipulation,
-adaptive conformal inference for online recalibration,
-composite scoring across monitor channels,
-integration with CBF-based workspace safety~\cite{aegis},
+\textbf{Future work} includes extending to autoregressive and flow-matching architectures,
+higher-DOF manipulation (14-DOF ALOHA),
+adaptive conformal inference~\cite{gibbs2021} for online recalibration,
 and real-robot validation.
+With the EU AI Act (Article 9) mandating continuous monitoring for high-risk AI systems by 2027, deployment-time reliability infrastructure for learned robot policies is an urgent practical need.
 
 \begin{thebibliography}{20}
 \bibitem{openvla} Kim, M.J. et al., ``OpenVLA: An Open-Source Vision-Language-Action Model,'' CoRL 2024, arXiv:2406.09246.
