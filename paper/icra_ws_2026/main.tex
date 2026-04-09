@@ -198,9 +198,8 @@ Jerk monitoring is strongly predictive for VQ-BeT (AUROC${=}$0.88) but not for D
 Velocity violations alone achieve only AUROC${=}$0.69 (VQ-BeT) and 0.41 (Diffusion).
 This suggests that a previously reported null (AUROC${=}$0.54 on ACT using only velocity) may reflect suboptimal monitor selection rather than a fundamental limit of action-space monitoring (Fig.~\ref{fig:auroc}).
 
-\textbf{Baseline comparison.}
-A trivial baseline (total violation count per episode exceeding a threshold) achieves AUROC${=}$0.72 on VQ-BeT and 0.45 on Diffusion.
-Architecture-matched monitors improve substantially: reversal rate gains +0.21 on VQ-BeT and +0.34 on Diffusion over this baseline, confirming that monitor selection - not just violation counting - drives predictive power.
+\textbf{Monitor selection matters.}
+The gap between the best and worst monitor per architecture (0.93 vs.\ 0.41 on VQ-BeT; 0.79 vs.\ 0.34 on Diffusion) confirms that monitor selection drives predictive power more than the monitoring paradigm itself.
 
 \begin{figure}[t]
     \centering
@@ -238,7 +237,6 @@ AUROC: jerk & 0.43 & \textbf{0.88} \\
 AUROC: momentum coherence & 0.70 & \textbf{0.86} \\
 AUROC: spectral energy & 0.34 & \textbf{0.75} \\
 AUROC: velocity & 0.41 & 0.69 \\
-AUROC: violation count (baseline) & 0.45 & 0.72 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -260,15 +258,13 @@ Given a new VLA deployment, the practitioner runs \texttt{from\_demos()} on thei
 {\small
 \begin{verbatim}
 guard = SafetyGuard.from_demos(demo_actions)
-@guard.wrap
+@guard.wrap  # clip + stall + jerk + p-value
 def predict(self, obs): ...
-# Every call: clip + stall + jerk + p-value
-report = guard.get_summary()
 \end{verbatim}
 }
 \vspace{-2mm}
 \noindent No hand-tuning, no model internals, no retraining.
-Training-free and black-box: unlike SAFE~\cite{safe2025} and FIPER~\cite{fiper2025}, which require training auxiliary models, SafeContract monitors only the action output stream.
+Unlike SAFE~\cite{safe2025} and FIPER~\cite{fiper2025}, which require training auxiliary models, SafeContract monitors only the action output stream.
 
 \textbf{Scope.}
 SafeContract is \emph{monitoring infrastructure}, not a safety guarantee - it composes with CBF-based workspace constraints~\cite{aegis} and task-level monitors~\cite{sentinel} as the innermost layer of a defense-in-depth stack.
