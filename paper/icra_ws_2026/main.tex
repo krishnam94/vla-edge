@@ -35,7 +35,7 @@ VLA, action-space monitoring, failure prediction, architecture analysis, conform
 VLA models~\cite{openvla,smolvla} predict robot actions end-to-end from vision and language, but what happens to those actions between the model's output layer and the robot's motors is largely unstudied.
 OpenVLA's deployment script sends raw outputs directly to motors with zero bounds checking~\cite{openvla};
 pi0 streams actions via WebSocket with no validation~\cite{pi0};
-LeRobot's~\cite{lerobot} \texttt{EEBoundsAndSafety} processor is imperative, uncomposable, and easy to omit.
+LeRobot's~\cite{lerobot} \texttt{EEBoundsAndSafety} processor is imperative, non-composable, and easy to omit.
 The implicit assumption is that if the model is good enough, the actions will be safe enough.
 We show this assumption is wrong - and that it is wrong in \emph{architecture-specific} ways.
 
@@ -133,7 +133,7 @@ All require either dynamics models, architecture access, or retraining.
 \textbf{Failure detection.}
 SAFE~\cite{safe2025} trains a failure detector on VLA internal features; FIPER~\cite{fiper2025} trains an RND network for failure prediction; Sentinel~\cite{sentinel} monitors temporal consistency and task progress.
 These require training auxiliary models.
-SafeContract is the first \emph{training-free, black-box} approach: it monitors only the action output stream, works across architectures without modification, and reveals that failure signatures are architecture-specific.
+To our knowledge, SafeContract is the first \emph{training-free, black-box} approach that systematically characterizes architecture-specific failure signatures from action outputs alone, without model access or retraining.
 
 \textbf{Conformal prediction for safety.}
 Recent work validates conformal prediction for robot safety~\cite{safe2025,feldman2025}.
@@ -195,7 +195,8 @@ The sweep is underpowered for precise operating curves but confirms the expected
 \textbf{Failure prediction.}
 Direction reversal rate predicts task failure with AUROC${=}$0.93 on VQ-BeT and 0.79 on Diffusion ($p < 0.001$ both).
 Jerk monitoring is strongly predictive for VQ-BeT (AUROC${=}$0.88) but not for Diffusion (0.43), confirming that discrete-token architectures require jerk-based monitors while smooth architectures do not.
-Velocity violations alone achieve only AUROC${=}$0.69 (VQ-BeT) and 0.41 (Diffusion), suggesting that a previously reported null result (AUROC${=}$0.54 on ACT using only velocity) may have reflected suboptimal monitor selection rather than a fundamental limit of action-space monitoring (Fig.~\ref{fig:auroc}).
+Velocity violations alone achieve only AUROC${=}$0.69 (VQ-BeT) and 0.41 (Diffusion).
+This suggests that a previously reported null (AUROC${=}$0.54 on ACT using only velocity) may reflect suboptimal monitor selection rather than a fundamental limit of action-space monitoring (Fig.~\ref{fig:auroc}).
 
 \textbf{Baseline comparison.}
 A trivial baseline (total violation count per episode exceeding a threshold) achieves AUROC${=}$0.72 on VQ-BeT and 0.45 on Diffusion.
@@ -217,7 +218,7 @@ Architecture-matched monitors improve substantially: reversal rate gains +0.21 o
 
 \begin{table}[t]
 \centering
-\caption{Same-dataset comparison on PushT ($n{=}200$, same seeds/contract) with failure prediction AUROCs ($n{=}100$).}
+\caption{Same-dataset comparison on PushT ($n{=}200$ per condition, same seeds/contract). AUROCs computed on $n{=}100$ episodes per architecture (no-contract condition).}
 \label{tab:crossarch}
 \footnotesize
 \setlength{\tabcolsep}{4pt}
@@ -233,7 +234,7 @@ Fisher's $p$ & 0.92 & 0.76 \\
 Violations & 772 & \textbf{1{,}847} \\
 \midrule
 AUROC: reversal rate & 0.79 & \textbf{0.93} \\
-AUROC: jerk & 0.43 & \textbf{0.89} \\
+AUROC: jerk & 0.43 & \textbf{0.88} \\
 AUROC: stall rate & \textbf{0.65} & 0.52 \\
 AUROC: momentum coherence & 0.70 & \textbf{0.86} \\
 AUROC: spectral energy & 0.34 & \textbf{0.75} \\
@@ -254,7 +255,7 @@ The architecture-matched monitoring result has a practical consequence: practiti
 For discrete-token models (VQ-BeT, OpenVLA), jerk and reversal rate are the strongest predictors.
 For smooth denoisers (Diffusion, flow-matching), stall detection and momentum coherence matter more.
 Given a new VLA deployment, the practitioner runs \texttt{from\_demos()} on their demonstration data, wraps \texttt{predict()}, and monitors the CUSUM alarm during rollout; if the alarm fires persistently, they should reduce $v_{\max}$ or switch to a fallback controller.
-\texttt{SafetyGuard} integrates all monitors in a single callable, calibrated from demonstration data:
+\texttt{SafetyGuard}, SafeContract's top-level API, integrates all monitors in a single callable calibrated from demonstration data:
 
 {\small
 \begin{verbatim}
@@ -280,12 +281,11 @@ The 97.9\% conformal coverage holds under exchangeability with calibration data;
 (3)~AUROC results are on PushT (2D); 14-DOF ALOHA validation is in progress.
 (4)~Box constraints are necessary but insufficient for full safety; they must compose with workspace-aware methods (CBFs, collision checking) for real deployment.
 
-\textbf{Future work.}
-Extending failure signatures to 14-DOF ALOHA manipulation,
+\textbf{Future work} includes extending failure signatures to 14-DOF ALOHA manipulation,
 adaptive conformal inference for online recalibration,
 composite scoring across monitor channels,
 integration with CBF-based workspace safety~\cite{aegis},
-and real-robot validation on collaborative manipulation tasks.
+and real-robot validation.
 
 \begin{thebibliography}{20}
 \bibitem{openvla} Kim, M.J. et al., ``OpenVLA: An Open-Source Vision-Language-Action Model,'' CoRL 2024, arXiv:2406.09246.
@@ -310,7 +310,6 @@ and real-robot validation on collaborative manipulation tasks.
 \bibitem{gibbs2021} Gibbs, I. and Candes, E., ``Adaptive Conformal Inference Under Distribution Shift,'' NeurIPS 2021, arXiv:2106.00170.
 \bibitem{acg2025} Shi, L. et al., ``Action Coherence Guidance for Flow-Matching VLAs,'' arXiv:2510.22201, 2025.
 \bibitem{kim2026guardrails} Kim, M. et al., ``Modular Safety Guardrails Are Necessary for Foundation-Model-Enabled Robots,'' arXiv:2602.04056, 2026.
-\bibitem{rapt2026} Wang, H. et al., ``RAPT: Lightweight OOD Detection for Humanoid Sim-to-Real Transfer,'' arXiv:2602.01515, 2026.
 \end{thebibliography}
 
 \end{document}
