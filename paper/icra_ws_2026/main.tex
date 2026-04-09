@@ -167,12 +167,12 @@ Bounds enforcement catches integration bugs; velocity monitoring catches physica
 
 We evaluate two architectures on the \emph{same} PushT dataset with the same seeds (0-199), contract (bounds $[0, 512]$, $v_{\max}{=}30$\,px/step), and success criterion (coverage ${\ge}0.95$). This controls for task and environment, isolating architecture effects.
 
-\textbf{Diffusion Policy} (262M params, DDPM, $n{=}200$ per condition).
+\textbf{Diffusion Policy}~\cite{diffusionpolicy} (262M params, DDPM, $n{=}200$ per condition).
 Without SafeContract: 58\% success (116/200, CI$_{95}$: [0.51, 0.65]).
 With SafeContract: 57\% success (114/200, CI$_{95}$: [0.50, 0.64]).
 Fisher's $p = 0.92$. SafeContract caught 772 violations with no task degradation.
 
-\textbf{VQ-BeT} (37.5M params, VQ-VAE + Behavior Transformer, $n{=}200$).
+\textbf{VQ-BeT}~\cite{vqbet} (37.5M params, VQ-VAE + Behavior Transformer, $n{=}200$).
 Without SafeContract: 56.5\% success (113/200, CI$_{95}$: [0.50, 0.63]).
 With SafeContract: 54.5\% success (109/200, CI$_{95}$: [0.48, 0.61]).
 Fisher's $p = 0.76$. SafeContract caught 1{,}847 velocity violations with no significant degradation.
@@ -184,7 +184,7 @@ Our Diffusion Policy achieves 58\% vs.\ the published 87.4\%. This gap reflects 
 VQ-BeT achieves 56.5\% (published: 57\%), confirming correct reproduction.
 The cross-architecture comparison is valid because both models use identical evaluation conditions.
 
-On ALOHA with ACT (51.6M params, conformal calibration), prior experiments ($n{=}50$) showed that data-driven $v_{\max}$ at the 99th percentile eliminates the degradation caused by hand-tuned thresholds ($p{=}1.0$).
+On ALOHA with ACT~\cite{act} (51.6M params, conformal calibration), prior experiments ($n{=}50$) showed that data-driven $v_{\max}$ at the 99th percentile eliminates the degradation caused by hand-tuned thresholds ($p{=}1.0$).
 
 Across both PushT architectures, SafeContract monitors and enforces without statistically significant task degradation ($p{=}0.92$ and $p{=}0.76$).
 
@@ -308,8 +308,11 @@ and real-robot validation.
 \bibitem{fiper2025} Romer, R. et al., ``Failure Prediction at Runtime for Generative Robot Policies,'' NeurIPS 2025, arXiv:2510.09459.
 \bibitem{feldman2025} Feldman, A.O. et al., ``Conformal Safety Monitoring for Flight Testing,'' arXiv:2511.20811, 2025.
 \bibitem{gibbs2021} Gibbs, I. and Candes, E., ``Adaptive Conformal Inference Under Distribution Shift,'' NeurIPS 2021, arXiv:2106.00170.
-\bibitem{acg2025} Shi, L. et al., ``Action Coherence Guidance for Flow-Matching VLAs,'' arXiv:2510.22201, 2025.
-\bibitem{kim2026guardrails} Kim, M. et al., ``Modular Safety Guardrails Are Necessary for Foundation-Model-Enabled Robots,'' arXiv:2602.04056, 2026.
+\bibitem{acg2025} Park, M. et al., ``ACG: Action Coherence Guidance for Flow-based VLA Models,'' arXiv:2510.22201, 2025.
+\bibitem{kim2026guardrails} Kim, J. et al., ``Modular Safety Guardrails Are Necessary for Foundation-Model-Enabled Robots in the Real World,'' arXiv:2602.04056, 2026.
+\bibitem{diffusionpolicy} Chi, C. et al., ``Diffusion Policy: Visuomotor Policy Learning via Action Diffusion,'' RSS 2023, arXiv:2303.04137.
+\bibitem{vqbet} Lee, S. et al., ``Behavior Generation with Latent Actions,'' ICML 2024, arXiv:2403.03181.
+\bibitem{act} Zhao, T.Z. et al., ``Learning Fine-Grained Bimanual Manipulation with Low-Cost Hardware,'' RSS 2023, arXiv:2304.13705.
 \end{thebibliography}
 
 \end{document}
