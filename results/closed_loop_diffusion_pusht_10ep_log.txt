@@ -1,0 +1,64 @@
+WARNING:lerobot.configs.policies:Device 'cuda' is not available. Switching to 'mps'.
+WARNING:lerobot.configs.policies:Device 'cuda' is not available. Switching to 'mps'.
+WARNING:root:Unexpected key(s) when loading model: ['normalize_inputs.buffer_observation_image.mean', 'normalize_inputs.buffer_observation_image.std', 'normalize_inputs.buffer_observation_state.max', 'normalize_inputs.buffer_observation_state.min', 'normalize_targets.buffer_action.max', 'normalize_targets.buffer_action.min', 'unnormalize_outputs.buffer_action.max', 'unnormalize_outputs.buffer_action.min']
+/Users/krishnamgupta/Desktop/projects/vla-edge/.venv/lib/python3.12/site-packages/pygame/pkgdata.py:25: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import resource_stream, resource_exists
+Using device: mps
+Loading Diffusion Policy from lerobot/diffusion_pusht...
+  Loaded Diffusion Policy on mps. Params: 262,709,026
+  n_obs_steps=2, n_action_steps=8, horizon=16
+Safety contract: bounds=[0, 512], v_max=30.0 px/step
+
+============================================================
+Running 10 episodes: no_contract
+============================================================
+  Ep  0: OK | cov=0.954 | steps=288 | viol=  0 | mod=  0 | 309.3s
+  Ep  1: OK | cov=0.964 | steps=201 | viol=  0 | mod=  0 | 236.6s
+  Ep  2: OK | cov=0.965 | steps=115 | viol=  0 | mod=  0 | 137.0s
+  Ep  3: OK | cov=0.966 | steps=262 | viol=  0 | mod=  0 | 1349.2s
+  Ep  4: OK | cov=0.960 | steps=160 | viol=  0 | mod=  0 | 1754.4s
+  Ep  5: OK | cov=0.954 | steps=264 | viol=  0 | mod=  0 | 210.4s
+  Ep  6: OK | cov=0.955 | steps=112 | viol=  0 | mod=  0 | 103.7s
+  Ep  7: -- | cov=0.942 | steps=300 | viol=  0 | mod=  0 | 288.3s
+  Ep  8: OK | cov=0.973 | steps=225 | viol=  0 | mod=  0 | 1293.5s
+  Ep  9: -- | cov=0.925 | steps=300 | viol=  0 | mod=  0 | 272.2s
+
+============================================================
+Running 10 episodes: with_contract
+============================================================
+  Ep  0: OK | cov=0.956 | steps=215 | viol=  2 | mod=  2 | 212.7s
+  Ep  1: OK | cov=0.961 | steps=207 | viol= 11 | mod= 11 | 218.6s
+  Ep  2: OK | cov=0.960 | steps=151 | viol=  6 | mod=  6 | 165.3s
+  Ep  3: OK | cov=0.957 | steps=162 | viol=  7 | mod=  7 | 181.4s
+  Ep  4: -- | cov=0.943 | steps=300 | viol=  4 | mod=  4 | 338.6s
+  Ep  5: OK | cov=0.976 | steps=137 | viol=  3 | mod=  3 | 159.4s
+  Ep  6: -- | cov=0.921 | steps=300 | viol=  2 | mod=  2 | 320.4s
+  Ep  7: OK | cov=0.954 | steps=200 | viol= 16 | mod= 16 | 142.4s
+  Ep  8: OK | cov=0.958 | steps=135 | viol=  5 | mod=  5 | 98.1s
+  Ep  9: OK | cov=0.961 | steps=264 | viol=  1 | mod=  1 | 190.1s
+
+============================================================
+SUMMARY
+============================================================
+
+no_contract:
+  Success rate: 8/10 (80%) [95% CI: 49-94%]
+  Avg max coverage: 0.956
+  Avg final coverage: 0.944
+  Avg reward:   107.5
+  Avg time/ep:  595.5s
+
+with_contract:
+  Success rate: 8/10 (80%) [95% CI: 49-94%]
+  Avg max coverage: 0.955
+  Avg final coverage: 0.876
+  Avg reward:   93.0
+  Violations:   57
+  Actions modified: 57
+  Avg time/ep:  202.7s
+
+KEY RESULT: SafetyContract DOES NOT degrade performance
+  Without: 80%  |  With: 80%  |  Delta: +0%
+  Fisher's exact p=1.000 (not significant)
+
+Results saved to /Users/krishnamgupta/Desktop/projects/vla-edge/results/closed_loop_diffusion_pusht_10ep.json

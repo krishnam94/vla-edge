@@ -1,0 +1,37 @@
+/Users/krishnamgupta/Desktop/projects/vla-edge/.venv/lib/python3.12/site-packages/lerobot/policies/vqbet/vqbet_utils.py:1373: FutureWarning: `torch.cuda.amp.autocast(args...)` is deprecated. Please use `torch.amp.autocast('cuda', args...)` instead.
+  @autocast(enabled=False)
+Loading VQ-BeT from lerobot/vqbet_pusht...
+number of parameters: 26.00M
+  VQ-BeT loaded: 37,515,530 params on mps
+Safety contract: bounds [0, 512], v_max=30.0 px/step
+
+==================================================
+  no_contract (20 episodes)
+==================================================
+/Users/krishnamgupta/Desktop/projects/vla-edge/.venv/lib/python3.12/site-packages/pygame/pkgdata.py:25: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import resource_stream, resource_exists
+  Ep  0: -- | cov=0.000 | steps=300 | viol=  0 | mod=  0 | 2.6s
+  Ep  1: -- | cov=0.079 | steps=300 | viol=  0 | mod=  0 | 2.0s
+  Ep  2: -- | cov=0.368 | steps=300 | viol=  0 | mod=  0 | 2.1s
+  Ep  3: -- | cov=0.000 | steps=300 | viol=  0 | mod=  0 | 2.0s
+  Ep  4: -- | cov=0.467 | steps=300 | viol=  0 | mod=  0 | 2.0s
+  Ep  5: -- | cov=0.000 | steps=300 | viol=  0 | mod=  0 | 2.0s
+  Ep  6: -- | cov=0.000 | steps=300 | viol=  0 | mod=  0 | 2.1s
+  Ep  7: -- | cov=0.000 | steps=300 | viol=  0 | mod=  0 | 2.1s
+  Ep  8: -- | cov=0.000 | steps=300 | viol=  0 | mod=  0 | 2.1s
+  Ep  9: -- | cov=0.019 | steps=300 | viol=  0 | mod=  0 | 2.0s
+  Ep 10: -- | cov=0.025 | steps=300 | viol=  0 | mod=  0 | 2.0s
+  Ep 11: -- | cov=0.135 | steps=300 | viol=  0 | mod=  0 | 2.0s
+  Ep 12: -- | cov=0.257 | steps=300 | viol=  0 | mod=  0 | 2.1s
+  Ep 13: -- | cov=0.000 | steps=300 | viol=  0 | mod=  0 | 2.1s
+  Ep 14: -- | cov=0.300 | steps=300 | viol=  0 | mod=  0 | 2.1s
+  Ep 15: -- | cov=0.313 | steps=300 | viol=  0 | mod=  0 | 2.1s
+  Ep 16: -- | cov=0.000 | steps=300 | viol=  0 | mod=  0 | 2.1s
+  Ep 17: -- | cov=0.000 | steps=300 | viol=  0 | mod=  0 | 2.1s
+  Ep 18: -- | cov=0.000 | steps=300 | viol=  0 | mod=  0 | 2.2s
+  Ep 19: -- | cov=0.276 | steps=300 | viol=  0 | mod=  0 | 2.0s
+
+==================================================
+  with_contract (20 episodes)
+==================================================
+  Ep  0: -- | cov=0.000 | steps=300 | viol=348 | mod=294 | 2.4s

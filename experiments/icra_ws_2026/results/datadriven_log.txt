@@ -1,0 +1,58 @@
+Loading dataset for data-driven calibration...
+Data-driven v_max per joint (p99): [0.0015, 0.0169, 0.0123, 0.0092, 0.0169, 0.0138, 0.0734, 0.0138, 0.0245, 0.0123, 0.0337, 0.0337, 0.066, 0.0807]
+Mean v_max: 0.0292, Max: 0.0807
+Loading ACT policy...
+WARNING:lerobot.configs.policies:Device 'cuda' is not available. Switching to 'mps'.
+WARNING:lerobot.configs.policies:Device 'cuda' is not available. Switching to 'mps'.
+WARNING:root:Unexpected key(s) when loading model: ['normalize_inputs.buffer_observation_images_top.mean', 'normalize_inputs.buffer_observation_images_top.std', 'normalize_inputs.buffer_observation_state.mean', 'normalize_inputs.buffer_observation_state.std', 'normalize_targets.buffer_action.mean', 'normalize_targets.buffer_action.std', 'unnormalize_outputs.buffer_action.mean', 'unnormalize_outputs.buffer_action.std']
+
+=== no_contract (20 episodes) ===
+  Ep  0: OK | viol=   0 | mod=   0
+  Ep  1: OK | viol=   0 | mod=   0
+  Ep  2: -- | viol=   0 | mod=   0
+  Ep  3: -- | viol=   0 | mod=   0
+  Ep  4: -- | viol=   0 | mod=   0
+  Ep  5: OK | viol=   0 | mod=   0
+  Ep  6: -- | viol=   0 | mod=   0
+  Ep  7: -- | viol=   0 | mod=   0
+  Ep  8: -- | viol=   0 | mod=   0
+  Ep  9: -- | viol=   0 | mod=   0
+  Ep 10: -- | viol=   0 | mod=   0
+  Ep 11: OK | viol=   0 | mod=   0
+  Ep 12: OK | viol=   0 | mod=   0
+  Ep 13: -- | viol=   0 | mod=   0
+  Ep 14: -- | viol=   0 | mod=   0
+  Ep 15: OK | viol=   0 | mod=   0
+  Ep 16: OK | viol=   0 | mod=   0
+  Ep 17: OK | viol=   0 | mod=   0
+  Ep 18: OK | viol=   0 | mod=   0
+  Ep 19: OK | viol=   0 | mod=   0
+
+=== with_contract (20 episodes) ===
+  Ep  0: OK | viol= 135 | mod= 131
+  Ep  1: -- | viol=  62 | mod=  58
+  Ep  2: -- | viol= 109 | mod= 109
+  Ep  3: OK | viol=  57 | mod=  57
+  Ep  4: OK | viol=  57 | mod=  57
+  Ep  5: OK | viol=  43 | mod=  43
+  Ep  6: -- | viol=  61 | mod=  61
+  Ep  7: OK | viol=  91 | mod=  88
+  Ep  8: OK | viol=  92 | mod=  89
+  Ep  9: OK | viol= 121 | mod= 121
+  Ep 10: -- | viol=  36 | mod=  36
+  Ep 11: OK | viol=  63 | mod=  63
+  Ep 12: OK | viol=  49 | mod=  49
+  Ep 13: -- | viol=  40 | mod=  40
+  Ep 14: -- | viol= 119 | mod= 118
+  Ep 15: OK | viol=  57 | mod=  57
+  Ep 16: OK | viol=  39 | mod=  39
+  Ep 17: -- | viol= 142 | mod= 139
+  Ep 18: -- | viol=  52 | mod=  52
+  Ep 19: -- | viol= 145 | mod= 139
+
+no_contract: 50% (10/20), violations=0
+
+with_contract: 55% (11/20), violations=1570
+Fisher p = 1.0000
+
+Saved to experiments/icra_ws_2026/results/exp_act_cl_datadriven.json

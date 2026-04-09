@@ -1,0 +1,171 @@
+EXP-STRESS: Task Success vs Enforcement Strictness
+============================================================
+Computing held-out calibration bounds...
+Loading ACT policy...
+WARNING:lerobot.configs.policies:Device 'cuda' is not available. Switching to 'mps'.
+WARNING:lerobot.configs.policies:Device 'cuda' is not available. Switching to 'mps'.
+WARNING:root:Unexpected key(s) when loading model: ['normalize_inputs.buffer_observation_images_top.mean', 'normalize_inputs.buffer_observation_images_top.std', 'normalize_inputs.buffer_observation_state.mean', 'normalize_inputs.buffer_observation_state.std', 'normalize_targets.buffer_action.mean', 'normalize_targets.buffer_action.std', 'unnormalize_outputs.buffer_action.mean', 'unnormalize_outputs.buffer_action.std']
+  ACT loaded on mps
+
+========================================
+  no_contract (20 episodes)
+========================================
+    Ep  0: OK | viol=   0 | mod=   0
+    Ep  1: OK | viol=   0 | mod=   0
+    Ep  2: OK | viol=   0 | mod=   0
+    Ep  3: OK | viol=   0 | mod=   0
+    Ep  4: OK | viol=   0 | mod=   0
+    Ep  5: OK | viol=   0 | mod=   0
+    Ep  6: -- | viol=   0 | mod=   0
+    Ep  7: -- | viol=   0 | mod=   0
+    Ep  8: -- | viol=   0 | mod=   0
+    Ep  9: OK | viol=   0 | mod=   0
+    Ep 10: OK | viol=   0 | mod=   0
+    Ep 11: OK | viol=   0 | mod=   0
+    Ep 12: -- | viol=   0 | mod=   0
+    Ep 13: -- | viol=   0 | mod=   0
+    Ep 14: OK | viol=   0 | mod=   0
+    Ep 15: -- | viol=   0 | mod=   0
+    Ep 16: OK | viol=   0 | mod=   0
+    Ep 17: -- | viol=   0 | mod=   0
+    Ep 18: -- | viol=   0 | mod=   0
+    Ep 19: OK | viol=   0 | mod=   0
+  Result: 60% (12/20), 0 violations
+
+========================================
+  v_max=0.01 (20 episodes)
+========================================
+    Ep  0: -- | viol= 257 | mod= 257
+    Ep  1: -- | viol= 318 | mod= 280
+    Ep  2: -- | viol= 263 | mod= 263
+    Ep  3: -- | viol= 346 | mod= 278
+    Ep  4: -- | viol= 246 | mod= 246
+    Ep  5: -- | viol= 344 | mod= 281
+    Ep  6: -- | viol= 310 | mod= 277
+    Ep  7: -- | viol= 230 | mod= 230
+    Ep  8: -- | viol= 255 | mod= 255
+    Ep  9: -- | viol= 251 | mod= 244
+    Ep 10: -- | viol= 259 | mod= 252
+    Ep 11: -- | viol= 275 | mod= 275
+    Ep 12: -- | viol= 255 | mod= 250
+    Ep 13: -- | viol= 280 | mod= 280
+    Ep 14: -- | viol= 258 | mod= 258
+    Ep 15: -- | viol= 297 | mod= 258
+    Ep 16: -- | viol= 355 | mod= 281
+    Ep 17: -- | viol= 284 | mod= 284
+    Ep 18: -- | viol= 279 | mod= 279
+    Ep 19: -- | viol= 278 | mod= 278
+  Result: 0% (0/20), 5640 violations
+
+========================================
+  v_max=0.02 (20 episodes)
+========================================
+    Ep  0: -- | viol= 240 | mod= 238
+    Ep  1: -- | viol= 251 | mod= 228
+    Ep  2: -- | viol= 162 | mod= 162
+    Ep  3: -- | viol= 249 | mod= 217
+    Ep  4: -- | viol= 274 | mod= 243
+    Ep  5: -- | viol= 180 | mod= 180
+    Ep  6: -- | viol= 217 | mod= 215
+    Ep  7: -- | viol= 218 | mod= 218
+    Ep  8: OK | viol= 192 | mod= 192
+    Ep  9: OK | viol= 197 | mod= 197
+    Ep 10: -- | viol= 217 | mod= 194
+    Ep 11: -- | viol= 226 | mod= 197
+    Ep 12: -- | viol= 241 | mod= 216
+    Ep 13: -- | viol= 157 | mod= 157
+    Ep 14: -- | viol= 171 | mod= 171
+    Ep 15: -- | viol= 192 | mod= 192
+    Ep 16: -- | viol= 177 | mod= 177
+    Ep 17: -- | viol= 199 | mod= 172
+    Ep 18: -- | viol= 180 | mod= 180
+    Ep 19: -- | viol= 204 | mod= 204
+  Result: 10% (2/20), 4144 violations
+
+========================================
+  v_max=0.05 (20 episodes)
+========================================
+    Ep  0: OK | viol=  37 | mod=  37
+    Ep  1: OK | viol=  65 | mod=  65
+    Ep  2: OK | viol=  69 | mod=  69
+    Ep  3: OK | viol=  58 | mod=  58
+    Ep  4: -- | viol= 147 | mod= 142
+    Ep  5: OK | viol=  47 | mod=  47
+    Ep  6: -- | viol= 137 | mod= 132
+    Ep  7: OK | viol=  60 | mod=  60
+    Ep  8: OK | viol=  68 | mod=  68
+    Ep  9: -- | viol=  55 | mod=  55
+    Ep 10: OK | viol= 165 | mod= 147
+    Ep 11: OK | viol= 110 | mod= 106
+    Ep 12: OK | viol= 122 | mod= 121
+    Ep 13: -- | viol= 113 | mod= 113
+    Ep 14: -- | viol=  41 | mod=  41
+    Ep 15: OK | viol=  56 | mod=  56
+    Ep 16: OK | viol=  53 | mod=  53
+    Ep 17: -- | viol= 239 | mod= 219
+    Ep 18: OK | viol=  57 | mod=  57
+    Ep 19: -- | viol=  44 | mod=  44
+  Result: 65% (13/20), 1743 violations
+
+========================================
+  v_max=0.1 (20 episodes)
+========================================
+    Ep  0: -- | viol=  22 | mod=  22
+    Ep  1: -- | viol=  11 | mod=  11
+    Ep  2: -- | viol=  14 | mod=  14
+    Ep  3: OK | viol=  54 | mod=  54
+    Ep  4: OK | viol=  14 | mod=  14
+    Ep  5: OK | viol=   9 | mod=   9
+    Ep  6: -- | viol=  59 | mod=  59
+    Ep  7: -- | viol=  58 | mod=  58
+    Ep  8: -- | viol=  98 | mod=  98
+    Ep  9: OK | viol=   8 | mod=   8
+    Ep 10: -- | viol=   6 | mod=   6
+    Ep 11: OK | viol=  12 | mod=  12
+    Ep 12: -- | viol=  13 | mod=  13
+    Ep 13: OK | viol=  12 | mod=  12
+    Ep 14: -- | viol=  38 | mod=  38
+    Ep 15: OK | viol=  75 | mod=  75
+    Ep 16: OK | viol=  30 | mod=  30
+    Ep 17: -- | viol=  51 | mod=  51
+    Ep 18: OK | viol=  13 | mod=  13
+    Ep 19: OK | viol=  10 | mod=  10
+  Result: 50% (10/20), 607 violations
+
+========================================
+  v_max=0.2 (20 episodes)
+========================================
+    Ep  0: -- | viol=  46 | mod=  46
+    Ep  1: OK | viol=   0 | mod=   0
+    Ep  2: -- | viol=  54 | mod=  54
+    Ep  3: OK | viol=  27 | mod=  27
+    Ep  4: -- | viol= 139 | mod= 139
+    Ep  5: OK | viol=  69 | mod=  69
+    Ep  6: OK | viol=   7 | mod=   7
+    Ep  7: -- | viol=  29 | mod=  29
+    Ep  8: OK | viol=   0 | mod=   0
+    Ep  9: -- | viol=  79 | mod=  79
+    Ep 10: OK | viol=  48 | mod=  48
+    Ep 11: OK | viol=   0 | mod=   0
+    Ep 12: OK | viol=  14 | mod=  14
+    Ep 13: -- | viol=   0 | mod=   0
+    Ep 14: -- | viol=   0 | mod=   0
+    Ep 15: -- | viol=   0 | mod=   0
+    Ep 16: -- | viol= 123 | mod= 122
+    Ep 17: -- | viol=  58 | mod=  58
+    Ep 18: OK | viol=  18 | mod=  18
+    Ep 19: -- | viol=   0 | mod=   0
+  Result: 45% (9/20), 711 violations
+
+============================================================
+STRESS TEST SUMMARY
+============================================================
+       v_max    Success                   CI   Violations
+ no_contract       60%       [0.387, 0.781]            0
+  v_max=0.01        0%           [0, 0.161]         5640
+  v_max=0.02       10%       [0.028, 0.301]         4144
+  v_max=0.05       65%       [0.433, 0.819]         1743
+   v_max=0.1       50%       [0.299, 0.701]          607
+   v_max=0.2       45%       [0.258, 0.658]          711
+
+Saved to experiments/icra_ws_2026/results/exp_stress_test.json

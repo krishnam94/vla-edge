@@ -1,0 +1,136 @@
+WARNING:lerobot.configs.policies:Device 'cuda' is not available. Switching to 'mps'.
+WARNING:lerobot.configs.policies:Device 'cuda' is not available. Switching to 'mps'.
+WARNING:root:Unexpected key(s) when loading model: ['normalize_inputs.buffer_observation_images_top.mean', 'normalize_inputs.buffer_observation_images_top.std', 'normalize_inputs.buffer_observation_state.mean', 'normalize_inputs.buffer_observation_state.std', 'normalize_targets.buffer_action.mean', 'normalize_targets.buffer_action.std', 'unnormalize_outputs.buffer_action.mean', 'unnormalize_outputs.buffer_action.std']
+Loading dataset lerobot/aloha_sim_transfer_cube_human...
+  20000 frames, 50 episodes
+  Calibration: 40 episodes, Holdout: 10 episodes
+  Calibration: 16000 actions, Holdout: 4000 actions
+  Holdout coverage (all dims in bounds): 0.9283
+  Holdout per-dim coverage: 0.9949
+  Max bound difference from full-data: 0.074790
+
+Loading ACT policy from lerobot/act_aloha_sim_transfer_cube_human...
+  Loaded ACT on mps. Params: 51,613,582
+Safety contract: v_max=0.05, bounds from 80% held-out calibration
+
+============================================================
+Running 50 episodes: no_contract
+============================================================
+  Ep  0: -- | max_r=1 | steps=300 | viol=  0 | mod=  0 | 28.1s
+  Ep  1: -- | max_r=2 | steps=300 | viol=  0 | mod=  0 | 12.1s
+  Ep  2: OK | max_r=4 | steps=284 | viol=  0 | mod=  0 | 10.3s
+  Ep  3: OK | max_r=4 | steps=294 | viol=  0 | mod=  0 | 10.8s
+  Ep  4: OK | max_r=4 | steps=295 | viol=  0 | mod=  0 | 10.6s
+  Ep  5: -- | max_r=2 | steps=300 | viol=  0 | mod=  0 | 11.1s
+  Ep  6: OK | max_r=4 | steps=241 | viol=  0 | mod=  0 | 8.8s
+  Ep  7: OK | max_r=4 | steps=268 | viol=  0 | mod=  0 | 9.4s
+  Ep  8: -- | max_r=1 | steps=300 | viol=  0 | mod=  0 | 12.0s
+  Ep  9: OK | max_r=4 | steps=275 | viol=  0 | mod=  0 | 9.4s
+  Ep 10: -- | max_r=1 | steps=300 | viol=  0 | mod=  0 | 10.4s
+  Ep 11: OK | max_r=4 | steps=231 | viol=  0 | mod=  0 | 8.5s
+  Ep 12: -- | max_r=2 | steps=300 | viol=  0 | mod=  0 | 10.3s
+  Ep 13: -- | max_r=2 | steps=300 | viol=  0 | mod=  0 | 10.2s
+  Ep 14: OK | max_r=4 | steps=279 | viol=  0 | mod=  0 | 9.9s
+  Ep 15: -- | max_r=0 | steps=300 | viol=  0 | mod=  0 | 11.0s
+  Ep 16: OK | max_r=4 | steps=279 | viol=  0 | mod=  0 | 11.8s
+  Ep 17: OK | max_r=4 | steps=276 | viol=  0 | mod=  0 | 11.5s
+  Ep 18: -- | max_r=2 | steps=300 | viol=  0 | mod=  0 | 11.8s
+  Ep 19: OK | max_r=4 | steps=287 | viol=  0 | mod=  0 | 12.3s
+  Ep 20: OK | max_r=4 | steps=279 | viol=  0 | mod=  0 | 11.6s
+  Ep 21: -- | max_r=2 | steps=300 | viol=  0 | mod=  0 | 12.2s
+  Ep 22: OK | max_r=4 | steps=274 | viol=  0 | mod=  0 | 9.6s
+  Ep 23: OK | max_r=4 | steps=272 | viol=  0 | mod=  0 | 9.4s
+  Ep 24: OK | max_r=4 | steps=287 | viol=  0 | mod=  0 | 10.2s
+  Ep 25: -- | max_r=2 | steps=300 | viol=  0 | mod=  0 | 10.5s
+  Ep 26: -- | max_r=2 | steps=300 | viol=  0 | mod=  0 | 10.2s
+  Ep 27: OK | max_r=4 | steps=298 | viol=  0 | mod=  0 | 10.6s
+  Ep 28: OK | max_r=4 | steps=280 | viol=  0 | mod=  0 | 9.8s
+  Ep 29: OK | max_r=4 | steps=282 | viol=  0 | mod=  0 | 11.0s
+  Ep 30: -- | max_r=2 | steps=300 | viol=  0 | mod=  0 | 12.7s
+  Ep 31: OK | max_r=4 | steps=285 | viol=  0 | mod=  0 | 12.2s
+  Ep 32: OK | max_r=4 | steps=278 | viol=  0 | mod=  0 | 12.6s
+  Ep 33: OK | max_r=4 | steps=297 | viol=  0 | mod=  0 | 12.1s
+  Ep 34: -- | max_r=1 | steps=300 | viol=  0 | mod=  0 | 12.6s
+  Ep 35: -- | max_r=2 | steps=300 | viol=  0 | mod=  0 | 11.5s
+  Ep 36: -- | max_r=2 | steps=300 | viol=  0 | mod=  0 | 11.0s
+  Ep 37: OK | max_r=4 | steps=293 | viol=  0 | mod=  0 | 10.8s
+  Ep 38: OK | max_r=4 | steps=284 | viol=  0 | mod=  0 | 10.2s
+  Ep 39: OK | max_r=4 | steps=298 | viol=  0 | mod=  0 | 10.3s
+  Ep 40: -- | max_r=0 | steps=300 | viol=  0 | mod=  0 | 10.5s
+  Ep 41: OK | max_r=4 | steps=272 | viol=  0 | mod=  0 | 9.6s
+  Ep 42: -- | max_r=1 | steps=300 | viol=  0 | mod=  0 | 6.3s
+  Ep 43: -- | max_r=2 | steps=300 | viol=  0 | mod=  0 | 4.8s
+  Ep 44: -- | max_r=2 | steps=300 | viol=  0 | mod=  0 | 5.1s
+  Ep 45: -- | max_r=1 | steps=300 | viol=  0 | mod=  0 | 4.3s
+  Ep 46: OK | max_r=4 | steps=271 | viol=  0 | mod=  0 | 4.4s
+  Ep 47: -- | max_r=2 | steps=300 | viol=  0 | mod=  0 | 4.2s
+  Ep 48: OK | max_r=4 | steps=284 | viol=  0 | mod=  0 | 4.0s
+  Ep 49: -- | max_r=2 | steps=300 | viol=  0 | mod=  0 | 4.2s
+
+============================================================
+Running 50 episodes: with_contract
+============================================================
+  Ep  0: OK | max_r=4 | steps=273 | viol=149 | mod=147 | 3.8s
+  Ep  1: -- | max_r=1 | steps=300 | viol= 67 | mod= 67 | 4.1s
+  Ep  2: -- | max_r=1 | steps=300 | viol=223 | mod=218 | 4.1s
+  Ep  3: OK | max_r=4 | steps=271 | viol= 65 | mod= 65 | 3.8s
+  Ep  4: OK | max_r=4 | steps=294 | viol= 45 | mod= 45 | 4.1s
+  Ep  5: OK | max_r=4 | steps=268 | viol= 63 | mod= 63 | 3.9s
+  Ep  6: -- | max_r=2 | steps=300 | viol= 54 | mod= 54 | 4.2s
+  Ep  7: OK | max_r=4 | steps=257 | viol= 67 | mod= 67 | 3.7s
+  Ep  8: -- | max_r=2 | steps=300 | viol=120 | mod=117 | 4.5s
+  Ep  9: OK | max_r=4 | steps=299 | viol= 44 | mod= 44 | 5.4s
+  Ep 10: -- | max_r=1 | steps=300 | viol=136 | mod=131 | 4.7s
+  Ep 11: OK | max_r=4 | steps=286 | viol= 86 | mod= 82 | 4.9s
+  Ep 12: -- | max_r=2 | steps=300 | viol=101 | mod= 99 | 4.2s
+  Ep 13: -- | max_r=1 | steps=300 | viol=146 | mod=142 | 4.2s
+  Ep 14: -- | max_r=1 | steps=300 | viol= 57 | mod= 57 | 4.2s
+  Ep 15: OK | max_r=4 | steps=280 | viol= 47 | mod= 47 | 3.8s
+  Ep 16: -- | max_r=2 | steps=300 | viol= 53 | mod= 53 | 4.1s
+  Ep 17: -- | max_r=1 | steps=300 | viol=125 | mod=120 | 4.1s
+  Ep 18: OK | max_r=4 | steps=290 | viol= 53 | mod= 53 | 3.9s
+  Ep 19: -- | max_r=2 | steps=300 | viol= 42 | mod= 42 | 4.4s
+  Ep 20: -- | max_r=2 | steps=300 | viol= 52 | mod= 52 | 4.9s
+  Ep 21: OK | max_r=4 | steps=284 | viol= 75 | mod= 75 | 4.6s
+  Ep 22: OK | max_r=4 | steps=287 | viol= 75 | mod= 75 | 4.0s
+  Ep 23: -- | max_r=2 | steps=300 | viol= 59 | mod= 59 | 4.3s
+  Ep 24: OK | max_r=4 | steps=294 | viol=134 | mod=130 | 4.6s
+  Ep 25: OK | max_r=4 | steps=281 | viol= 62 | mod= 62 | 4.5s
+  Ep 26: -- | max_r=2 | steps=300 | viol= 31 | mod= 31 | 4.8s
+  Ep 27: -- | max_r=1 | steps=300 | viol=135 | mod=132 | 4.7s
+  Ep 28: OK | max_r=4 | steps=290 | viol= 53 | mod= 53 | 4.6s
+  Ep 29: OK | max_r=4 | steps=285 | viol= 58 | mod= 55 | 4.1s
+  Ep 30: -- | max_r=1 | steps=300 | viol=105 | mod=103 | 4.9s
+  Ep 31: -- | max_r=2 | steps=300 | viol= 54 | mod= 54 | 4.4s
+  Ep 32: OK | max_r=4 | steps=238 | viol=116 | mod=104 | 3.4s
+  Ep 33: -- | max_r=2 | steps=300 | viol=155 | mod=154 | 4.3s
+  Ep 34: OK | max_r=4 | steps=266 | viol= 43 | mod= 43 | 4.2s
+  Ep 35: OK | max_r=4 | steps=269 | viol= 72 | mod= 72 | 4.1s
+  Ep 36: OK | max_r=4 | steps=260 | viol=108 | mod=105 | 4.0s
+  Ep 37: OK | max_r=4 | steps=265 | viol= 61 | mod= 61 | 4.0s
+  Ep 38: -- | max_r=1 | steps=300 | viol=128 | mod=124 | 4.3s
+  Ep 39: OK | max_r=4 | steps=261 | viol= 84 | mod= 84 | 3.8s
+  Ep 40: OK | max_r=4 | steps=290 | viol= 46 | mod= 46 | 4.1s
+  Ep 41: -- | max_r=2 | steps=300 | viol=113 | mod=113 | 4.3s
+  Ep 42: -- | max_r=1 | steps=300 | viol= 50 | mod= 50 | 4.2s
+  Ep 43: -- | max_r=2 | steps=300 | viol= 57 | mod= 57 | 4.1s
+  Ep 44: -- | max_r=2 | steps=300 | viol=164 | mod=161 | 4.4s
+  Ep 45: -- | max_r=2 | steps=300 | viol= 50 | mod= 50 | 4.6s
+  Ep 46: -- | max_r=2 | steps=300 | viol=125 | mod=123 | 4.4s
+  Ep 47: OK | max_r=4 | steps=299 | viol=122 | mod=121 | 4.2s
+  Ep 48: OK | max_r=4 | steps=293 | viol=131 | mod=129 | 4.1s
+  Ep 49: OK | max_r=4 | steps=277 | viol= 80 | mod= 80 | 3.9s
+
+============================================================
+SUMMARY
+============================================================
+  no_contract: 54% (27/50)
+    CI: [0.404, 0.670]
+    Violations: 0, Modified: 0
+  with_contract: 50% (25/50)
+    CI: [0.366, 0.634]
+    Violations: 4341, Modified: 4271
+  Fisher p = 0.8415
+  Holdout coverage: 0.9283
+
+Saved to results/closed_loop_eval_holdout.json

@@ -1,0 +1,144 @@
+Using device: mps
+Loading Diffusion Policy from lerobot/diffusion_pusht...
+WARNING:lerobot.configs.policies:Device 'cuda' is not available. Switching to 'mps'.
+WARNING:lerobot.configs.policies:Device 'cuda' is not available. Switching to 'mps'.
+WARNING:root:Unexpected key(s) when loading model: ['normalize_inputs.buffer_observation_image.mean', 'normalize_inputs.buffer_observation_image.std', 'normalize_inputs.buffer_observation_state.max', 'normalize_inputs.buffer_observation_state.min', 'normalize_targets.buffer_action.max', 'normalize_targets.buffer_action.min', 'unnormalize_outputs.buffer_action.max', 'unnormalize_outputs.buffer_action.min']
+  Loaded Diffusion Policy on mps. Params: 262,709,026
+  n_obs_steps=2, n_action_steps=8, horizon=16
+Safety contract: bounds=[0, 512], v_max=30.0 px/step
+
+============================================================
+Running 50 episodes: no_contract
+============================================================
+/Users/krishnamgupta/Desktop/projects/vla-edge/.venv/lib/python3.12/site-packages/pygame/pkgdata.py:25: UserWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html. The pkg_resources package is slated for removal as early as 2025-11-30. Refrain from using this package or pin to Setuptools<81.
+  from pkg_resources import resource_stream, resource_exists
+  Ep  0: OK | cov=0.953 | steps=181 | viol=  0 | mod=  0 | 112.8s
+  Ep  1: OK | cov=0.950 | steps=178 | viol=  0 | mod=  0 | 130.3s
+  Ep  2: OK | cov=0.951 | steps=116 | viol=  0 | mod=  0 | 81.4s
+  Ep  3: OK | cov=0.956 | steps=167 | viol=  0 | mod=  0 | 111.5s
+  Ep  4: OK | cov=0.969 | steps=127 | viol=  0 | mod=  0 | 85.4s
+  Ep  5: OK | cov=0.954 | steps=256 | viol=  0 | mod=  0 | 172.8s
+  Ep  6: OK | cov=0.952 | steps=106 | viol=  0 | mod=  0 | 77.6s
+  Ep  7: OK | cov=0.956 | steps=112 | viol=  0 | mod=  0 | 78.3s
+  Ep  8: OK | cov=0.961 | steps=136 | viol=  0 | mod=  0 | 94.6s
+  Ep  9: -- | cov=0.949 | steps=300 | viol=  0 | mod=  0 | 212.8s
+  Ep 10: -- | cov=0.591 | steps=300 | viol=  0 | mod=  0 | 225.8s
+  Ep 11: OK | cov=0.951 | steps=201 | viol=  0 | mod=  0 | 150.8s
+  Ep 12: -- | cov=0.687 | steps=300 | viol=  0 | mod=  0 | 200.2s
+  Ep 13: -- | cov=0.519 | steps=300 | viol=  0 | mod=  0 | 191.7s
+  Ep 14: OK | cov=0.952 | steps=103 | viol=  0 | mod=  0 | 62.1s
+  Ep 15: -- | cov=0.945 | steps=300 | viol=  0 | mod=  0 | 190.7s
+  Ep 16: OK | cov=0.951 | steps=225 | viol=  0 | mod=  0 | 146.1s
+  Ep 17: OK | cov=0.956 | steps=176 | viol=  0 | mod=  0 | 111.3s
+  Ep 18: -- | cov=0.935 | steps=300 | viol=  0 | mod=  0 | 179.7s
+  Ep 19: OK | cov=0.970 | steps= 79 | viol=  0 | mod=  0 | 47.8s
+  Ep 20: OK | cov=0.963 | steps=275 | viol=  0 | mod=  0 | 171.3s
+  Ep 21: OK | cov=0.967 | steps=193 | viol=  0 | mod=  0 | 122.0s
+  Ep 22: -- | cov=0.940 | steps=300 | viol=  0 | mod=  0 | 178.4s
+  Ep 23: OK | cov=0.958 | steps=210 | viol=  0 | mod=  0 | 133.0s
+  Ep 24: OK | cov=0.950 | steps= 96 | viol=  0 | mod=  0 | 125.9s
+  Ep 25: -- | cov=0.928 | steps=300 | viol=  0 | mod=  0 | 883.2s
+  Ep 26: -- | cov=0.945 | steps=300 | viol=  0 | mod=  0 | 161.1s
+  Ep 27: OK | cov=0.953 | steps=124 | viol=  0 | mod=  0 | 73.3s
+  Ep 28: -- | cov=0.915 | steps=300 | viol=  0 | mod=  0 | 166.4s
+  Ep 29: -- | cov=0.937 | steps=300 | viol=  0 | mod=  0 | 1262.1s
+  Ep 30: OK | cov=0.982 | steps=129 | viol=  0 | mod=  0 | 163.8s
+  Ep 31: -- | cov=0.688 | steps=300 | viol=  0 | mod=  0 | 368.3s
+  Ep 32: OK | cov=0.952 | steps=154 | viol=  0 | mod=  0 | 194.3s
+  Ep 33: -- | cov=0.946 | steps=300 | viol=  0 | mod=  0 | 369.3s
+  Ep 34: OK | cov=0.977 | steps= 96 | viol=  0 | mod=  0 | 116.6s
+  Ep 35: OK | cov=0.952 | steps=225 | viol=  0 | mod=  0 | 275.5s
+  Ep 36: OK | cov=0.972 | steps=260 | viol=  0 | mod=  0 | 1231.9s
+  Ep 37: OK | cov=0.964 | steps=209 | viol=  0 | mod=  0 | 260.0s
+  Ep 38: OK | cov=0.957 | steps=288 | viol=  0 | mod=  0 | 347.4s
+  Ep 39: -- | cov=0.920 | steps=300 | viol=  0 | mod=  0 | 367.8s
+  Ep 40: OK | cov=0.979 | steps=226 | viol=  0 | mod=  0 | 280.4s
+  Ep 41: OK | cov=0.962 | steps=177 | viol=  0 | mod=  0 | 223.0s
+  Ep 42: -- | cov=0.943 | steps=300 | viol=  0 | mod=  0 | 369.0s
+  Ep 43: -- | cov=0.929 | steps=300 | viol=  0 | mod=  0 | 369.2s
+  Ep 44: OK | cov=0.967 | steps=136 | viol=  0 | mod=  0 | 165.5s
+  Ep 45: OK | cov=0.956 | steps=183 | viol=  0 | mod=  0 | 223.6s
+  Ep 46: -- | cov=0.927 | steps=300 | viol=  0 | mod=  0 | 371.8s
+  Ep 47: OK | cov=0.958 | steps=144 | viol=  0 | mod=  0 | 175.0s
+  Ep 48: OK | cov=0.951 | steps=113 | viol=  0 | mod=  0 | 146.1s
+  Ep 49: OK | cov=0.953 | steps=217 | viol=  0 | mod=  0 | 1208.5s
+
+============================================================
+Running 50 episodes: with_contract
+============================================================
+  Ep  0: -- | cov=0.632 | steps=300 | viol=  0 | mod=  0 | 3317.0s
+  Ep  1: OK | cov=0.952 | steps=216 | viol= 11 | mod= 11 | 2128.0s
+  Ep  2: OK | cov=0.962 | steps=104 | viol=  3 | mod=  3 | 1471.2s
+  Ep  3: OK | cov=0.956 | steps=152 | viol=  3 | mod=  3 | 2053.7s
+  Ep  4: OK | cov=0.953 | steps=273 | viol= 21 | mod= 21 | 3685.9s
+  Ep  5: OK | cov=0.955 | steps=289 | viol=  3 | mod=  3 | 2107.4s
+  Ep  6: OK | cov=0.959 | steps=106 | viol=  0 | mod=  0 | 111.9s
+  Ep  7: OK | cov=0.975 | steps=173 | viol=  3 | mod=  3 | 2083.4s
+  Ep  8: OK | cov=0.988 | steps=144 | viol=  1 | mod=  1 | 2002.0s
+  Ep  9: -- | cov=0.914 | steps=300 | viol=  4 | mod=  4 | 333.8s
+  Ep 10: OK | cov=0.969 | steps=242 | viol=  3 | mod=  3 | 274.1s
+  Ep 11: -- | cov=0.642 | steps=300 | viol=  0 | mod=  0 | 338.1s
+  Ep 12: OK | cov=0.954 | steps=211 | viol=  3 | mod=  3 | 238.6s
+  Ep 13: -- | cov=0.931 | steps=300 | viol=  4 | mod=  4 | 338.1s
+  Ep 14: OK | cov=0.952 | steps= 78 | viol=  0 | mod=  0 | 90.9s
+  Ep 15: OK | cov=0.950 | steps=273 | viol=  0 | mod=  0 | 310.4s
+  Ep 16: OK | cov=0.954 | steps=295 | viol=  2 | mod=  2 | 328.5s
+  Ep 17: -- | cov=0.943 | steps=300 | viol=  2 | mod=  2 | 337.4s
+  Ep 18: OK | cov=0.960 | steps=183 | viol=  0 | mod=  0 | 203.7s
+  Ep 19: OK | cov=0.960 | steps= 98 | viol=  4 | mod=  4 | 115.0s
+  Ep 20: -- | cov=0.551 | steps=300 | viol=  0 | mod=  0 | 338.3s
+  Ep 21: OK | cov=0.953 | steps=192 | viol=  2 | mod=  2 | 212.8s
+  Ep 22: OK | cov=0.959 | steps=216 | viol=  1 | mod=  1 | 1111.4s
+  Ep 23: -- | cov=0.688 | steps=300 | viol=  0 | mod=  0 | 459.9s
+  Ep 24: -- | cov=0.932 | steps=300 | viol= 11 | mod= 11 | 460.6s
+  Ep 25: -- | cov=0.944 | steps=300 | viol= 11 | mod= 11 | 461.6s
+  Ep 26: OK | cov=0.960 | steps=144 | viol=  1 | mod=  1 | 199.4s
+  Ep 27: OK | cov=0.950 | steps=153 | viol=  4 | mod=  4 | 1836.8s
+  Ep 28: -- | cov=0.937 | steps=300 | viol=  4 | mod=  4 | 3697.3s
+  Ep 29: OK | cov=0.960 | steps=118 | viol=  1 | mod=  1 | 1110.9s
+  Ep 30: -- | cov=0.611 | steps=300 | viol=  1 | mod=  1 | 465.1s
+  Ep 31: -- | cov=0.687 | steps=300 | viol=  4 | mod=  4 | 149.2s
+  Ep 32: -- | cov=0.899 | steps=300 | viol= 13 | mod= 13 | 156.4s
+  Ep 33: OK | cov=0.972 | steps=135 | viol=  2 | mod=  2 | 73.1s
+  Ep 34: -- | cov=0.937 | steps=300 | viol=  9 | mod=  9 | 160.1s
+  Ep 35: -- | cov=0.922 | steps=300 | viol=  8 | mod=  8 | 166.5s
+  Ep 36: OK | cov=0.951 | steps=147 | viol=  7 | mod=  7 | 85.7s
+  Ep 37: -- | cov=0.950 | steps=300 | viol= 15 | mod= 15 | 168.2s
+  Ep 38: OK | cov=0.968 | steps=264 | viol=  0 | mod=  0 | 155.1s
+  Ep 39: OK | cov=0.958 | steps=208 | viol= 11 | mod= 11 | 119.0s
+  Ep 40: OK | cov=0.962 | steps=145 | viol=  0 | mod=  0 | 89.3s
+  Ep 41: OK | cov=0.955 | steps=170 | viol=  0 | mod=  0 | 106.8s
+  Ep 42: OK | cov=0.951 | steps=137 | viol=  1 | mod=  1 | 88.0s
+  Ep 43: OK | cov=0.959 | steps=249 | viol=  4 | mod=  4 | 153.6s
+  Ep 44: OK | cov=0.953 | steps=138 | viol=  4 | mod=  4 | 87.0s
+  Ep 45: -- | cov=0.555 | steps=300 | viol=  4 | mod=  4 | 182.8s
+  Ep 46: OK | cov=0.964 | steps=240 | viol=  3 | mod=  3 | 142.7s
+  Ep 47: OK | cov=0.953 | steps=161 | viol=  0 | mod=  0 | 98.0s
+  Ep 48: -- | cov=0.934 | steps=300 | viol=  6 | mod=  6 | 191.8s
+  Ep 49: -- | cov=0.826 | steps=300 | viol=  1 | mod=  1 | 188.5s
+
+============================================================
+SUMMARY
+============================================================
+
+no_contract:
+  Success rate: 33/50 (66%) [95% CI: 52-78%]
+  Avg max coverage: 0.926
+  Avg final coverage: 0.877
+  Avg reward:   95.1
+  Avg time/ep:  263.4s
+
+with_contract:
+  Success rate: 31/50 (62%) [95% CI: 48-74%]
+  Avg max coverage: 0.903
+  Avg final coverage: 0.845
+  Avg reward:   98.6
+  Violations:   195
+  Actions modified: 195
+  Avg time/ep:  695.7s
+
+KEY RESULT: SafetyContract DOES NOT degrade performance
+  Without: 66%  |  With: 62%  |  Delta: -4%
+  Fisher's exact p=0.835 (not significant)
+
+Results saved to /Users/krishnamgupta/Desktop/projects/vla-edge/results/closed_loop_diffusion_pusht_50ep.json
