@@ -1,0 +1,1042 @@
+{
+  "experiment": "ACT ALOHA n=100 conformal calibration",
+  "summary": {
+    "no_contract": {
+      "success_rate": 0.04,
+      "successes": 2,
+      "total_episodes": 50,
+      "ci_95": [
+        0.011,
+        0.135
+      ],
+      "total_violations": 0,
+      "total_actions_modified": 0
+    },
+    "with_contract": {
+      "success_rate": 0.02,
+      "successes": 1,
+      "total_episodes": 50,
+      "ci_95": [
+        0.004,
+        0.105
+      ],
+      "total_violations": 4781,
+      "total_actions_modified": 4684
+    },
+    "fisher_p_value": 1.0
+  },
+  "episodes": {
+    "no_contract": [
+      {
+        "success": false,
+        "total_reward": 143.0,
+        "steps": 300,
+        "violations": 0,
+        "actions_modified": 0,
+        "episode": 0,
+        "seed": 0,
+        "elapsed_s": 54.32377815246582
+      },
+      {
+        "success": false,
+        "total_reward": 16.0,
+        "steps": 300,
+        "violations": 0,
+        "actions_modified": 0,
+        "episode": 1,
+        "seed": 1,
+        "elapsed_s": 52.42816734313965
+      },
+      {
+        "success": false,
+        "total_reward": 96.0,
+        "steps": 300,
+        "violations": 0,
+        "actions_modified": 0,
+        "episode": 2,
+        "seed": 2,
+        "elapsed_s": 49.59977102279663
+      },
+      {
+        "success": false,
+        "total_reward": 153.0,
+        "steps": 300,
+        "violations": 0,
+        "actions_modified": 0,
+        "episode": 3,
+        "seed": 3,
+        "elapsed_s": 50.10957670211792
+      },
+      {
+        "success": false,
+        "total_reward": 0.0,
+        "steps": 300,
+        "violations": 0,
+        "actions_modified": 0,
+        "episode": 4,
+        "seed": 4,
+        "elapsed_s": 48.3574652671814
+      },
+      {
+        "success": false,
+        "total_reward": 144.0,
+        "steps": 300,
+        "violations": 0,
+        "actions_modified": 0,
+        "episode": 5,
+        "seed": 5,
+        "elapsed_s": 48.82728600502014
+      },
+      {
+        "success": false,
+        "total_reward": 74.0,
+        "steps": 300,
+        "violations": 0,
+        "actions_modified": 0,
+        "episode": 6,
+        "seed": 6,
+        "elapsed_s": 50.202555656433105
+      },
+      {
+        "success": true,
+        "total_reward": 170.0,
+        "steps": 291,
+        "violations": 0,
+        "actions_modified": 0,
+        "episode": 7,
+        "seed": 7,
+        "elapsed_s": 48.88836359977722
+      },
+      {
+        "success": false,
+        "total_reward": 138.0,
+        "steps": 300,
+        "violations": 0,
+        "actions_modified": 0,
+        "episode": 8,
+        "seed": 8,
+        "elapsed_s": 53.97419190406799
+      },
+      {
+        "success": false,
+        "total_reward": 9.0,
+        "steps": 300,
+        "violations": 0,
+        "actions_modified": 0,
+        "episode": 9,
+        "seed": 9,
+        "elapsed_s": 50.433499336242676
+      },
+      {
+        "success": false,
+        "total_reward": 154.0,
+        "steps": 300,
+        "violations": 0,
+        "actions_modified": 0,
+        "episode": 10,
+        "seed": 10,
+        "elapsed_s": 49.718215465545654
+      },
+      {
+        "success": false,
+        "total_reward": 84.0,
+        "steps": 300,
+        "violations": 0,
+        "actions_modified": 0,
+        "episode": 11,
+        "seed": 11,
+        "elapsed_s": 50.85076951980591
+      },
+      {
+        "success": false,
+        "total_reward": 221.0,
+        "steps": 300,
+        "violations": 0,
+        "actions_modified": 0,
+        "episode": 12,
+        "seed": 12,
+        "elapsed_s": 53.43382930755615
+      },
+      {
+        "success": false,
+        "total_reward": 135.0,
+        "steps": 300,
+        "violations": 0,
+        "actions_modified": 0,
+        "episode": 13,
+        "seed": 13,
+        "elapsed_s": 52.83669114112854
+      },
+      {
+        "success": false,
+        "total_reward": 172.0,
+        "steps": 300,
+        "violations": 0,
+        "actions_modified": 0,
+        "episode": 14,
+        "seed": 14,
+        "elapsed_s": 48.752421140670776
+      },
+      {
+        "success": false,
+        "total_reward": 124.0,
+        "steps": 300,
+        "violations": 0,
+        "actions_modified": 0,
+        "episode": 15,
+        "seed": 15,
+        "elapsed_s": 50.498571157455444
+      },
+      {
+        "success": false,
+        "total_reward": 184.0,
+        "steps": 300,
+        "violations": 0,
+        "actions_modified": 0,
+        "episode": 16,
+        "seed": 16,
+        "elapsed_s": 49.40299344062805
+      },
+      {
+        "success": false,
+        "total_reward": 132.0,
+        "steps": 300,
+        "violations": 0,
+        "actions_modified": 0,
+        "episode": 17,
+        "seed": 17,
+        "elapsed_s": 49.5397253036499
+      },
+      {
+        "success": false,
+        "total_reward": 83.0,
+        "steps": 300,
+        "violations": 0,
+        "actions_modified": 0,
+        "episode": 18,
+        "seed": 18,
+        "elapsed_s": 56.393677711486816
+      },
+      {
+        "success": false,
+        "total_reward": 67.0,
+        "steps": 300,
+        "violations": 0,
+        "actions_modified": 0,
+        "episode": 19,
+        "seed": 19,
+        "elapsed_s": 51.08439588546753
+      },
+      {
+        "success": false,
+        "total_reward": 137.0,
+        "steps": 300,
+        "violations": 0,
+        "actions_modified": 0,
+        "episode": 20,
+        "seed": 20,
+        "elapsed_s": 49.98153519630432
+      },
+      {
+        "success": false,
+        "total_reward": 62.0,
+        "steps": 300,
+        "violations": 0,
+        "actions_modified": 0,
+        "episode": 21,
+        "seed": 21,
+        "elapsed_s": 50.397197008132935
+      },
+      {
+        "success": false,
+        "total_reward": 167.0,
+        "steps": 300,
+        "violations": 0,
+        "actions_modified": 0,
+        "episode": 22,
+        "seed": 22,
+        "elapsed_s": 53.79951357841492
+      },
+      {
+        "success": false,
+        "total_reward": 64.0,
+        "steps": 300,
+        "violations": 0,
+        "actions_modified": 0,
+        "episode": 23,
+        "seed": 23,
+        "elapsed_s": 50.41258215904236
+      },
+      {
+        "success": false,
+        "total_reward": 135.0,
+        "steps": 300,
+        "violations": 0,
+        "actions_modified": 0,
+        "episode": 24,
+        "seed": 24,
+        "elapsed_s": 51.32757806777954
+      },
+      {
+        "success": false,
+        "total_reward": 0.0,
+        "steps": 300,
+        "violations": 0,
+        "actions_modified": 0,
+        "episode": 25,
+        "seed": 25,
+        "elapsed_s": 49.769073724746704
+      },
+      {
+        "success": false,
+        "total_reward": 0.0,
+        "steps": 300,
+        "violations": 0,
+        "actions_modified": 0,
+        "episode": 26,
+        "seed": 26,
+        "elapsed_s": 49.72674894332886
+      },
+      {
+        "success": false,
+        "total_reward": 139.0,
+        "steps": 300,
+        "violations": 0,
+        "actions_modified": 0,
+        "episode": 27,
+        "seed": 27,
+        "elapsed_s": 50.40356087684631
+      },
+      {
+        "success": false,
+        "total_reward": 0.0,
+        "steps": 300,
+        "violations": 0,
+        "actions_modified": 0,
+        "episode": 28,
+        "seed": 28,
+        "elapsed_s": 50.490556955337524
+      },
+      {
+        "success": false,
+        "total_reward": 124.0,
+        "steps": 300,
+        "violations": 0,
+        "actions_modified": 0,
+        "episode": 29,
+        "seed": 29,
+        "elapsed_s": 49.117964029312134
+      },
+      {
+        "success": false,
+        "total_reward": 12.0,
+        "steps": 300,
+        "violations": 0,
+        "actions_modified": 0,
+        "episode": 30,
+        "seed": 30,
+        "elapsed_s": 48.673404932022095
+      },
+      {
+        "success": false,
+        "total_reward": 169.0,
+        "steps": 300,
+        "violations": 0,
+        "actions_modified": 0,
+        "episode": 31,
+        "seed": 31,
+        "elapsed_s": 50.43251848220825
+      },
+      {
+        "success": true,
+        "total_reward": 147.0,
+        "steps": 274,
+        "violations": 0,
+        "actions_modified": 0,
+        "episode": 32,
+        "seed": 32,
+        "elapsed_s": 45.97282290458679
+      },
+      {
+        "success": false,
+        "total_reward": 164.0,
+        "steps": 300,
+        "violations": 0,
+        "actions_modified": 0,
+        "episode": 33,
+        "seed": 33,
+        "elapsed_s": 49.33258080482483
+      },
+      {
+        "success": false,
+        "total_reward": 74.0,
+        "steps": 300,
+        "violations": 0,
+        "actions_modified": 0,
+        "episode": 34,
+        "seed": 34,
+        "elapsed_s": 51.73535656929016
+      },
+      {
+        "success": false,
+        "total_reward": 0.0,
+        "steps": 300,
+        "violations": 0,
+        "actions_modified": 0,
+        "episode": 35,
+        "seed": 35,
+        "elapsed_s": 50.413350343704224
+      },
+      {
+        "success": false,
+        "total_reward": 0.0,
+        "steps": 300,
+        "violations": 0,
+        "actions_modified": 0,
+        "episode": 36,
+        "seed": 36,
+        "elapsed_s": 48.88854122161865
+      },
+      {
+        "success": false,
+        "total_reward": 0.0,
+        "steps": 300,
+        "violations": 0,
+        "actions_modified": 0,
+        "episode": 37,
+        "seed": 37,
+        "elapsed_s": 51.36503005027771
+      },
+      {
+        "success": false,
+        "total_reward": 66.0,
+        "steps": 300,
+        "violations": 0,
+        "actions_modified": 0,
+        "episode": 38,
+        "seed": 38,
+        "elapsed_s": 51.56856894493103
+      },
+      {
+        "success": false,
+        "total_reward": 0.0,
+        "steps": 300,
+        "violations": 0,
+        "actions_modified": 0,
+        "episode": 39,
+        "seed": 39,
+        "elapsed_s": 50.94138312339783
+      },
+      {
+        "success": false,
+        "total_reward": 83.0,
+        "steps": 300,
+        "violations": 0,
+        "actions_modified": 0,
+        "episode": 40,
+        "seed": 40,
+        "elapsed_s": 51.945613622665405
+      },
+      {
+        "success": false,
+        "total_reward": 2.0,
+        "steps": 300,
+        "violations": 0,
+        "actions_modified": 0,
+        "episode": 41,
+        "seed": 41,
+        "elapsed_s": 50.4126033782959
+      },
+      {
+        "success": false,
+        "total_reward": 150.0,
+        "steps": 300,
+        "violations": 0,
+        "actions_modified": 0,
+        "episode": 42,
+        "seed": 42,
+        "elapsed_s": 51.55791425704956
+      },
+      {
+        "success": false,
+        "total_reward": 0.0,
+        "steps": 300,
+        "violations": 0,
+        "actions_modified": 0,
+        "episode": 43,
+        "seed": 43,
+        "elapsed_s": 49.387964487075806
+      },
+      {
+        "success": false,
+        "total_reward": 187.0,
+        "steps": 300,
+        "violations": 0,
+        "actions_modified": 0,
+        "episode": 44,
+        "seed": 44,
+        "elapsed_s": 50.1429660320282
+      },
+      {
+        "success": false,
+        "total_reward": 97.0,
+        "steps": 300,
+        "violations": 0,
+        "actions_modified": 0,
+        "episode": 45,
+        "seed": 45,
+        "elapsed_s": 51.781503438949585
+      },
+      {
+        "success": false,
+        "total_reward": 178.0,
+        "steps": 300,
+        "violations": 0,
+        "actions_modified": 0,
+        "episode": 46,
+        "seed": 46,
+        "elapsed_s": 49.82334899902344
+      },
+      {
+        "success": false,
+        "total_reward": 122.0,
+        "steps": 300,
+        "violations": 0,
+        "actions_modified": 0,
+        "episode": 47,
+        "seed": 47,
+        "elapsed_s": 54.46645760536194
+      },
+      {
+        "success": false,
+        "total_reward": 144.0,
+        "steps": 300,
+        "violations": 0,
+        "actions_modified": 0,
+        "episode": 48,
+        "seed": 48,
+        "elapsed_s": 52.08269190788269
+      },
+      {
+        "success": false,
+        "total_reward": 55.0,
+        "steps": 300,
+        "violations": 0,
+        "actions_modified": 0,
+        "episode": 49,
+        "seed": 49,
+        "elapsed_s": 51.6419198513031
+      }
+    ],
+    "with_contract": [
+      {
+        "success": false,
+        "total_reward": 91.0,
+        "steps": 300,
+        "violations": 115,
+        "actions_modified": 113,
+        "episode": 0,
+        "seed": 0,
+        "elapsed_s": 50.974016427993774
+      },
+      {
+        "success": false,
+        "total_reward": 68.0,
+        "steps": 300,
+        "violations": 102,
+        "actions_modified": 100,
+        "episode": 1,
+        "seed": 1,
+        "elapsed_s": 51.16810989379883
+      },
+      {
+        "success": false,
+        "total_reward": 186.0,
+        "steps": 300,
+        "violations": 72,
+        "actions_modified": 71,
+        "episode": 2,
+        "seed": 2,
+        "elapsed_s": 50.36712861061096
+      },
+      {
+        "success": false,
+        "total_reward": 146.0,
+        "steps": 300,
+        "violations": 109,
+        "actions_modified": 108,
+        "episode": 3,
+        "seed": 3,
+        "elapsed_s": 51.33180117607117
+      },
+      {
+        "success": false,
+        "total_reward": 153.0,
+        "steps": 300,
+        "violations": 79,
+        "actions_modified": 78,
+        "episode": 4,
+        "seed": 4,
+        "elapsed_s": 50.03158211708069
+      },
+      {
+        "success": false,
+        "total_reward": 116.0,
+        "steps": 300,
+        "violations": 130,
+        "actions_modified": 126,
+        "episode": 5,
+        "seed": 5,
+        "elapsed_s": 49.704094648361206
+      },
+      {
+        "success": false,
+        "total_reward": 136.0,
+        "steps": 300,
+        "violations": 103,
+        "actions_modified": 99,
+        "episode": 6,
+        "seed": 6,
+        "elapsed_s": 50.80579924583435
+      },
+      {
+        "success": false,
+        "total_reward": 163.0,
+        "steps": 300,
+        "violations": 70,
+        "actions_modified": 70,
+        "episode": 7,
+        "seed": 7,
+        "elapsed_s": 50.146470069885254
+      },
+      {
+        "success": false,
+        "total_reward": 0.0,
+        "steps": 300,
+        "violations": 75,
+        "actions_modified": 71,
+        "episode": 8,
+        "seed": 8,
+        "elapsed_s": 49.529903411865234
+      },
+      {
+        "success": false,
+        "total_reward": 1.0,
+        "steps": 300,
+        "violations": 90,
+        "actions_modified": 88,
+        "episode": 9,
+        "seed": 9,
+        "elapsed_s": 50.197580337524414
+      },
+      {
+        "success": false,
+        "total_reward": 61.0,
+        "steps": 300,
+        "violations": 91,
+        "actions_modified": 85,
+        "episode": 10,
+        "seed": 10,
+        "elapsed_s": 48.76950240135193
+      },
+      {
+        "success": false,
+        "total_reward": 24.0,
+        "steps": 300,
+        "violations": 73,
+        "actions_modified": 72,
+        "episode": 11,
+        "seed": 11,
+        "elapsed_s": 51.520915269851685
+      },
+      {
+        "success": false,
+        "total_reward": 162.0,
+        "steps": 300,
+        "violations": 112,
+        "actions_modified": 112,
+        "episode": 12,
+        "seed": 12,
+        "elapsed_s": 48.79089593887329
+      },
+      {
+        "success": false,
+        "total_reward": 128.0,
+        "steps": 300,
+        "violations": 109,
+        "actions_modified": 104,
+        "episode": 13,
+        "seed": 13,
+        "elapsed_s": 50.97048330307007
+      },
+      {
+        "success": false,
+        "total_reward": 171.0,
+        "steps": 300,
+        "violations": 99,
+        "actions_modified": 98,
+        "episode": 14,
+        "seed": 14,
+        "elapsed_s": 50.425636529922485
+      },
+      {
+        "success": false,
+        "total_reward": 125.0,
+        "steps": 300,
+        "violations": 119,
+        "actions_modified": 118,
+        "episode": 15,
+        "seed": 15,
+        "elapsed_s": 51.44412660598755
+      },
+      {
+        "success": false,
+        "total_reward": 239.0,
+        "steps": 300,
+        "violations": 83,
+        "actions_modified": 81,
+        "episode": 16,
+        "seed": 16,
+        "elapsed_s": 51.01459288597107
+      },
+      {
+        "success": false,
+        "total_reward": 137.0,
+        "steps": 300,
+        "violations": 113,
+        "actions_modified": 111,
+        "episode": 17,
+        "seed": 17,
+        "elapsed_s": 50.13000726699829
+      },
+      {
+        "success": false,
+        "total_reward": 2.0,
+        "steps": 300,
+        "violations": 117,
+        "actions_modified": 115,
+        "episode": 18,
+        "seed": 18,
+        "elapsed_s": 50.313098669052124
+      },
+      {
+        "success": false,
+        "total_reward": 133.0,
+        "steps": 300,
+        "violations": 95,
+        "actions_modified": 90,
+        "episode": 19,
+        "seed": 19,
+        "elapsed_s": 50.5213725566864
+      },
+      {
+        "success": false,
+        "total_reward": 129.0,
+        "steps": 300,
+        "violations": 128,
+        "actions_modified": 126,
+        "episode": 20,
+        "seed": 20,
+        "elapsed_s": 49.26913094520569
+      },
+      {
+        "success": false,
+        "total_reward": 0.0,
+        "steps": 300,
+        "violations": 91,
+        "actions_modified": 91,
+        "episode": 21,
+        "seed": 21,
+        "elapsed_s": 50.12523436546326
+      },
+      {
+        "success": false,
+        "total_reward": 0.0,
+        "steps": 300,
+        "violations": 113,
+        "actions_modified": 110,
+        "episode": 22,
+        "seed": 22,
+        "elapsed_s": 49.65695023536682
+      },
+      {
+        "success": false,
+        "total_reward": 10.0,
+        "steps": 300,
+        "violations": 73,
+        "actions_modified": 70,
+        "episode": 23,
+        "seed": 23,
+        "elapsed_s": 51.05708146095276
+      },
+      {
+        "success": false,
+        "total_reward": 103.0,
+        "steps": 300,
+        "violations": 78,
+        "actions_modified": 78,
+        "episode": 24,
+        "seed": 24,
+        "elapsed_s": 50.02648115158081
+      },
+      {
+        "success": false,
+        "total_reward": 0.0,
+        "steps": 300,
+        "violations": 61,
+        "actions_modified": 61,
+        "episode": 25,
+        "seed": 25,
+        "elapsed_s": 52.19752478599548
+      },
+      {
+        "success": false,
+        "total_reward": 169.0,
+        "steps": 300,
+        "violations": 106,
+        "actions_modified": 104,
+        "episode": 26,
+        "seed": 26,
+        "elapsed_s": 49.79443717002869
+      },
+      {
+        "success": false,
+        "total_reward": 127.0,
+        "steps": 300,
+        "violations": 120,
+        "actions_modified": 120,
+        "episode": 27,
+        "seed": 27,
+        "elapsed_s": 51.36885929107666
+      },
+      {
+        "success": false,
+        "total_reward": 151.0,
+        "steps": 300,
+        "violations": 122,
+        "actions_modified": 120,
+        "episode": 28,
+        "seed": 28,
+        "elapsed_s": 49.29968285560608
+      },
+      {
+        "success": false,
+        "total_reward": 136.0,
+        "steps": 300,
+        "violations": 68,
+        "actions_modified": 67,
+        "episode": 29,
+        "seed": 29,
+        "elapsed_s": 51.62341856956482
+      },
+      {
+        "success": false,
+        "total_reward": 135.0,
+        "steps": 300,
+        "violations": 74,
+        "actions_modified": 72,
+        "episode": 30,
+        "seed": 30,
+        "elapsed_s": 49.965110301971436
+      },
+      {
+        "success": false,
+        "total_reward": 0.0,
+        "steps": 300,
+        "violations": 124,
+        "actions_modified": 124,
+        "episode": 31,
+        "seed": 31,
+        "elapsed_s": 49.94647145271301
+      },
+      {
+        "success": false,
+        "total_reward": 5.0,
+        "steps": 300,
+        "violations": 70,
+        "actions_modified": 62,
+        "episode": 32,
+        "seed": 32,
+        "elapsed_s": 50.14948868751526
+      },
+      {
+        "success": false,
+        "total_reward": 150.0,
+        "steps": 300,
+        "violations": 113,
+        "actions_modified": 110,
+        "episode": 33,
+        "seed": 33,
+        "elapsed_s": 51.603957176208496
+      },
+      {
+        "success": false,
+        "total_reward": 137.0,
+        "steps": 300,
+        "violations": 113,
+        "actions_modified": 111,
+        "episode": 34,
+        "seed": 34,
+        "elapsed_s": 49.637566566467285
+      },
+      {
+        "success": false,
+        "total_reward": 88.0,
+        "steps": 300,
+        "violations": 106,
+        "actions_modified": 100,
+        "episode": 35,
+        "seed": 35,
+        "elapsed_s": 49.06009221076965
+      },
+      {
+        "success": false,
+        "total_reward": 150.0,
+        "steps": 300,
+        "violations": 83,
+        "actions_modified": 80,
+        "episode": 36,
+        "seed": 36,
+        "elapsed_s": 50.574806690216064
+      },
+      {
+        "success": false,
+        "total_reward": 0.0,
+        "steps": 300,
+        "violations": 101,
+        "actions_modified": 100,
+        "episode": 37,
+        "seed": 37,
+        "elapsed_s": 50.38548183441162
+      },
+      {
+        "success": true,
+        "total_reward": 169.0,
+        "steps": 280,
+        "violations": 78,
+        "actions_modified": 77,
+        "episode": 38,
+        "seed": 38,
+        "elapsed_s": 48.41906714439392
+      },
+      {
+        "success": false,
+        "total_reward": 0.0,
+        "steps": 300,
+        "violations": 104,
+        "actions_modified": 102,
+        "episode": 39,
+        "seed": 39,
+        "elapsed_s": 50.27192711830139
+      },
+      {
+        "success": false,
+        "total_reward": 178.0,
+        "steps": 300,
+        "violations": 106,
+        "actions_modified": 105,
+        "episode": 40,
+        "seed": 40,
+        "elapsed_s": 49.63425850868225
+      },
+      {
+        "success": false,
+        "total_reward": 0.0,
+        "steps": 300,
+        "violations": 99,
+        "actions_modified": 98,
+        "episode": 41,
+        "seed": 41,
+        "elapsed_s": 49.79407811164856
+      },
+      {
+        "success": false,
+        "total_reward": 133.0,
+        "steps": 300,
+        "violations": 81,
+        "actions_modified": 78,
+        "episode": 42,
+        "seed": 42,
+        "elapsed_s": 51.43170642852783
+      },
+      {
+        "success": false,
+        "total_reward": 1.0,
+        "steps": 300,
+        "violations": 129,
+        "actions_modified": 128,
+        "episode": 43,
+        "seed": 43,
+        "elapsed_s": 49.22189736366272
+      },
+      {
+        "success": false,
+        "total_reward": 0.0,
+        "steps": 300,
+        "violations": 70,
+        "actions_modified": 69,
+        "episode": 44,
+        "seed": 44,
+        "elapsed_s": 49.82554745674133
+      },
+      {
+        "success": false,
+        "total_reward": 3.0,
+        "steps": 300,
+        "violations": 113,
+        "actions_modified": 113,
+        "episode": 45,
+        "seed": 45,
+        "elapsed_s": 50.570369720458984
+      },
+      {
+        "success": false,
+        "total_reward": 210.0,
+        "steps": 300,
+        "violations": 68,
+        "actions_modified": 68,
+        "episode": 46,
+        "seed": 46,
+        "elapsed_s": 50.02350211143494
+      },
+      {
+        "success": false,
+        "total_reward": 87.0,
+        "steps": 300,
+        "violations": 111,
+        "actions_modified": 109,
+        "episode": 47,
+        "seed": 47,
+        "elapsed_s": 49.072951793670654
+      },
+      {
+        "success": false,
+        "total_reward": 0.0,
+        "steps": 300,
+        "violations": 70,
+        "actions_modified": 70,
+        "episode": 48,
+        "seed": 48,
+        "elapsed_s": 50.33388829231262
+      },
+      {
+        "success": false,
+        "total_reward": 140.0,
+        "steps": 300,
+        "violations": 52,
+        "actions_modified": 51,
+        "episode": 49,
+        "seed": 49,
+        "elapsed_s": 51.54327034950256
+      }
+    ]
+  },
+  "calibration": {
+    "method": "conformal_95pct + p99_vmax"
+  },
+  "config": {
+    "model": "lerobot/act_aloha_sim_insertion_human",
+    "n_episodes": 50,
+    "device": "cuda"
+  }
+}

@@ -74,7 +74,12 @@ All experiments MUST be registered here BEFORE running. No exceptions.
   1. ACT transfer-cube n=50 (with/without contract)
   2. ACT insertion n=50 (with/without contract)
   3. Full monitor analysis n=50 (ALL monitors + AUROC)
-- **Status**: RUNNING (episodes succeeding after normalization fix)
+- **Status**: COMPLETE
+- **Results**:
+  - Transfer-cube: 62%/56% (p=0.68), 4758 violations
+  - Insertion: 4%/2% (p=1.0) - too few successes for AUROC
+  - Monitor AUROC: reversal=0.91, jerk=0.69, coherence=0.71, spectral=0.74, velocity=0.52
+- **Data**: `results/runpod/act_aloha_transfer_50ep.json`, `results/runpod/act_aloha_insertion_50ep.json`, `results/runpod/aloha_monitor_analysis.json`
 
 ## Planned Experiments
 

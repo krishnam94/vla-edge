@@ -1,0 +1,2101 @@
+{
+  "experiment": "ALOHA ACT Monitor Analysis (14-DOF generalization test)",
+  "model": "lerobot/act_aloha_sim_transfer_cube_human",
+  "env": "gym_aloha/AlohaTransferCube-v0",
+  "n_episodes": 50,
+  "success_rate": 0.48,
+  "aurocs": {
+    "velocity_violations": {
+      "auroc": 0.5208,
+      "p_value": 0.4039
+    },
+    "stall_rate": {
+      "auroc": 0.5256,
+      "p_value": 0.3817
+    },
+    "mean_jerk": {
+      "auroc": 0.6939,
+      "p_value": 0.0096
+    },
+    "jerk_rms": {
+      "auroc": 0.6538,
+      "p_value": 0.0318
+    },
+    "atv": {
+      "auroc": 0.7516,
+      "p_value": 0.0012
+    },
+    "reversal_rate": {
+      "auroc": 0.9087,
+      "p_value": 0.0
+    },
+    "mean_ser": {
+      "auroc": 0.7388,
+      "p_value": 0.002
+    },
+    "mean_prediction_error": {
+      "auroc": 0.5,
+      "p_value": 1.0
+    },
+    "min_coherence": {
+      "auroc": 0.7147,
+      "p_value": 0.0048
+    },
+    "reversal_rate_tmc": {
+      "auroc": 0.7997,
+      "p_value": 0.0001
+    }
+  },
+  "episodes": [
+    {
+      "success": false,
+      "steps": 300,
+      "bounds_violations": 0,
+      "velocity_violations": 38,
+      "stall_summary": {
+        "n_steps": 300,
+        "total_stalls": 3,
+        "total_stall_steps": 36,
+        "stall_rate": 0.12,
+        "current_stall_duration": 0
+      },
+      "jerk_summary": {
+        "n_steps": 300,
+        "violations": 1,
+        "violation_rate": 0.003367003367003367,
+        "mean_jerk": 0.033965663940517185,
+        "max_jerk": 0.7193342447280884,
+        "std_jerk": 0.058830062146370446,
+        "jerk_rms": 0.06793116029530158
+      },
+      "spectral_summary": {
+        "n_steps": 300,
+        "mean_ser": 0.9999052557078921,
+        "min_ser": 0.9985065349948441,
+        "mean_high_freq": 9.474429210787338e-05
+      },
+      "lps_summary": {
+        "n_steps": 300
+      },
+      "momentum_summary": {
+        "n_steps": 300,
+        "mean_coherence": 0.6969041264931656,
+        "min_coherence": -0.8475300669670105,
+        "reversal_rate": 0.023728813559322035
+      },
+      "atv": 14.749947838485241,
+      "reversal_rate": 5.697986577181208,
+      "episode": 0,
+      "elapsed_s": 54.511513233184814
+    },
+    {
+      "success": false,
+      "steps": 300,
+      "bounds_violations": 0,
+      "velocity_violations": 31,
+      "stall_summary": {
+        "n_steps": 300,
+        "total_stalls": 3,
+        "total_stall_steps": 36,
+        "stall_rate": 0.12,
+        "current_stall_duration": 32
+      },
+      "jerk_summary": {
+        "n_steps": 300,
+        "violations": 1,
+        "violation_rate": 0.003367003367003367,
+        "mean_jerk": 0.025276831222654193,
+        "max_jerk": 0.5121835470199585,
+        "std_jerk": 0.04899878378690608,
+        "jerk_rms": 0.05513437230307892
+      },
+      "spectral_summary": {
+        "n_steps": 300,
+        "mean_ser": 0.9999668574949337,
+        "min_ser": 0.9997103762814374,
+        "mean_high_freq": 3.31425050662526e-05
+      },
+      "lps_summary": {
+        "n_steps": 300
+      },
+      "momentum_summary": {
+        "n_steps": 300,
+        "mean_coherence": 0.7778574210986242,
+        "min_coherence": -0.9938167333602905,
+        "reversal_rate": 0.023728813559322035
+      },
+      "atv": 12.20494168996811,
+      "reversal_rate": 4.9630872483221475,
+      "episode": 1,
+      "elapsed_s": 50.541717290878296
+    },
+    {
+      "success": true,
+      "steps": 284,
+      "bounds_violations": 51,
+      "velocity_violations": 44,
+      "stall_summary": {
+        "n_steps": 284,
+        "total_stalls": 1,
+        "total_stall_steps": 3,
+        "stall_rate": 0.01056338028169014,
+        "current_stall_duration": 0
+      },
+      "jerk_summary": {
+        "n_steps": 284,
+        "violations": 0,
+        "violation_rate": 0.0,
+        "mean_jerk": 0.031710642936815144,
+        "max_jerk": 0.32468265295028687,
+        "std_jerk": 0.042982372978229044,
+        "jerk_rms": 0.053413942583428325
+      },
+      "spectral_summary": {
+        "n_steps": 284,
+        "mean_ser": 0.9999717410872954,
+        "min_ser": 0.9998571890673053,
+        "mean_high_freq": 2.8258912704637318e-05
+      },
+      "lps_summary": {
+        "n_steps": 284
+      },
+      "momentum_summary": {
+        "n_steps": 284,
+        "mean_coherence": 0.8004111133943108,
+        "min_coherence": -0.9872502684593201,
+        "reversal_rate": 0.035842293906810034
+      },
+      "atv": 14.705887490417808,
+      "reversal_rate": 4.904255319148936,
+      "episode": 2,
+      "elapsed_s": 46.58626842498779
+    },
+    {
+      "success": true,
+      "steps": 291,
+      "bounds_violations": 0,
+      "velocity_violations": 36,
+      "stall_summary": {
+        "n_steps": 291,
+        "total_stalls": 3,
+        "total_stall_steps": 16,
+        "stall_rate": 0.054982817869415807,
+        "current_stall_duration": 0
+      },
+      "jerk_summary": {
+        "n_steps": 291,
+        "violations": 1,
+        "violation_rate": 0.003472222222222222,
+        "mean_jerk": 0.02696844433537788,
+        "max_jerk": 0.540290892124176,
+        "std_jerk": 0.04652701885650444,
+        "jerk_rms": 0.05377788089487996
+      },
+      "spectral_summary": {
+        "n_steps": 291,
+        "mean_ser": 0.9999555728788614,
+        "min_ser": 0.9994406777167608,
+        "mean_high_freq": 4.442712113861269e-05
+      },
+      "lps_summary": {
+        "n_steps": 291
+      },
+      "momentum_summary": {
+        "n_steps": 291,
+        "mean_coherence": 0.8155197601083998,
+        "min_coherence": -0.981974184513092,
+        "reversal_rate": 0.017482517482517484
+      },
+      "atv": 14.014869405888021,
+      "reversal_rate": 4.747404844290657,
+      "episode": 3,
+      "elapsed_s": 47.83033633232117
+    },
+    {
+      "success": true,
+      "steps": 289,
+      "bounds_violations": 15,
+      "velocity_violations": 40,
+      "stall_summary": {
+        "n_steps": 289,
+        "total_stalls": 3,
+        "total_stall_steps": 13,
+        "stall_rate": 0.04498269896193772,
+        "current_stall_duration": 0
+      },
+      "jerk_summary": {
+        "n_steps": 289,
+        "violations": 0,
+        "violation_rate": 0.0,
+        "mean_jerk": 0.025008658116514034,
+        "max_jerk": 0.48387765884399414,
+        "std_jerk": 0.040141465653322515,
+        "jerk_rms": 0.0472945054481549
+      },
+      "spectral_summary": {
+        "n_steps": 289,
+        "mean_ser": 0.9999587469002232,
+        "min_ser": 0.999456077984101,
+        "mean_high_freq": 4.125309977676128e-05
+      },
+      "lps_summary": {
+        "n_steps": 289
+      },
+      "momentum_summary": {
+        "n_steps": 289,
+        "mean_coherence": 0.8356223117599499,
+        "min_coherence": -0.9773044586181641,
+        "reversal_rate": 0.017605633802816902
+      },
+      "atv": 13.717979933135211,
+      "reversal_rate": 5.118466898954704,
+      "episode": 4,
+      "elapsed_s": 46.29958891868591
+    },
+    {
+      "success": false,
+      "steps": 300,
+      "bounds_violations": 0,
+      "velocity_violations": 41,
+      "stall_summary": {
+        "n_steps": 300,
+        "total_stalls": 2,
+        "total_stall_steps": 10,
+        "stall_rate": 0.03333333333333333,
+        "current_stall_duration": 3
+      },
+      "jerk_summary": {
+        "n_steps": 300,
+        "violations": 0,
+        "violation_rate": 0.0,
+        "mean_jerk": 0.025868277896433967,
+        "max_jerk": 0.25623971223831177,
+        "std_jerk": 0.03455614003408064,
+        "jerk_rms": 0.043165896438995974
+      },
+      "spectral_summary": {
+        "n_steps": 300,
+        "mean_ser": 0.9999771083105138,
+        "min_ser": 0.9998809618297846,
+        "mean_high_freq": 2.2891689486215228e-05
+      },
+      "lps_summary": {
+        "n_steps": 300
+      },
+      "momentum_summary": {
+        "n_steps": 300,
+        "mean_coherence": 0.7778589498551594,
+        "min_coherence": -0.8456077575683594,
+        "reversal_rate": 0.01694915254237288
+      },
+      "atv": 12.904608046635985,
+      "reversal_rate": 5.1879194630872485,
+      "episode": 5,
+      "elapsed_s": 52.42359447479248
+    },
+    {
+      "success": true,
+      "steps": 269,
+      "bounds_violations": 39,
+      "velocity_violations": 32,
+      "stall_summary": {
+        "n_steps": 269,
+        "total_stalls": 3,
+        "total_stall_steps": 39,
+        "stall_rate": 0.1449814126394052,
+        "current_stall_duration": 0
+      },
+      "jerk_summary": {
+        "n_steps": 269,
+        "violations": 0,
+        "violation_rate": 0.0,
+        "mean_jerk": 0.024589162796063532,
+        "max_jerk": 0.24084722995758057,
+        "std_jerk": 0.03487446497580001,
+        "jerk_rms": 0.04267148033944471
+      },
+      "spectral_summary": {
+        "n_steps": 269,
+        "mean_ser": 0.9999776478568779,
+        "min_ser": 0.9998897701020617,
+        "mean_high_freq": 2.235214312207301e-05
+      },
+      "lps_summary": {
+        "n_steps": 269
+      },
+      "momentum_summary": {
+        "n_steps": 269,
+        "mean_coherence": 0.8491215625721397,
+        "min_coherence": -0.5690737366676331,
+        "reversal_rate": 0.007575757575757576
+      },
+      "atv": 11.418256214819849,
+      "reversal_rate": 4.790262172284645,
+      "episode": 6,
+      "elapsed_s": 42.496103286743164
+    },
+    {
+      "success": false,
+      "steps": 300,
+      "bounds_violations": 49,
+      "velocity_violations": 33,
+      "stall_summary": {
+        "n_steps": 300,
+        "total_stalls": 1,
+        "total_stall_steps": 2,
+        "stall_rate": 0.006666666666666667,
+        "current_stall_duration": 0
+      },
+      "jerk_summary": {
+        "n_steps": 300,
+        "violations": 1,
+        "violation_rate": 0.003367003367003367,
+        "mean_jerk": 0.03808147482799761,
+        "max_jerk": 0.8619701862335205,
+        "std_jerk": 0.06570870473414143,
+        "jerk_rms": 0.07594624811611167
+      },
+      "spectral_summary": {
+        "n_steps": 300,
+        "mean_ser": 0.9998958202229219,
+        "min_ser": 0.9983034862368863,
+        "mean_high_freq": 0.0001041797770781061
+      },
+      "lps_summary": {
+        "n_steps": 300
+      },
+      "momentum_summary": {
+        "n_steps": 300,
+        "mean_coherence": 0.6840527967313084,
+        "min_coherence": -0.9513710737228394,
+        "reversal_rate": 0.05084745762711865
+      },
+      "atv": 16.72355579584837,
+      "reversal_rate": 5.573825503355705,
+      "episode": 7,
+      "elapsed_s": 49.57870101928711
+    },
+    {
+      "success": false,
+      "steps": 300,
+      "bounds_violations": 82,
+      "velocity_violations": 38,
+      "stall_summary": {
+        "n_steps": 300,
+        "total_stalls": 3,
+        "total_stall_steps": 64,
+        "stall_rate": 0.21333333333333335,
+        "current_stall_duration": 0
+      },
+      "jerk_summary": {
+        "n_steps": 300,
+        "violations": 0,
+        "violation_rate": 0.0,
+        "mean_jerk": 0.025622921221284352,
+        "max_jerk": 0.20303988456726074,
+        "std_jerk": 0.031211268424516648,
+        "jerk_rms": 0.04038164643225154
+      },
+      "spectral_summary": {
+        "n_steps": 300,
+        "mean_ser": 0.999974367312727,
+        "min_ser": 0.9999158786547271,
+        "mean_high_freq": 2.563268727295842e-05
+      },
+      "lps_summary": {
+        "n_steps": 300
+      },
+      "momentum_summary": {
+        "n_steps": 300,
+        "mean_coherence": 0.7759576970427218,
+        "min_coherence": -0.8650506734848022,
+        "reversal_rate": 0.03389830508474576
+      },
+      "atv": 13.495424478780478,
+      "reversal_rate": 5.365771812080537,
+      "episode": 8,
+      "elapsed_s": 50.05089044570923
+    },
+    {
+      "success": true,
+      "steps": 293,
+      "bounds_violations": 0,
+      "velocity_violations": 36,
+      "stall_summary": {
+        "n_steps": 293,
+        "total_stalls": 5,
+        "total_stall_steps": 46,
+        "stall_rate": 0.15699658703071673,
+        "current_stall_duration": 0
+      },
+      "jerk_summary": {
+        "n_steps": 293,
+        "violations": 0,
+        "violation_rate": 0.0,
+        "mean_jerk": 0.026462198215825804,
+        "max_jerk": 0.2101893424987793,
+        "std_jerk": 0.03696018053773503,
+        "jerk_rms": 0.04545660435839463
+      },
+      "spectral_summary": {
+        "n_steps": 293,
+        "mean_ser": 0.999973034342999,
+        "min_ser": 0.9999066122569295,
+        "mean_high_freq": 2.6965657000999066e-05
+      },
+      "lps_summary": {
+        "n_steps": 293
+      },
+      "momentum_summary": {
+        "n_steps": 293,
+        "mean_coherence": 0.779612014367659,
+        "min_coherence": -0.9552701711654663,
+        "reversal_rate": 0.017361111111111112
+      },
+      "atv": 12.14750486984849,
+      "reversal_rate": 5.292096219931271,
+      "episode": 9,
+      "elapsed_s": 52.33204531669617
+    },
+    {
+      "success": true,
+      "steps": 275,
+      "bounds_violations": 0,
+      "velocity_violations": 43,
+      "stall_summary": {
+        "n_steps": 275,
+        "total_stalls": 2,
+        "total_stall_steps": 9,
+        "stall_rate": 0.03272727272727273,
+        "current_stall_duration": 1
+      },
+      "jerk_summary": {
+        "n_steps": 275,
+        "violations": 0,
+        "violation_rate": 0.0,
+        "mean_jerk": 0.02369773974094321,
+        "max_jerk": 0.12984061241149902,
+        "std_jerk": 0.022367282280475423,
+        "jerk_rms": 0.032586472430196384
+      },
+      "spectral_summary": {
+        "n_steps": 275,
+        "mean_ser": 0.999980625786274,
+        "min_ser": 0.999954150451181,
+        "mean_high_freq": 1.937421372599779e-05
+      },
+      "lps_summary": {
+        "n_steps": 275
+      },
+      "momentum_summary": {
+        "n_steps": 275,
+        "mean_coherence": 0.811049883460833,
+        "min_coherence": -0.871228814125061,
+        "reversal_rate": 0.025925925925925925
+      },
+      "atv": 12.68073104461655,
+      "reversal_rate": 4.758241758241758,
+      "episode": 10,
+      "elapsed_s": 44.99523091316223
+    },
+    {
+      "success": false,
+      "steps": 300,
+      "bounds_violations": 75,
+      "velocity_violations": 41,
+      "stall_summary": {
+        "n_steps": 300,
+        "total_stalls": 1,
+        "total_stall_steps": 9,
+        "stall_rate": 0.03,
+        "current_stall_duration": 0
+      },
+      "jerk_summary": {
+        "n_steps": 300,
+        "violations": 0,
+        "violation_rate": 0.0,
+        "mean_jerk": 0.02698831982684858,
+        "max_jerk": 0.23280036449432373,
+        "std_jerk": 0.029835037550015868,
+        "jerk_rms": 0.04023057136913574
+      },
+      "spectral_summary": {
+        "n_steps": 300,
+        "mean_ser": 0.9999748267947096,
+        "min_ser": 0.9998916154622259,
+        "mean_high_freq": 2.5173205290385248e-05
+      },
+      "lps_summary": {
+        "n_steps": 300
+      },
+      "momentum_summary": {
+        "n_steps": 300,
+        "mean_coherence": 0.7506382136274192,
+        "min_coherence": -0.9592172503471375,
+        "reversal_rate": 0.04406779661016949
+      },
+      "atv": 14.718411868438125,
+      "reversal_rate": 5.221476510067114,
+      "episode": 11,
+      "elapsed_s": 47.76363921165466
+    },
+    {
+      "success": false,
+      "steps": 300,
+      "bounds_violations": 97,
+      "velocity_violations": 34,
+      "stall_summary": {
+        "n_steps": 300,
+        "total_stalls": 2,
+        "total_stall_steps": 80,
+        "stall_rate": 0.26666666666666666,
+        "current_stall_duration": 28
+      },
+      "jerk_summary": {
+        "n_steps": 300,
+        "violations": 0,
+        "violation_rate": 0.0,
+        "mean_jerk": 0.023824180291357265,
+        "max_jerk": 0.17005851864814758,
+        "std_jerk": 0.029828884513661415,
+        "jerk_rms": 0.03817530507912734
+      },
+      "spectral_summary": {
+        "n_steps": 300,
+        "mean_ser": 0.9999713099716631,
+        "min_ser": 0.9998567715516372,
+        "mean_high_freq": 2.8690028336941786e-05
+      },
+      "lps_summary": {
+        "n_steps": 300
+      },
+      "momentum_summary": {
+        "n_steps": 300,
+        "mean_coherence": 0.7534384796727386,
+        "min_coherence": -0.9759055376052856,
+        "reversal_rate": 0.04406779661016949
+      },
+      "atv": 12.840392171870917,
+      "reversal_rate": 5.3120805369127515,
+      "episode": 12,
+      "elapsed_s": 49.87076926231384
+    },
+    {
+      "success": false,
+      "steps": 300,
+      "bounds_violations": 134,
+      "velocity_violations": 24,
+      "stall_summary": {
+        "n_steps": 300,
+        "total_stalls": 3,
+        "total_stall_steps": 75,
+        "stall_rate": 0.25,
+        "current_stall_duration": 0
+      },
+      "jerk_summary": {
+        "n_steps": 300,
+        "violations": 3,
+        "violation_rate": 0.010101010101010102,
+        "mean_jerk": 0.044503659599457526,
+        "max_jerk": 1.8910210132598877,
+        "std_jerk": 0.1361197916342837,
+        "jerk_rms": 0.14321024192530785
+      },
+      "spectral_summary": {
+        "n_steps": 300,
+        "mean_ser": 0.9997240718983784,
+        "min_ser": 0.9942001216498789,
+        "mean_high_freq": 0.0002759281016215809
+      },
+      "lps_summary": {
+        "n_steps": 300
+      },
+      "momentum_summary": {
+        "n_steps": 300,
+        "mean_coherence": 0.6335184567923642,
+        "min_coherence": -0.9797497987747192,
+        "reversal_rate": 0.09491525423728814
+      },
+      "atv": 12.475410950370133,
+      "reversal_rate": 6.167785234899329,
+      "episode": 13,
+      "elapsed_s": 48.541080474853516
+    },
+    {
+      "success": true,
+      "steps": 271,
+      "bounds_violations": 0,
+      "velocity_violations": 36,
+      "stall_summary": {
+        "n_steps": 271,
+        "total_stalls": 3,
+        "total_stall_steps": 10,
+        "stall_rate": 0.03690036900369004,
+        "current_stall_duration": 0
+      },
+      "jerk_summary": {
+        "n_steps": 271,
+        "violations": 0,
+        "violation_rate": 0.0,
+        "mean_jerk": 0.025842390454082348,
+        "max_jerk": 0.23544347286224365,
+        "std_jerk": 0.031405163854071556,
+        "jerk_rms": 0.04067079371099523
+      },
+      "spectral_summary": {
+        "n_steps": 271,
+        "mean_ser": 0.9999779597880969,
+        "min_ser": 0.9999168153718496,
+        "mean_high_freq": 2.204021190310712e-05
+      },
+      "lps_summary": {
+        "n_steps": 271
+      },
+      "momentum_summary": {
+        "n_steps": 271,
+        "mean_coherence": 0.8684710117435097,
+        "min_coherence": -0.8018077611923218,
+        "reversal_rate": 0.0037593984962406013
+      },
+      "atv": 12.94009483139962,
+      "reversal_rate": 4.605947955390334,
+      "episode": 14,
+      "elapsed_s": 43.04947066307068
+    },
+    {
+      "success": false,
+      "steps": 300,
+      "bounds_violations": 29,
+      "velocity_violations": 43,
+      "stall_summary": {
+        "n_steps": 300,
+        "total_stalls": 3,
+        "total_stall_steps": 16,
+        "stall_rate": 0.05333333333333334,
+        "current_stall_duration": 3
+      },
+      "jerk_summary": {
+        "n_steps": 300,
+        "violations": 0,
+        "violation_rate": 0.0,
+        "mean_jerk": 0.025737978467836927,
+        "max_jerk": 0.2013472318649292,
+        "std_jerk": 0.02982428393067825,
+        "jerk_rms": 0.03939456114222559
+      },
+      "spectral_summary": {
+        "n_steps": 300,
+        "mean_ser": 0.9999756931028373,
+        "min_ser": 0.9998858744522373,
+        "mean_high_freq": 2.4306897162706953e-05
+      },
+      "lps_summary": {
+        "n_steps": 300
+      },
+      "momentum_summary": {
+        "n_steps": 300,
+        "mean_coherence": 0.7881290549317659,
+        "min_coherence": -0.945387065410614,
+        "reversal_rate": 0.023728813559322035
+      },
+      "atv": 13.25838896073401,
+      "reversal_rate": 5.308724832214765,
+      "episode": 15,
+      "elapsed_s": 48.16830110549927
+    },
+    {
+      "success": true,
+      "steps": 285,
+      "bounds_violations": 0,
+      "velocity_violations": 33,
+      "stall_summary": {
+        "n_steps": 285,
+        "total_stalls": 4,
+        "total_stall_steps": 27,
+        "stall_rate": 0.09473684210526316,
+        "current_stall_duration": 1
+      },
+      "jerk_summary": {
+        "n_steps": 285,
+        "violations": 0,
+        "violation_rate": 0.0,
+        "mean_jerk": 0.024909573032500895,
+        "max_jerk": 0.23219287395477295,
+        "std_jerk": 0.03196932711075896,
+        "jerk_rms": 0.040528073042968675
+      },
+      "spectral_summary": {
+        "n_steps": 285,
+        "mean_ser": 0.9999713788442661,
+        "min_ser": 0.9998358569764964,
+        "mean_high_freq": 2.862115573387669e-05
+      },
+      "lps_summary": {
+        "n_steps": 285
+      },
+      "momentum_summary": {
+        "n_steps": 285,
+        "mean_coherence": 0.8267036830274654,
+        "min_coherence": -0.9210024476051331,
+        "reversal_rate": 0.017857142857142856
+      },
+      "atv": 13.366304678842425,
+      "reversal_rate": 4.667844522968198,
+      "episode": 16,
+      "elapsed_s": 50.6896538734436
+    },
+    {
+      "success": true,
+      "steps": 248,
+      "bounds_violations": 75,
+      "velocity_violations": 30,
+      "stall_summary": {
+        "n_steps": 248,
+        "total_stalls": 3,
+        "total_stall_steps": 17,
+        "stall_rate": 0.06854838709677419,
+        "current_stall_duration": 12
+      },
+      "jerk_summary": {
+        "n_steps": 248,
+        "violations": 0,
+        "violation_rate": 0.0,
+        "mean_jerk": 0.029864698770094893,
+        "max_jerk": 0.3348977565765381,
+        "std_jerk": 0.04353435930992924,
+        "jerk_rms": 0.052793377171332104
+      },
+      "spectral_summary": {
+        "n_steps": 248,
+        "mean_ser": 0.9999543170534069,
+        "min_ser": 0.9996572575337657,
+        "mean_high_freq": 4.568294659312855e-05
+      },
+      "lps_summary": {
+        "n_steps": 248
+      },
+      "momentum_summary": {
+        "n_steps": 248,
+        "mean_coherence": 0.8195652580923505,
+        "min_coherence": -0.9602289199829102,
+        "reversal_rate": 0.024691358024691357
+      },
+      "atv": 11.91389225795865,
+      "reversal_rate": 4.894308943089431,
+      "episode": 17,
+      "elapsed_s": 43.382983922958374
+    },
+    {
+      "success": true,
+      "steps": 298,
+      "bounds_violations": 0,
+      "velocity_violations": 29,
+      "stall_summary": {
+        "n_steps": 298,
+        "total_stalls": 3,
+        "total_stall_steps": 37,
+        "stall_rate": 0.12416107382550336,
+        "current_stall_duration": 0
+      },
+      "jerk_summary": {
+        "n_steps": 298,
+        "violations": 0,
+        "violation_rate": 0.0,
+        "mean_jerk": 0.022324748753996218,
+        "max_jerk": 0.18358111381530762,
+        "std_jerk": 0.026093618262141873,
+        "jerk_rms": 0.03434052010292563
+      },
+      "spectral_summary": {
+        "n_steps": 298,
+        "mean_ser": 0.9999780037749699,
+        "min_ser": 0.9999101777426621,
+        "mean_high_freq": 2.1996225030074257e-05
+      },
+      "lps_summary": {
+        "n_steps": 298
+      },
+      "momentum_summary": {
+        "n_steps": 298,
+        "mean_coherence": 0.824198512649704,
+        "min_coherence": -0.5736213326454163,
+        "reversal_rate": 0.0034129692832764505
+      },
+      "atv": 12.639291729778051,
+      "reversal_rate": 4.966216216216216,
+      "episode": 18,
+      "elapsed_s": 48.362659215927124
+    },
+    {
+      "success": true,
+      "steps": 269,
+      "bounds_violations": 0,
+      "velocity_violations": 43,
+      "stall_summary": {
+        "n_steps": 269,
+        "total_stalls": 1,
+        "total_stall_steps": 23,
+        "stall_rate": 0.08550185873605948,
+        "current_stall_duration": 0
+      },
+      "jerk_summary": {
+        "n_steps": 269,
+        "violations": 0,
+        "violation_rate": 0.0,
+        "mean_jerk": 0.02459098450503403,
+        "max_jerk": 0.1836497187614441,
+        "std_jerk": 0.027319871112632652,
+        "jerk_rms": 0.03675720169623476
+      },
+      "spectral_summary": {
+        "n_steps": 269,
+        "mean_ser": 0.999979678924187,
+        "min_ser": 0.9999374891860853,
+        "mean_high_freq": 2.0321075812956835e-05
+      },
+      "lps_summary": {
+        "n_steps": 269
+      },
+      "momentum_summary": {
+        "n_steps": 269,
+        "mean_coherence": 0.8366419758831123,
+        "min_coherence": -0.8483615517616272,
+        "reversal_rate": 0.011363636363636364
+      },
+      "atv": 12.92360943974927,
+      "reversal_rate": 4.580524344569288,
+      "episode": 19,
+      "elapsed_s": 43.10899782180786
+    },
+    {
+      "success": true,
+      "steps": 249,
+      "bounds_violations": 13,
+      "velocity_violations": 41,
+      "stall_summary": {
+        "n_steps": 249,
+        "total_stalls": 2,
+        "total_stall_steps": 16,
+        "stall_rate": 0.0642570281124498,
+        "current_stall_duration": 0
+      },
+      "jerk_summary": {
+        "n_steps": 249,
+        "violations": 0,
+        "violation_rate": 0.0,
+        "mean_jerk": 0.02604614155806177,
+        "max_jerk": 0.19970309734344482,
+        "std_jerk": 0.030987680263008417,
+        "jerk_rms": 0.040480091627181795
+      },
+      "spectral_summary": {
+        "n_steps": 249,
+        "mean_ser": 0.9999670553572375,
+        "min_ser": 0.9998988149925303,
+        "mean_high_freq": 3.2944642762489096e-05
+      },
+      "lps_summary": {
+        "n_steps": 249
+      },
+      "momentum_summary": {
+        "n_steps": 249,
+        "mean_coherence": 0.8459352843585561,
+        "min_coherence": -0.8632679581642151,
+        "reversal_rate": 0.00819672131147541
+      },
+      "atv": 12.389990941155702,
+      "reversal_rate": 4.817813765182186,
+      "episode": 20,
+      "elapsed_s": 40.922905683517456
+    },
+    {
+      "success": false,
+      "steps": 300,
+      "bounds_violations": 135,
+      "velocity_violations": 29,
+      "stall_summary": {
+        "n_steps": 300,
+        "total_stalls": 4,
+        "total_stall_steps": 26,
+        "stall_rate": 0.08666666666666667,
+        "current_stall_duration": 0
+      },
+      "jerk_summary": {
+        "n_steps": 300,
+        "violations": 0,
+        "violation_rate": 0.0,
+        "mean_jerk": 0.03584434426944665,
+        "max_jerk": 0.38377100229263306,
+        "std_jerk": 0.05397727574276675,
+        "jerk_rms": 0.06479477843713403
+      },
+      "spectral_summary": {
+        "n_steps": 300,
+        "mean_ser": 0.9999406479603112,
+        "min_ser": 0.9993807711441576,
+        "mean_high_freq": 5.935203968876479e-05
+      },
+      "lps_summary": {
+        "n_steps": 300
+      },
+      "momentum_summary": {
+        "n_steps": 300,
+        "mean_coherence": 0.625988811952204,
+        "min_coherence": -0.9805592894554138,
+        "reversal_rate": 0.061016949152542375
+      },
+      "atv": 12.970967624336481,
+      "reversal_rate": 5.932885906040268,
+      "episode": 21,
+      "elapsed_s": 47.45482158660889
+    },
+    {
+      "success": false,
+      "steps": 300,
+      "bounds_violations": 55,
+      "velocity_violations": 61,
+      "stall_summary": {
+        "n_steps": 300,
+        "total_stalls": 4,
+        "total_stall_steps": 11,
+        "stall_rate": 0.03666666666666667,
+        "current_stall_duration": 0
+      },
+      "jerk_summary": {
+        "n_steps": 300,
+        "violations": 0,
+        "violation_rate": 0.0,
+        "mean_jerk": 0.03452459973618639,
+        "max_jerk": 0.3011510372161865,
+        "std_jerk": 0.043931907810412014,
+        "jerk_rms": 0.05587450680593451
+      },
+      "spectral_summary": {
+        "n_steps": 300,
+        "mean_ser": 0.9999621603885154,
+        "min_ser": 0.9998467205899796,
+        "mean_high_freq": 3.783961148462467e-05
+      },
+      "lps_summary": {
+        "n_steps": 300
+      },
+      "momentum_summary": {
+        "n_steps": 300,
+        "mean_coherence": 0.8154408672982353,
+        "min_coherence": -0.9935338497161865,
+        "reversal_rate": 0.01694915254237288
+      },
+      "atv": 16.463838008698076,
+      "reversal_rate": 4.449664429530201,
+      "episode": 22,
+      "elapsed_s": 47.058817625045776
+    },
+    {
+      "success": false,
+      "steps": 300,
+      "bounds_violations": 64,
+      "velocity_violations": 47,
+      "stall_summary": {
+        "n_steps": 300,
+        "total_stalls": 3,
+        "total_stall_steps": 31,
+        "stall_rate": 0.10333333333333333,
+        "current_stall_duration": 0
+      },
+      "jerk_summary": {
+        "n_steps": 300,
+        "violations": 0,
+        "violation_rate": 0.0,
+        "mean_jerk": 0.03636369110408054,
+        "max_jerk": 0.3226320147514343,
+        "std_jerk": 0.048934756470426506,
+        "jerk_rms": 0.06096661727152766
+      },
+      "spectral_summary": {
+        "n_steps": 300,
+        "mean_ser": 0.9999383258957122,
+        "min_ser": 0.9992664951933309,
+        "mean_high_freq": 6.167410428781217e-05
+      },
+      "lps_summary": {
+        "n_steps": 300
+      },
+      "momentum_summary": {
+        "n_steps": 300,
+        "mean_coherence": 0.6606836085918091,
+        "min_coherence": -0.9054315090179443,
+        "reversal_rate": 0.030508474576271188
+      },
+      "atv": 14.982134201563895,
+      "reversal_rate": 5.6610738255033555,
+      "episode": 23,
+      "elapsed_s": 48.8314950466156
+    },
+    {
+      "success": true,
+      "steps": 280,
+      "bounds_violations": 0,
+      "velocity_violations": 38,
+      "stall_summary": {
+        "n_steps": 280,
+        "total_stalls": 4,
+        "total_stall_steps": 41,
+        "stall_rate": 0.14642857142857144,
+        "current_stall_duration": 0
+      },
+      "jerk_summary": {
+        "n_steps": 280,
+        "violations": 0,
+        "violation_rate": 0.0,
+        "mean_jerk": 0.02417379945839355,
+        "max_jerk": 0.20243406295776367,
+        "std_jerk": 0.03346063342987413,
+        "jerk_rms": 0.041279372206745574
+      },
+      "spectral_summary": {
+        "n_steps": 280,
+        "mean_ser": 0.999974448934753,
+        "min_ser": 0.9999175563231778,
+        "mean_high_freq": 2.5551065247042537e-05
+      },
+      "lps_summary": {
+        "n_steps": 280
+      },
+      "momentum_summary": {
+        "n_steps": 280,
+        "mean_coherence": 0.8503368310325525,
+        "min_coherence": -0.8674759268760681,
+        "reversal_rate": 0.01090909090909091
+      },
+      "atv": 12.233900452032685,
+      "reversal_rate": 4.776978417266187,
+      "episode": 24,
+      "elapsed_s": 43.69700264930725
+    },
+    {
+      "success": false,
+      "steps": 300,
+      "bounds_violations": 99,
+      "velocity_violations": 43,
+      "stall_summary": {
+        "n_steps": 300,
+        "total_stalls": 5,
+        "total_stall_steps": 16,
+        "stall_rate": 0.05333333333333334,
+        "current_stall_duration": 1
+      },
+      "jerk_summary": {
+        "n_steps": 300,
+        "violations": 0,
+        "violation_rate": 0.0,
+        "mean_jerk": 0.03145861439406872,
+        "max_jerk": 0.30106380581855774,
+        "std_jerk": 0.04622509043955823,
+        "jerk_rms": 0.055914250471056526
+      },
+      "spectral_summary": {
+        "n_steps": 300,
+        "mean_ser": 0.9999513013647502,
+        "min_ser": 0.9993896970354939,
+        "mean_high_freq": 4.8698635249810884e-05
+      },
+      "lps_summary": {
+        "n_steps": 300
+      },
+      "momentum_summary": {
+        "n_steps": 300,
+        "mean_coherence": 0.7255127299008733,
+        "min_coherence": -0.9777181148529053,
+        "reversal_rate": 0.020338983050847456
+      },
+      "atv": 13.057465306017548,
+      "reversal_rate": 5.815436241610739,
+      "episode": 25,
+      "elapsed_s": 46.989588022232056
+    },
+    {
+      "success": true,
+      "steps": 268,
+      "bounds_violations": 14,
+      "velocity_violations": 31,
+      "stall_summary": {
+        "n_steps": 268,
+        "total_stalls": 1,
+        "total_stall_steps": 5,
+        "stall_rate": 0.018656716417910446,
+        "current_stall_duration": 3
+      },
+      "jerk_summary": {
+        "n_steps": 268,
+        "violations": 0,
+        "violation_rate": 0.0,
+        "mean_jerk": 0.024513595804290952,
+        "max_jerk": 0.34981220960617065,
+        "std_jerk": 0.03388919779146283,
+        "jerk_rms": 0.04182575888379122
+      },
+      "spectral_summary": {
+        "n_steps": 268,
+        "mean_ser": 0.9999595314268277,
+        "min_ser": 0.9996839505157524,
+        "mean_high_freq": 4.0468573172303124e-05
+      },
+      "lps_summary": {
+        "n_steps": 268
+      },
+      "momentum_summary": {
+        "n_steps": 268,
+        "mean_coherence": 0.7995542894885964,
+        "min_coherence": -0.9478882551193237,
+        "reversal_rate": 0.030418250950570342
+      },
+      "atv": 13.152134589385241,
+      "reversal_rate": 4.7669172932330826,
+      "episode": 26,
+      "elapsed_s": 40.73887276649475
+    },
+    {
+      "success": true,
+      "steps": 270,
+      "bounds_violations": 7,
+      "velocity_violations": 28,
+      "stall_summary": {
+        "n_steps": 270,
+        "total_stalls": 3,
+        "total_stall_steps": 25,
+        "stall_rate": 0.09259259259259259,
+        "current_stall_duration": 17
+      },
+      "jerk_summary": {
+        "n_steps": 270,
+        "violations": 0,
+        "violation_rate": 0.0,
+        "mean_jerk": 0.025086897561389408,
+        "max_jerk": 0.31437861919403076,
+        "std_jerk": 0.03929921667506646,
+        "jerk_rms": 0.046623822886261344
+      },
+      "spectral_summary": {
+        "n_steps": 270,
+        "mean_ser": 0.9999728875990048,
+        "min_ser": 0.9998337133145261,
+        "mean_high_freq": 2.711240099517731e-05
+      },
+      "lps_summary": {
+        "n_steps": 270
+      },
+      "momentum_summary": {
+        "n_steps": 270,
+        "mean_coherence": 0.8500816327502143,
+        "min_coherence": -0.7759073376655579,
+        "reversal_rate": 0.011320754716981131
+      },
+      "atv": 11.289802810177207,
+      "reversal_rate": 4.835820895522388,
+      "episode": 27,
+      "elapsed_s": 41.680641889572144
+    },
+    {
+      "success": false,
+      "steps": 300,
+      "bounds_violations": 9,
+      "velocity_violations": 45,
+      "stall_summary": {
+        "n_steps": 300,
+        "total_stalls": 2,
+        "total_stall_steps": 10,
+        "stall_rate": 0.03333333333333333,
+        "current_stall_duration": 3
+      },
+      "jerk_summary": {
+        "n_steps": 300,
+        "violations": 3,
+        "violation_rate": 0.010101010101010102,
+        "mean_jerk": 0.03853378866357033,
+        "max_jerk": 1.172611951828003,
+        "std_jerk": 0.08971529977615476,
+        "jerk_rms": 0.09764060570630446
+      },
+      "spectral_summary": {
+        "n_steps": 300,
+        "mean_ser": 0.9997925908743249,
+        "min_ser": 0.9960772392351591,
+        "mean_high_freq": 0.0002074091256750732
+      },
+      "lps_summary": {
+        "n_steps": 300
+      },
+      "momentum_summary": {
+        "n_steps": 300,
+        "mean_coherence": 0.6704792521436209,
+        "min_coherence": -0.8911199569702148,
+        "reversal_rate": 0.02711864406779661
+      },
+      "atv": 17.519628269597888,
+      "reversal_rate": 5.348993288590604,
+      "episode": 28,
+      "elapsed_s": 45.35594463348389
+    },
+    {
+      "success": true,
+      "steps": 241,
+      "bounds_violations": 0,
+      "velocity_violations": 37,
+      "stall_summary": {
+        "n_steps": 241,
+        "total_stalls": 3,
+        "total_stall_steps": 14,
+        "stall_rate": 0.058091286307053944,
+        "current_stall_duration": 0
+      },
+      "jerk_summary": {
+        "n_steps": 241,
+        "violations": 0,
+        "violation_rate": 0.0,
+        "mean_jerk": 0.029656378826236025,
+        "max_jerk": 0.23619383573532104,
+        "std_jerk": 0.038116673812868325,
+        "jerk_rms": 0.04829473705945424
+      },
+      "spectral_summary": {
+        "n_steps": 241,
+        "mean_ser": 0.9999765216390167,
+        "min_ser": 0.9999456300664072,
+        "mean_high_freq": 2.34783609832645e-05
+      },
+      "lps_summary": {
+        "n_steps": 241
+      },
+      "momentum_summary": {
+        "n_steps": 241,
+        "mean_coherence": 0.8549767723464865,
+        "min_coherence": -0.599396288394928,
+        "reversal_rate": 0.00847457627118644
+      },
+      "atv": 11.996202158741653,
+      "reversal_rate": 4.410041841004184,
+      "episode": 29,
+      "elapsed_s": 36.257079124450684
+    },
+    {
+      "success": false,
+      "steps": 300,
+      "bounds_violations": 0,
+      "velocity_violations": 20,
+      "stall_summary": {
+        "n_steps": 300,
+        "total_stalls": 2,
+        "total_stall_steps": 31,
+        "stall_rate": 0.10333333333333333,
+        "current_stall_duration": 1
+      },
+      "jerk_summary": {
+        "n_steps": 300,
+        "violations": 2,
+        "violation_rate": 0.006734006734006734,
+        "mean_jerk": 0.04506637630764684,
+        "max_jerk": 0.6904507279396057,
+        "std_jerk": 0.06984189219610107,
+        "jerk_rms": 0.08311960165348627
+      },
+      "spectral_summary": {
+        "n_steps": 300,
+        "mean_ser": 0.9999319771348714,
+        "min_ser": 0.9995248316876926,
+        "mean_high_freq": 6.802286512863631e-05
+      },
+      "lps_summary": {
+        "n_steps": 300
+      },
+      "momentum_summary": {
+        "n_steps": 300,
+        "mean_coherence": 0.586189323375633,
+        "min_coherence": -0.9958327412605286,
+        "reversal_rate": 0.0576271186440678
+      },
+      "atv": 13.590778110548854,
+      "reversal_rate": 6.124161073825503,
+      "episode": 30,
+      "elapsed_s": 43.8689169883728
+    },
+    {
+      "success": false,
+      "steps": 300,
+      "bounds_violations": 0,
+      "velocity_violations": 35,
+      "stall_summary": {
+        "n_steps": 300,
+        "total_stalls": 3,
+        "total_stall_steps": 54,
+        "stall_rate": 0.18,
+        "current_stall_duration": 0
+      },
+      "jerk_summary": {
+        "n_steps": 300,
+        "violations": 0,
+        "violation_rate": 0.0,
+        "mean_jerk": 0.019448772831647483,
+        "max_jerk": 0.16340011358261108,
+        "std_jerk": 0.025207769709189823,
+        "jerk_rms": 0.03183844246141097
+      },
+      "spectral_summary": {
+        "n_steps": 300,
+        "mean_ser": 0.9999805816570326,
+        "min_ser": 0.9999260990931764,
+        "mean_high_freq": 1.9418342967369995e-05
+      },
+      "lps_summary": {
+        "n_steps": 300
+      },
+      "momentum_summary": {
+        "n_steps": 300,
+        "mean_coherence": 0.8176738845393599,
+        "min_coherence": -0.8166627287864685,
+        "reversal_rate": 0.010169491525423728
+      },
+      "atv": 12.654353700578213,
+      "reversal_rate": 5.201342281879195,
+      "episode": 31,
+      "elapsed_s": 46.519962787628174
+    },
+    {
+      "success": false,
+      "steps": 300,
+      "bounds_violations": 0,
+      "velocity_violations": 30,
+      "stall_summary": {
+        "n_steps": 300,
+        "total_stalls": 2,
+        "total_stall_steps": 34,
+        "stall_rate": 0.11333333333333333,
+        "current_stall_duration": 32
+      },
+      "jerk_summary": {
+        "n_steps": 300,
+        "violations": 0,
+        "violation_rate": 0.0,
+        "mean_jerk": 0.02539306369795141,
+        "max_jerk": 0.4264373779296875,
+        "std_jerk": 0.04178064265692826,
+        "jerk_rms": 0.04889202168855519
+      },
+      "spectral_summary": {
+        "n_steps": 300,
+        "mean_ser": 0.9999635448622395,
+        "min_ser": 0.9997429402086355,
+        "mean_high_freq": 3.645513776051601e-05
+      },
+      "lps_summary": {
+        "n_steps": 300
+      },
+      "momentum_summary": {
+        "n_steps": 300,
+        "mean_coherence": 0.7588555350015729,
+        "min_coherence": -0.9929251074790955,
+        "reversal_rate": 0.030508474576271188
+      },
+      "atv": 12.741793844848871,
+      "reversal_rate": 5.2885906040268456,
+      "episode": 32,
+      "elapsed_s": 45.793463468551636
+    },
+    {
+      "success": true,
+      "steps": 271,
+      "bounds_violations": 73,
+      "velocity_violations": 43,
+      "stall_summary": {
+        "n_steps": 271,
+        "total_stalls": 3,
+        "total_stall_steps": 34,
+        "stall_rate": 0.12546125461254612,
+        "current_stall_duration": 0
+      },
+      "jerk_summary": {
+        "n_steps": 271,
+        "violations": 1,
+        "violation_rate": 0.0037313432835820895,
+        "mean_jerk": 0.02995267659147729,
+        "max_jerk": 0.5553420186042786,
+        "std_jerk": 0.04832874068746314,
+        "jerk_rms": 0.05685798107064378
+      },
+      "spectral_summary": {
+        "n_steps": 271,
+        "mean_ser": 0.9999491687571423,
+        "min_ser": 0.9994278914916304,
+        "mean_high_freq": 5.083124285765184e-05
+      },
+      "lps_summary": {
+        "n_steps": 271
+      },
+      "momentum_summary": {
+        "n_steps": 271,
+        "mean_coherence": 0.7926048398914194,
+        "min_coherence": -0.9099171757698059,
+        "reversal_rate": 0.015037593984962405
+      },
+      "atv": 13.709761320613325,
+      "reversal_rate": 4.773234200743494,
+      "episode": 33,
+      "elapsed_s": 41.8251428604126
+    },
+    {
+      "success": true,
+      "steps": 284,
+      "bounds_violations": 0,
+      "velocity_violations": 40,
+      "stall_summary": {
+        "n_steps": 284,
+        "total_stalls": 4,
+        "total_stall_steps": 16,
+        "stall_rate": 0.056338028169014086,
+        "current_stall_duration": 0
+      },
+      "jerk_summary": {
+        "n_steps": 284,
+        "violations": 1,
+        "violation_rate": 0.0035587188612099642,
+        "mean_jerk": 0.03175193914527146,
+        "max_jerk": 0.6990243196487427,
+        "std_jerk": 0.058609127820425266,
+        "jerk_rms": 0.06665744897125878
+      },
+      "spectral_summary": {
+        "n_steps": 284,
+        "mean_ser": 0.9999389487911503,
+        "min_ser": 0.9991294498187436,
+        "mean_high_freq": 6.105120884969395e-05
+      },
+      "lps_summary": {
+        "n_steps": 284
+      },
+      "momentum_summary": {
+        "n_steps": 284,
+        "mean_coherence": 0.8065605727858894,
+        "min_coherence": -0.9192887544631958,
+        "reversal_rate": 0.021505376344086023
+      },
+      "atv": 14.009677462745458,
+      "reversal_rate": 4.602836879432624,
+      "episode": 34,
+      "elapsed_s": 43.719794511795044
+    },
+    {
+      "success": false,
+      "steps": 300,
+      "bounds_violations": 226,
+      "velocity_violations": 38,
+      "stall_summary": {
+        "n_steps": 300,
+        "total_stalls": 1,
+        "total_stall_steps": 5,
+        "stall_rate": 0.016666666666666666,
+        "current_stall_duration": 0
+      },
+      "jerk_summary": {
+        "n_steps": 300,
+        "violations": 1,
+        "violation_rate": 0.003367003367003367,
+        "mean_jerk": 0.03839384804570715,
+        "max_jerk": 0.84651118516922,
+        "std_jerk": 0.0650622064390541,
+        "jerk_rms": 0.07554586867906771
+      },
+      "spectral_summary": {
+        "n_steps": 300,
+        "mean_ser": 0.999916512835695,
+        "min_ser": 0.998647587964517,
+        "mean_high_freq": 8.348716430495173e-05
+      },
+      "lps_summary": {
+        "n_steps": 300
+      },
+      "momentum_summary": {
+        "n_steps": 300,
+        "mean_coherence": 0.6780846212374962,
+        "min_coherence": -0.8496617674827576,
+        "reversal_rate": 0.05084745762711865
+      },
+      "atv": 16.22245059348643,
+      "reversal_rate": 5.859060402684563,
+      "episode": 35,
+      "elapsed_s": 45.6175811290741
+    },
+    {
+      "success": true,
+      "steps": 299,
+      "bounds_violations": 67,
+      "velocity_violations": 30,
+      "stall_summary": {
+        "n_steps": 299,
+        "total_stalls": 4,
+        "total_stall_steps": 39,
+        "stall_rate": 0.13043478260869565,
+        "current_stall_duration": 0
+      },
+      "jerk_summary": {
+        "n_steps": 299,
+        "violations": 0,
+        "violation_rate": 0.0,
+        "mean_jerk": 0.024533505148782924,
+        "max_jerk": 0.22016561031341553,
+        "std_jerk": 0.03407467909182907,
+        "jerk_rms": 0.04198781525748263
+      },
+      "spectral_summary": {
+        "n_steps": 299,
+        "mean_ser": 0.9999802208453679,
+        "min_ser": 0.9999025885961804,
+        "mean_high_freq": 1.9779154632137974e-05
+      },
+      "lps_summary": {
+        "n_steps": 299
+      },
+      "momentum_summary": {
+        "n_steps": 299,
+        "mean_coherence": 0.8303354586709012,
+        "min_coherence": -0.8428722023963928,
+        "reversal_rate": 0.017006802721088437
+      },
+      "atv": 12.35055846720934,
+      "reversal_rate": 4.898989898989899,
+      "episode": 36,
+      "elapsed_s": 47.085864543914795
+    },
+    {
+      "success": false,
+      "steps": 300,
+      "bounds_violations": 5,
+      "velocity_violations": 44,
+      "stall_summary": {
+        "n_steps": 300,
+        "total_stalls": 2,
+        "total_stall_steps": 4,
+        "stall_rate": 0.013333333333333334,
+        "current_stall_duration": 0
+      },
+      "jerk_summary": {
+        "n_steps": 300,
+        "violations": 0,
+        "violation_rate": 0.0,
+        "mean_jerk": 0.026412697703348666,
+        "max_jerk": 0.25477293133735657,
+        "std_jerk": 0.03344149983971719,
+        "jerk_rms": 0.04261413511381271
+      },
+      "spectral_summary": {
+        "n_steps": 300,
+        "mean_ser": 0.9999728405834288,
+        "min_ser": 0.9998604868933029,
+        "mean_high_freq": 2.7159416571165274e-05
+      },
+      "lps_summary": {
+        "n_steps": 300
+      },
+      "momentum_summary": {
+        "n_steps": 300,
+        "mean_coherence": 0.8093312430526998,
+        "min_coherence": -0.963504433631897,
+        "reversal_rate": 0.030508474576271188
+      },
+      "atv": 14.752442461438477,
+      "reversal_rate": 4.590604026845638,
+      "episode": 37,
+      "elapsed_s": 50.571410179138184
+    },
+    {
+      "success": true,
+      "steps": 278,
+      "bounds_violations": 59,
+      "velocity_violations": 37,
+      "stall_summary": {
+        "n_steps": 278,
+        "total_stalls": 5,
+        "total_stall_steps": 29,
+        "stall_rate": 0.10431654676258993,
+        "current_stall_duration": 0
+      },
+      "jerk_summary": {
+        "n_steps": 278,
+        "violations": 0,
+        "violation_rate": 0.0,
+        "mean_jerk": 0.020963165163993835,
+        "max_jerk": 0.18293225765228271,
+        "std_jerk": 0.023941969134405692,
+        "jerk_rms": 0.03182251058175202
+      },
+      "spectral_summary": {
+        "n_steps": 278,
+        "mean_ser": 0.9999781950413262,
+        "min_ser": 0.9999215115523324,
+        "mean_high_freq": 2.180495867376564e-05
+      },
+      "lps_summary": {
+        "n_steps": 278
+      },
+      "momentum_summary": {
+        "n_steps": 278,
+        "mean_coherence": 0.8161578401121492,
+        "min_coherence": -0.8979358077049255,
+        "reversal_rate": 0.018315018315018316
+      },
+      "atv": 12.380616900511086,
+      "reversal_rate": 5.094202898550725,
+      "episode": 38,
+      "elapsed_s": 47.75559902191162
+    },
+    {
+      "success": false,
+      "steps": 300,
+      "bounds_violations": 0,
+      "velocity_violations": 31,
+      "stall_summary": {
+        "n_steps": 300,
+        "total_stalls": 2,
+        "total_stall_steps": 54,
+        "stall_rate": 0.18,
+        "current_stall_duration": 32
+      },
+      "jerk_summary": {
+        "n_steps": 300,
+        "violations": 0,
+        "violation_rate": 0.0,
+        "mean_jerk": 0.02118762216283015,
+        "max_jerk": 0.14495882391929626,
+        "std_jerk": 0.021912291952869742,
+        "jerk_rms": 0.030480549068916906
+      },
+      "spectral_summary": {
+        "n_steps": 300,
+        "mean_ser": 0.9999752627368963,
+        "min_ser": 0.9998782879832699,
+        "mean_high_freq": 2.473726310370239e-05
+      },
+      "lps_summary": {
+        "n_steps": 300
+      },
+      "momentum_summary": {
+        "n_steps": 300,
+        "mean_coherence": 0.7919653510138139,
+        "min_coherence": -0.9520027041435242,
+        "reversal_rate": 0.020338983050847456
+      },
+      "atv": 12.374086186289787,
+      "reversal_rate": 5.25503355704698,
+      "episode": 39,
+      "elapsed_s": 50.36726117134094
+    },
+    {
+      "success": false,
+      "steps": 300,
+      "bounds_violations": 0,
+      "velocity_violations": 33,
+      "stall_summary": {
+        "n_steps": 300,
+        "total_stalls": 3,
+        "total_stall_steps": 38,
+        "stall_rate": 0.12666666666666668,
+        "current_stall_duration": 0
+      },
+      "jerk_summary": {
+        "n_steps": 300,
+        "violations": 0,
+        "violation_rate": 0.0,
+        "mean_jerk": 0.02973974468531432,
+        "max_jerk": 0.392975777387619,
+        "std_jerk": 0.037866327492322646,
+        "jerk_rms": 0.04814884392904477
+      },
+      "spectral_summary": {
+        "n_steps": 300,
+        "mean_ser": 0.9999513708701754,
+        "min_ser": 0.9994396428120164,
+        "mean_high_freq": 4.8629129824617756e-05
+      },
+      "lps_summary": {
+        "n_steps": 300
+      },
+      "momentum_summary": {
+        "n_steps": 300,
+        "mean_coherence": 0.7033481840138971,
+        "min_coherence": -0.8738503456115723,
+        "reversal_rate": 0.020338983050847456
+      },
+      "atv": 14.235862782225013,
+      "reversal_rate": 5.805369127516778,
+      "episode": 40,
+      "elapsed_s": 47.24517226219177
+    },
+    {
+      "success": true,
+      "steps": 289,
+      "bounds_violations": 62,
+      "velocity_violations": 29,
+      "stall_summary": {
+        "n_steps": 289,
+        "total_stalls": 5,
+        "total_stall_steps": 28,
+        "stall_rate": 0.09688581314878893,
+        "current_stall_duration": 0
+      },
+      "jerk_summary": {
+        "n_steps": 289,
+        "violations": 0,
+        "violation_rate": 0.0,
+        "mean_jerk": 0.022688586694689896,
+        "max_jerk": 0.25722604990005493,
+        "std_jerk": 0.033939932886144816,
+        "jerk_rms": 0.0408251271953741
+      },
+      "spectral_summary": {
+        "n_steps": 289,
+        "mean_ser": 0.9999804341283651,
+        "min_ser": 0.9999125794381953,
+        "mean_high_freq": 1.9565871634874554e-05
+      },
+      "lps_summary": {
+        "n_steps": 289
+      },
+      "momentum_summary": {
+        "n_steps": 289,
+        "mean_coherence": 0.8448126042445361,
+        "min_coherence": -0.7441477179527283,
+        "reversal_rate": 0.014084507042253521
+      },
+      "atv": 11.506309445947409,
+      "reversal_rate": 4.919860627177701,
+      "episode": 41,
+      "elapsed_s": 47.371010065078735
+    },
+    {
+      "success": false,
+      "steps": 300,
+      "bounds_violations": 123,
+      "velocity_violations": 40,
+      "stall_summary": {
+        "n_steps": 300,
+        "total_stalls": 2,
+        "total_stall_steps": 11,
+        "stall_rate": 0.03666666666666667,
+        "current_stall_duration": 0
+      },
+      "jerk_summary": {
+        "n_steps": 300,
+        "violations": 1,
+        "violation_rate": 0.003367003367003367,
+        "mean_jerk": 0.038888409119162096,
+        "max_jerk": 0.6760831475257874,
+        "std_jerk": 0.057547761508515996,
+        "jerk_rms": 0.06945540453024779
+      },
+      "spectral_summary": {
+        "n_steps": 300,
+        "mean_ser": 0.9998924403556023,
+        "min_ser": 0.9982120893347227,
+        "mean_high_freq": 0.00010755964439768118
+      },
+      "lps_summary": {
+        "n_steps": 300
+      },
+      "momentum_summary": {
+        "n_steps": 300,
+        "mean_coherence": 0.7299830611353203,
+        "min_coherence": -0.9368995428085327,
+        "reversal_rate": 0.04406779661016949
+      },
+      "atv": 18.588467141613364,
+      "reversal_rate": 5.409395973154362,
+      "episode": 42,
+      "elapsed_s": 47.885820388793945
+    },
+    {
+      "success": true,
+      "steps": 283,
+      "bounds_violations": 0,
+      "velocity_violations": 42,
+      "stall_summary": {
+        "n_steps": 283,
+        "total_stalls": 3,
+        "total_stall_steps": 14,
+        "stall_rate": 0.04946996466431095,
+        "current_stall_duration": 0
+      },
+      "jerk_summary": {
+        "n_steps": 283,
+        "violations": 0,
+        "violation_rate": 0.0,
+        "mean_jerk": 0.028450162968199168,
+        "max_jerk": 0.2878907322883606,
+        "std_jerk": 0.039494091425470265,
+        "jerk_rms": 0.04867437755575817
+      },
+      "spectral_summary": {
+        "n_steps": 283,
+        "mean_ser": 0.9999704679474003,
+        "min_ser": 0.9998591025161943,
+        "mean_high_freq": 2.9532052599701153e-05
+      },
+      "lps_summary": {
+        "n_steps": 283
+      },
+      "momentum_summary": {
+        "n_steps": 283,
+        "mean_coherence": 0.7726906240187424,
+        "min_coherence": -0.8451526165008545,
+        "reversal_rate": 0.03237410071942446
+      },
+      "atv": 12.888599088415504,
+      "reversal_rate": 5.0213523131672595,
+      "episode": 43,
+      "elapsed_s": 45.887192249298096
+    },
+    {
+      "success": true,
+      "steps": 247,
+      "bounds_violations": 39,
+      "velocity_violations": 41,
+      "stall_summary": {
+        "n_steps": 247,
+        "total_stalls": 1,
+        "total_stall_steps": 9,
+        "stall_rate": 0.03643724696356275,
+        "current_stall_duration": 0
+      },
+      "jerk_summary": {
+        "n_steps": 247,
+        "violations": 0,
+        "violation_rate": 0.0,
+        "mean_jerk": 0.027262969858577995,
+        "max_jerk": 0.19428187608718872,
+        "std_jerk": 0.02858649462495625,
+        "jerk_rms": 0.03950262270346597
+      },
+      "spectral_summary": {
+        "n_steps": 247,
+        "mean_ser": 0.9999811499760801,
+        "min_ser": 0.9999505203927544,
+        "mean_high_freq": 1.8850023919880776e-05
+      },
+      "lps_summary": {
+        "n_steps": 247
+      },
+      "momentum_summary": {
+        "n_steps": 247,
+        "mean_coherence": 0.8340732743525839,
+        "min_coherence": -0.5714633464813232,
+        "reversal_rate": 0.004132231404958678
+      },
+      "atv": 12.09494555555284,
+      "reversal_rate": 4.485714285714286,
+      "episode": 44,
+      "elapsed_s": 38.61146569252014
+    },
+    {
+      "success": true,
+      "steps": 297,
+      "bounds_violations": 88,
+      "velocity_violations": 46,
+      "stall_summary": {
+        "n_steps": 297,
+        "total_stalls": 2,
+        "total_stall_steps": 2,
+        "stall_rate": 0.006734006734006734,
+        "current_stall_duration": 0
+      },
+      "jerk_summary": {
+        "n_steps": 297,
+        "violations": 0,
+        "violation_rate": 0.0,
+        "mean_jerk": 0.02747943259927691,
+        "max_jerk": 0.28012144565582275,
+        "std_jerk": 0.033344647245195404,
+        "jerk_rms": 0.04320861853710114
+      },
+      "spectral_summary": {
+        "n_steps": 297,
+        "mean_ser": 0.9999758260509009,
+        "min_ser": 0.9999045160552912,
+        "mean_high_freq": 2.4173949099148828e-05
+      },
+      "lps_summary": {
+        "n_steps": 297
+      },
+      "momentum_summary": {
+        "n_steps": 297,
+        "mean_coherence": 0.790839378964411,
+        "min_coherence": -0.9673725962638855,
+        "reversal_rate": 0.05136986301369863
+      },
+      "atv": 15.047765736468136,
+      "reversal_rate": 4.861016949152543,
+      "episode": 45,
+      "elapsed_s": 47.559354066848755
+    },
+    {
+      "success": false,
+      "steps": 300,
+      "bounds_violations": 0,
+      "velocity_violations": 45,
+      "stall_summary": {
+        "n_steps": 300,
+        "total_stalls": 4,
+        "total_stall_steps": 55,
+        "stall_rate": 0.18333333333333332,
+        "current_stall_duration": 8
+      },
+      "jerk_summary": {
+        "n_steps": 300,
+        "violations": 0,
+        "violation_rate": 0.0,
+        "mean_jerk": 0.019457490638099133,
+        "max_jerk": 0.17661863565444946,
+        "std_jerk": 0.024706030272257064,
+        "jerk_rms": 0.031448082195030556
+      },
+      "spectral_summary": {
+        "n_steps": 300,
+        "mean_ser": 0.9999773373087313,
+        "min_ser": 0.9999230586208564,
+        "mean_high_freq": 2.2662691268715562e-05
+      },
+      "lps_summary": {
+        "n_steps": 300
+      },
+      "momentum_summary": {
+        "n_steps": 300,
+        "mean_coherence": 0.7892200526086834,
+        "min_coherence": -0.924763023853302,
+        "reversal_rate": 0.013559322033898305
+      },
+      "atv": 12.752661792561412,
+      "reversal_rate": 5.308724832214765,
+      "episode": 46,
+      "elapsed_s": 47.35244798660278
+    },
+    {
+      "success": false,
+      "steps": 300,
+      "bounds_violations": 27,
+      "velocity_violations": 31,
+      "stall_summary": {
+        "n_steps": 300,
+        "total_stalls": 0,
+        "total_stall_steps": 0,
+        "stall_rate": 0.0,
+        "current_stall_duration": 0
+      },
+      "jerk_summary": {
+        "n_steps": 300,
+        "violations": 1,
+        "violation_rate": 0.003367003367003367,
+        "mean_jerk": 0.03796746981289451,
+        "max_jerk": 0.6071550250053406,
+        "std_jerk": 0.05335713381915195,
+        "jerk_rms": 0.06548673524758998
+      },
+      "spectral_summary": {
+        "n_steps": 300,
+        "mean_ser": 0.9999165522260078,
+        "min_ser": 0.9988113142073846,
+        "mean_high_freq": 8.344777399216241e-05
+      },
+      "lps_summary": {
+        "n_steps": 300
+      },
+      "momentum_summary": {
+        "n_steps": 300,
+        "mean_coherence": 0.7024987892137241,
+        "min_coherence": -0.955829381942749,
+        "reversal_rate": 0.03389830508474576
+      },
+      "atv": 17.210545986890793,
+      "reversal_rate": 5.640939597315437,
+      "episode": 47,
+      "elapsed_s": 43.74223327636719
+    },
+    {
+      "success": false,
+      "steps": 300,
+      "bounds_violations": 0,
+      "velocity_violations": 43,
+      "stall_summary": {
+        "n_steps": 300,
+        "total_stalls": 4,
+        "total_stall_steps": 17,
+        "stall_rate": 0.056666666666666664,
+        "current_stall_duration": 0
+      },
+      "jerk_summary": {
+        "n_steps": 300,
+        "violations": 1,
+        "violation_rate": 0.003367003367003367,
+        "mean_jerk": 0.0298943894629928,
+        "max_jerk": 0.542178750038147,
+        "std_jerk": 0.04533724499280494,
+        "jerk_rms": 0.05430598774447171
+      },
+      "spectral_summary": {
+        "n_steps": 300,
+        "mean_ser": 0.9999300513578033,
+        "min_ser": 0.9989027374215927,
+        "mean_high_freq": 6.994864219667107e-05
+      },
+      "lps_summary": {
+        "n_steps": 300
+      },
+      "momentum_summary": {
+        "n_steps": 300,
+        "mean_coherence": 0.7064678681667074,
+        "min_coherence": -0.9147216081619263,
+        "reversal_rate": 0.02711864406779661
+      },
+      "atv": 13.678026070818305,
+      "reversal_rate": 5.738255033557047,
+      "episode": 48,
+      "elapsed_s": 47.17221927642822
+    },
+    {
+      "success": false,
+      "steps": 300,
+      "bounds_violations": 0,
+      "velocity_violations": 30,
+      "stall_summary": {
+        "n_steps": 300,
+        "total_stalls": 1,
+        "total_stall_steps": 18,
+        "stall_rate": 0.06,
+        "current_stall_duration": 22
+      },
+      "jerk_summary": {
+        "n_steps": 300,
+        "violations": 0,
+        "violation_rate": 0.0,
+        "mean_jerk": 0.02498985661400689,
+        "max_jerk": 0.1960321068763733,
+        "std_jerk": 0.025077541855519078,
+        "jerk_rms": 0.03540305126827256
+      },
+      "spectral_summary": {
+        "n_steps": 300,
+        "mean_ser": 0.999978742952007,
+        "min_ser": 0.9999120733641556,
+        "mean_high_freq": 2.1257047993050726e-05
+      },
+      "lps_summary": {
+        "n_steps": 300
+      },
+      "momentum_summary": {
+        "n_steps": 300,
+        "mean_coherence": 0.7479838484045812,
+        "min_coherence": -0.9321980476379395,
+        "reversal_rate": 0.04067796610169491
+      },
+      "atv": 13.033025774173439,
+      "reversal_rate": 5.087248322147651,
+      "episode": 49,
+      "elapsed_s": 43.72304654121399
+    }
+  ]
+}

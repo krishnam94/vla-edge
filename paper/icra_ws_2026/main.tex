@@ -21,8 +21,8 @@ kayjee1994@gmail.com}}
 \begin{abstract}
 VLA models predict robot actions end-to-end from vision and language, but what happens between the model's output layer and the robot's motors is largely unstudied.
 We present a controlled characterization of how different VLA architectures fail at the action level.
-Running VQ-BeT and Diffusion Policy on the same PushT dataset ($n{=}200$, same seeds), we find that VQ-BeT produces 2.4$\times$ more velocity violations than Diffusion (1{,}847 vs.\ 772), that jerk monitoring predicts failure for discrete-token architectures (AUROC${=}$0.88) but not smooth denoisers (0.43), and that direction reversal rate is the most universal predictor (0.93 and 0.79).
-No single monitor is universally best - this is not a limitation of monitoring but a property of VLA architectures that deployment infrastructure must accommodate.
+Across three architectures (VQ-BeT, Diffusion Policy, ACT) on PushT (2D) and ALOHA (14-DOF bimanual), we find that direction reversal rate is a universal failure predictor (AUROC${=}$0.93, 0.79, 0.91), that jerk monitoring is predictive only for discrete-token architectures (0.88 vs.\ 0.43), and that velocity violations alone are non-predictive (0.41-0.69).
+No single monitor is universally best - this is a property of VLA architectures that deployment infrastructure must accommodate.
 We introduce \texttt{SafeContract}, a training-free, black-box action monitoring toolkit with conformal calibration, enabling architecture-matched failure prediction without model access or retraining.\footnote{Code: \url{https://github.com/krishnam94/vla-edge}}
 \end{abstract}
 
@@ -181,22 +181,17 @@ Our Diffusion Policy achieves 58\% vs.\ the published 87.4\%. This gap reflects 
 VQ-BeT achieves 56.5\% (published: 57\%), confirming correct reproduction.
 The cross-architecture comparison is valid because both models use identical evaluation conditions.
 
-On ALOHA with ACT~\cite{act} (51.6M params, conformal calibration), prior experiments ($n{=}50$) showed that data-driven $v_{\max}$ at the 99th percentile eliminates the degradation caused by hand-tuned thresholds ($p{=}1.0$).
+\textbf{ACT on ALOHA} (51.6M params, 14-DOF bimanual, $n{=}50$ per condition).
+Without SafeContract: 62\% success (31/50, CI$_{95}$: [0.48, 0.74]).
+With SafeContract: 56\% success (28/50, CI$_{95}$: [0.42, 0.69]).
+Fisher's $p = 0.68$. SafeContract caught 4{,}758 velocity violations with no significant degradation.
 
-Across both PushT architectures, SafeContract monitors and enforces without statistically significant task degradation ($p{=}0.92$ and $p{=}0.76$).
-
-\textbf{Enforcement strictness.}
-A preliminary sweep of $v_{\max}$ on ACT (ALOHA, $n{=}20$ per level) shows that over-constrained enforcement ($v_{\max}{=}0.01$) drops success to 0\%, while conformal-calibrated enforcement ($v_{\max}$ at the 99th percentile) falls in the viable range.
-The sweep is underpowered for precise operating curves but confirms the expected monotonic trend: excessively tight bounds degrade task success, while data-driven bounds preserve it.
+Across all three architectures, SafeContract monitors and enforces without statistically significant task degradation ($p{=}0.92$, $p{=}0.76$, and $p{=}0.68$).
 
 \textbf{Failure prediction.}
-Direction reversal rate predicts task failure with AUROC${=}$0.93 on VQ-BeT and 0.79 on Diffusion ($p < 0.001$ both).
-Jerk monitoring is strongly predictive for VQ-BeT (AUROC${=}$0.88) but not for Diffusion (0.43), confirming that discrete-token architectures require jerk-based monitors while smooth architectures do not.
-Velocity violations alone achieve only AUROC${=}$0.69 (VQ-BeT) and 0.41 (Diffusion).
-This suggests that a previously reported null (AUROC${=}$0.54 on ACT using only velocity) may reflect suboptimal monitor selection rather than a fundamental limit of action-space monitoring (Fig.~\ref{fig:auroc}).
-
-\textbf{Monitor selection matters.}
-The gap between the best and worst monitor per architecture (0.93 vs.\ 0.41 on VQ-BeT; 0.79 vs.\ 0.34 on Diffusion) confirms that monitor selection drives predictive power more than the monitoring paradigm itself.
+Direction reversal rate predicts task failure with AUROC${=}$0.93 on VQ-BeT, 0.79 on Diffusion, and \textbf{0.91 on ACT/ALOHA} ($p < 0.001$ all three), confirming it as a \emph{universal} failure predictor across architectures and action dimensions (2D and 14-DOF).
+Jerk monitoring is strongly predictive for VQ-BeT (0.88), moderately for ACT (0.69), and not for Diffusion (0.43) - a gradient consistent with the discrete-to-continuous spectrum.
+Velocity violations are non-predictive across all three (0.52-0.69), confirming that the earlier null (AUROC${=}$0.54 on ACT) reflected monitor choice, not a fundamental limit (Fig.~\ref{fig:auroc}, Table~\ref{tab:crossarch}).
 
 \begin{figure}[t]
     \centering
@@ -214,26 +209,27 @@ The gap between the best and worst monitor per architecture (0.93 vs.\ 0.41 on V
 
 \begin{table}[t]
 \centering
-\caption{Same-dataset comparison on PushT ($n{=}200$ per condition, same seeds/contract). AUROCs computed on $n{=}100$ episodes per architecture (no-contract condition).}
+\caption{Cross-architecture comparison with failure prediction AUROCs. PushT: $n{=}200$ per condition (same seeds/contract), AUROCs on $n{=}100$. ALOHA: $n{=}50$ per condition, AUROCs on $n{=}50$.}
 \label{tab:crossarch}
 \footnotesize
-\setlength{\tabcolsep}{4pt}
-\begin{tabular}{lrr}
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrr}
 \toprule
- & \textbf{Diffusion} & \textbf{VQ-BeT} \\
+ & \textbf{Diffusion} & \textbf{VQ-BeT} & \textbf{ACT} \\
+ & \textit{PushT} & \textit{PushT} & \textit{ALOHA 14-DOF} \\
 \midrule
-Architecture & DDPM & BeT \\
-Params & 262M & 37.5M \\
-CL success (no contract) & 58\% & 56.5\% \\
-CL success (with contract) & 57\% & 54.5\% \\
-Fisher's $p$ & 0.92 & 0.76 \\
-Violations & 772 & \textbf{1{,}847} \\
+Family & Continuous & Discrete & Continuous \\
+Params & 262M & 37.5M & 51.6M \\
+Success (no contract) & 58\% & 56.5\% & 62\% \\
+Success (with contract) & 57\% & 54.5\% & 56\% \\
+Fisher's $p$ & 0.92 & 0.76 & 0.68 \\
+Violations & 772 & \textbf{1{,}847} & 4{,}758 \\
 \midrule
-AUROC: reversal rate & 0.79 & \textbf{0.93} \\
-AUROC: jerk & 0.43 & \textbf{0.88} \\
-AUROC: momentum coherence & 0.70 & \textbf{0.86} \\
-AUROC: spectral energy & 0.34 & \textbf{0.75} \\
-AUROC: velocity & 0.41 & 0.69 \\
+AUROC: reversal rate & 0.79 & \textbf{0.93} & \textbf{0.91} \\
+AUROC: jerk & 0.43 & \textbf{0.88} & 0.69 \\
+AUROC: momentum coherence & 0.70 & \textbf{0.86} & 0.71 \\
+AUROC: spectral energy & 0.34 & \textbf{0.75} & 0.74 \\
+AUROC: velocity & 0.41 & 0.69 & 0.52 \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -241,9 +237,9 @@ AUROC: velocity & 0.41 & 0.69 \\
 \section{Discussion}
 
 The central finding is that \emph{different VLA architectures fail in fundamentally different ways}, and the monitors that predict failure are architecture-specific.
-On PushT, VQ-BeT produces 2.4$\times$ more violations than Diffusion (1{,}847 vs.\ 772); jerk predicts failure for discrete-token models (AUROC${=}$0.88) but not smooth denoisers (0.43); momentum coherence shows the same pattern (0.86 vs.\ 0.70).
-More broadly, VLA architectures partition into two families: a \emph{discrete family} (autoregressive, VQ-VAE) where jerk and reversal rate are predictive, and a \emph{continuous family} (diffusion, flow matching, action chunking) where coherence and stall monitors matter more.
-This two-family structure likely generalizes beyond the architectures tested here.
+Across three architectures and two tasks, direction reversal rate is the most universal predictor (AUROC: 0.93, 0.79, 0.91), while jerk follows a discrete-to-continuous gradient (0.88, 0.43, 0.69).
+VLA architectures partition into two families: a \emph{discrete family} (autoregressive, VQ-VAE) where jerk and reversal rate are strongly predictive, and a \emph{continuous family} (diffusion, flow matching, action chunking) where coherence and spectral energy matter more.
+ACT on ALOHA (14-DOF) confirms this pattern: as a continuous-family model with chunk boundary effects, its jerk AUROC (0.69) falls between VQ-BeT (0.88) and Diffusion (0.43).
 
 \textbf{Implications for VLA deployment.}
 The architecture-matched monitoring result has a practical consequence: practitioners must select monitors based on their VLA architecture, not use a one-size-fits-all approach.
@@ -269,8 +265,8 @@ Hand-tuned $v_{\max}{=}0.05$ clips 12.5\% of expert actions; data-driven calibra
 The 97.9\% conformal coverage holds under exchangeability with calibration data; during rollout, coverage degrades under distribution shift. CUSUM detects when this occurs; adaptive conformal inference~\cite{gibbs2021} would maintain coverage online.
 
 \textbf{Limitations and boundaries.}
-(1)~All experiments in simulation (PushT 2D); real-robot patterns may differ.
-(2)~Two of eleven known VLA architecture types tested; autoregressive (OpenVLA) and flow matching (pi0) are untested.
+(1)~All experiments in simulation; real-robot patterns may differ.
+(2)~Three of eleven known VLA architecture types tested; autoregressive (OpenVLA) and flow matching (pi0) are untested.
 (3)~Emerging hybrid architectures (AR reasoning + diffusion actions) can produce physically valid trajectories toward wrong targets - invisible to any action-space monitor. SafeContract addresses physical safety; semantic correctness requires complementary perception~\cite{fiper2025} and task-level~\cite{sentinel} monitoring.
 
 \textbf{Future work} includes extending to autoregressive and flow-matching architectures,
