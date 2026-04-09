@@ -114,11 +114,11 @@ Stacking decorators is order-independent for per-joint bounds; velocity composit
 \subsection{Conformal Calibration}
 \label{sec:calibration}
 
-Hand-tuned thresholds are unreliable: a common choice of $v_{\max}{=}0.05$ clips 12.5\% of \emph{expert} actions on the ALOHA dataset.
+Hand-tuned thresholds are unreliable: a common choice of $v_{\max}{=}0.05$ clips a significant fraction of \emph{expert} actions on the ALOHA dataset.
 We replace hand-tuning with split-conformal prediction~\cite{vovk2005}.
 Demonstration episodes are split 80/20; nonconformity scores $s_i = \max_j |a_{ij} - \hat{\mu}_j| / \hat{\sigma}_j$ are computed on the calibration set; the $(1{-}\alpha)(1 + 1/n)$ quantile yields bounds with a finite-sample coverage guarantee.
-At $\alpha{=}0.05$, conformal bounds are 25\% tighter than the 4$\sigma$ heuristic while achieving 97.9\% holdout coverage (99.5\% per dimension).
-Separately, velocity limits are set per-joint at the 99th percentile of consecutive action deltas from the calibration set (an empirical heuristic, not a conformal guarantee), covering 99\% of expert steps versus 87.5\% for the hand-tuned value.
+At $\alpha{=}0.05$, conformal bounds are 25\% tighter than the 4$\sigma$ heuristic while achieving 97.9\% holdout coverage (99.1\% minimum per dimension).
+Separately, velocity limits are set per-joint at the 99th percentile of consecutive action deltas from the calibration set (an empirical heuristic, not a conformal guarantee).
 
 \section{Related Work}
 
@@ -258,7 +258,7 @@ Unlike SAFE~\cite{safe2025} and FIPER~\cite{fiper2025}, which require training a
 
 \textbf{Scope.}
 SafeContract is \emph{monitoring infrastructure}, not a safety guarantee - it composes with CBF-based workspace constraints~\cite{aegis} and task-level monitors~\cite{sentinel} as the innermost layer of a defense-in-depth stack.
-Hand-tuned $v_{\max}{=}0.05$ clips 12.5\% of expert actions; data-driven calibration at the 99th percentile eliminates this ($p{=}1.0$).
+Hand-tuned $v_{\max}{=}0.05$ clips a significant fraction of expert actions; data-driven calibration at the 99th percentile eliminates this.
 The 97.9\% conformal coverage holds under exchangeability with calibration data; during rollout, coverage degrades under distribution shift. CUSUM detects when this occurs; adaptive conformal inference~\cite{gibbs2021} would maintain coverage online.
 
 \textbf{Limitations and boundaries.}
