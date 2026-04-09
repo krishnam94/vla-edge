@@ -42,11 +42,11 @@ We show this assumption is wrong - and that it is wrong in \emph{architecture-sp
 Comparing VQ-BeT and Diffusion Policy on the \emph{same} PushT dataset ($n{=}200$, same seeds), we find architecture-determined failure signatures: VQ-BeT produces 2.4$\times$ more velocity violations (1{,}847 vs.\ 772), jerk predicts failure only for discrete-token models (AUROC${=}$0.88 vs.\ 0.43), and direction reversal rate is the most universal predictor (0.93 and 0.79).
 Effective deployment monitoring must be architecture-aware.
 
-We introduce \texttt{SafeContract}, a training-free, black-box action monitoring toolkit with three contributions:
+Our contributions are empirical findings about VLA failure, enabled by \texttt{SafeContract}, a training-free, black-box action monitoring toolkit:
 \begin{enumerate}
-    \item \textbf{Architecture-specific failure signatures.} Same-dataset comparison ($n{=}200$) reveals that VQ-BeT and Diffusion fail in fundamentally different ways, and that the monitors predicting failure differ by architecture (Sec.~\ref{sec:closedloop}).
-    \item \textbf{Architecture-matched failure prediction.} Direction reversal rate achieves AUROC${=}$0.93 (VQ-BeT) and 0.79 (Diffusion); jerk is predictive only for discrete-token models (0.88 vs.\ 0.43). Velocity violations alone yield only 0.69 and 0.41, suggesting that monitor selection matters more than the monitoring paradigm itself (Sec.~\ref{sec:closedloop}).
-    \item \textbf{Conformal calibration.} Split-conformal bounds (97.9\% coverage), data-driven velocity limits, and CUSUM shift detection~\cite{page1954} replace hand-tuned thresholds with statistical guarantees~\cite{vovk2005} (Sec.~\ref{sec:monitoring},~\ref{sec:calibration}).
+    \item \textbf{VLA architectures fail in fundamentally different ways.} Same-dataset comparison ($n{=}200$) shows VQ-BeT produces 2.4$\times$ more violations than Diffusion, with qualitatively different failure signatures (Sec.~\ref{sec:closedloop}).
+    \item \textbf{No single monitor is universally best.} Direction reversal rate achieves AUROC${=}$0.93 (VQ-BeT) and 0.79 (Diffusion); jerk is predictive only for discrete-token models (0.88 vs.\ 0.43). Monitor selection matters more than the monitoring paradigm (Sec.~\ref{sec:closedloop}).
+    \item \textbf{Data-driven calibration eliminates hand-tuning.} Split-conformal bounds~\cite{vovk2005} (97.9\% coverage) and CUSUM shift detection~\cite{page1954} replace ad-hoc thresholds that clip 12.5\% of expert actions (Sec.~\ref{sec:calibration}).
 \end{enumerate}
 
 \section{Method}
@@ -147,13 +147,10 @@ Platform: Apple M3, CPU, Python 3.12. Full monitoring overhead is negligible: $<
 \subsection{VLAs Produce Unsafe Actions (EXP-A)}
 \label{sec:exp_a}
 
-We run SmolVLA on 100 consecutive LIBERO observations. \textbf{Result}: 100\% of observations produce at least one out-of-bounds dimension, with values from $-2.16$ to $3.70$ (expected $[-1, 1]$). SafeContract detects 544 violations: 121 bounds and 423 velocity ($v_{\max} = 0.1$).
-
-\textbf{Normalization analysis.}
-SmolVLA was trained on SO-100 data.
-After correct MEAN\_STD unnormalization, position bounds violations drop from \textbf{86\% to 0\%}: every bounds violation was a normalization artifact.
-However, velocity violations persist: at a conservative $v_{\max}{=}0.1$ rad/step, \textbf{16\%} of expert and \textbf{98\%} of SmolVLA consecutive steps violate on at least one joint. The \textbf{6$\times$ gap} is the robust finding; the absolute rates depend on $v_{\max}$ choice.
-Bounds enforcement catches integration bugs; velocity monitoring catches physical concerns normalization cannot address.
+We run SmolVLA on 100 consecutive LIBERO observations with SafeContract monitoring.
+After correct MEAN\_STD unnormalization, bounds violations drop from 86\% to 0\%: every bounds violation was a normalization artifact, detectable by monitoring.
+The robust finding is velocity: at $v_{\max}{=}0.1$ rad/step, \textbf{98\%} of SmolVLA steps violate on at least one joint versus \textbf{16\%} of expert steps - a \textbf{6$\times$ gap} that persists regardless of normalization.
+Bounds monitoring catches integration bugs; velocity monitoring catches physical concerns that normalization cannot address.
 
 \begin{figure}[t]
     \centering
