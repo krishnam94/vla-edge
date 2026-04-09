@@ -246,8 +246,9 @@ AUROC: violation count (baseline) & 0.45 & 0.72 \\
 \section{Discussion}
 
 The central finding is that \emph{different VLA architectures fail in fundamentally different ways}, and the monitors that predict failure are architecture-specific.
-On PushT, VQ-BeT produces 2.4$\times$ more violations than Diffusion (1{,}847 vs.\ 772); jerk predicts failure for discrete-token models (AUROC${=}$0.88) but not smooth denoisers (0.43); momentum coherence shows the same architecture-dependent pattern (0.86 vs.\ 0.70).
-A deployment toolkit shipping a single monitor will miss failures on architectures it was not designed for.
+On PushT, VQ-BeT produces 2.4$\times$ more violations than Diffusion (1{,}847 vs.\ 772); jerk predicts failure for discrete-token models (AUROC${=}$0.88) but not smooth denoisers (0.43); momentum coherence shows the same pattern (0.86 vs.\ 0.70).
+More broadly, VLA architectures partition into two families: a \emph{discrete family} (autoregressive, VQ-VAE) where jerk and reversal rate are predictive, and a \emph{continuous family} (diffusion, flow matching, action chunking) where coherence and stall monitors matter more.
+This two-family structure likely generalizes beyond the architectures tested here.
 
 \textbf{Implications for VLA deployment.}
 The architecture-matched monitoring result has a practical consequence: practitioners must select monitors based on their VLA architecture, not use a one-size-fits-all approach.
