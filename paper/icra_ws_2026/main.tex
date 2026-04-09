@@ -235,7 +235,6 @@ Violations & 772 & \textbf{1{,}847} \\
 \midrule
 AUROC: reversal rate & 0.79 & \textbf{0.93} \\
 AUROC: jerk & 0.43 & \textbf{0.88} \\
-AUROC: stall rate & \textbf{0.65} & 0.52 \\
 AUROC: momentum coherence & 0.70 & \textbf{0.86} \\
 AUROC: spectral energy & 0.34 & \textbf{0.75} \\
 AUROC: velocity & 0.41 & 0.69 \\
@@ -247,13 +246,13 @@ AUROC: violation count (baseline) & 0.45 & 0.72 \\
 \section{Discussion}
 
 The central finding is that \emph{different VLA architectures fail in fundamentally different ways}, and the monitors that predict failure are architecture-specific.
-On PushT, VQ-BeT produces 2.4$\times$ more violations than Diffusion (1{,}847 vs.\ 772); jerk predicts failure for discrete-token models (AUROC${=}$0.88) but not smooth denoisers (0.43); conversely, stall detection is the only monitor more predictive for Diffusion than VQ-BeT (0.65 vs.\ 0.52), capturing policy-freeze failures invisible to bounds/velocity monitoring.
+On PushT, VQ-BeT produces 2.4$\times$ more violations than Diffusion (1{,}847 vs.\ 772); jerk predicts failure for discrete-token models (AUROC${=}$0.88) but not smooth denoisers (0.43); momentum coherence shows the same architecture-dependent pattern (0.86 vs.\ 0.70).
 A deployment toolkit shipping a single monitor will miss failures on architectures it was not designed for.
 
 \textbf{Implications for VLA deployment.}
 The architecture-matched monitoring result has a practical consequence: practitioners must select monitors based on their VLA architecture, not use a one-size-fits-all approach.
 For discrete-token models (VQ-BeT, OpenVLA), jerk and reversal rate are the strongest predictors.
-For smooth denoisers (Diffusion, flow-matching), stall detection and momentum coherence matter more.
+For smooth denoisers (Diffusion, flow-matching), momentum coherence and reversal rate are more reliable than jerk-based monitors.
 Given a new VLA deployment, the practitioner runs \texttt{from\_demos()} on their demonstration data, wraps \texttt{predict()}, and monitors the CUSUM alarm during rollout; if the alarm fires persistently, they should reduce $v_{\max}$ or switch to a fallback controller.
 \texttt{SafetyGuard}, SafeContract's top-level API, integrates all monitors in a single callable calibrated from demonstration data:
 
