@@ -207,21 +207,18 @@ Velocity violations are non-predictive across all three (0.52-0.69), confirming 
     \label{fig:closedloop}
 \end{figure}
 
-\begin{table}[t]
+\begin{table*}[t]
 \centering
 \caption{Cross-architecture comparison with failure prediction AUROCs. PushT: $n{=}200$ per condition (same seeds/contract), AUROCs on $n{=}100$. ALOHA: $n{=}50$ per condition, AUROCs on $n{=}50$.}
 \label{tab:crossarch}
-\footnotesize
-\setlength{\tabcolsep}{3pt}
-\begin{tabular}{lrrr}
+\small
+\begin{tabular}{lccc}
 \toprule
- & \textbf{Diffusion} & \textbf{VQ-BeT} & \textbf{ACT} \\
- & \textit{PushT} & \textit{PushT} & \textit{ALOHA 14-DOF} \\
+ & \textbf{Diffusion (PushT)} & \textbf{VQ-BeT (PushT)} & \textbf{ACT (ALOHA 14-DOF)} \\
 \midrule
 Family & Continuous & Discrete & Continuous \\
 Params & 262M & 37.5M & 51.6M \\
-Success (no contract) & 58\% & 56.5\% & 62\% \\
-Success (with contract) & 57\% & 54.5\% & 56\% \\
+Success (no / with contract) & 58\% / 57\% & 56.5\% / 54.5\% & 62\% / 56\% \\
 Fisher's $p$ & 0.92 & 0.76 & 0.68 \\
 Violations & 772 & \textbf{1{,}847} & 4{,}758 \\
 \midrule
@@ -232,7 +229,7 @@ AUROC: spectral energy & 0.34 & \textbf{0.75} & 0.74 \\
 AUROC: velocity & 0.41 & 0.69 & 0.52 \\
 \bottomrule
 \end{tabular}
-\end{table}
+\end{table*}
 
 \section{Discussion}
 
