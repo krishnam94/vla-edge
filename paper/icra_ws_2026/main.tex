@@ -36,7 +36,7 @@ VLA, action-space monitoring, failure prediction, architecture analysis, conform
 
 \section{Introduction}
 
-VLA models~\cite{openvla,smolvla} predict robot actions end-to-end from vision and language.
+VLA models~\cite{rt2,openvla,smolvla} predict robot actions end-to-end from vision and language.
 But what happens to those actions between the model's output layer and the robot's motors is largely unstudied.
 OpenVLA's deployment script sends raw outputs directly to motors with zero bounds checking~\cite{openvla};
 pi0 streams actions via WebSocket with no validation~\cite{pi0};
@@ -249,7 +249,7 @@ The \emph{continuous family} (diffusion, flow matching, action chunking) produce
 Reversal rate remains predictive (0.79--0.91), but jerk drops to chance (0.41 for pure diffusion).
 
 ACT on ALOHA sits between the families: as a continuous model with chunk boundary effects, its jerk AUROC (0.69) is intermediate.
-The gradient VQ-BeT (0.88) $\rightarrow$ ACT (0.69) $\rightarrow$ Diffusion (0.41) tracks the discrete-to-continuous spectrum of action generation.
+The gradient VQ-BeT (0.88) $\rightarrow$ ACT (0.69) $\rightarrow$ Diffusion (0.41) tracks the discrete-to-continuous spectrum, though we note this is partially confounded by task dimensionality (PushT 2D vs.\ ALOHA 14-DOF); isolating the architecture effect requires testing all three on the same task.
 
 \textbf{The velocity monitoring blind spot.}
 The ACT result is perhaps the most practically significant.
@@ -280,6 +280,7 @@ Real-robot validation is essential before deployment recommendations can be made
 With the EU AI Act (Article 9) mandating continuous monitoring for high-risk AI systems by 2027, architecture-matched action monitoring is an urgent practical need.
 
 \begin{thebibliography}{20}
+\bibitem{rt2} Brohan, A. et al., ``RT-2: Vision-Language-Action Models Transfer Web Knowledge to Robotic Control,'' CoRL 2023, arXiv:2307.15818.
 \bibitem{openvla} Kim, M.J. et al., ``OpenVLA: An Open-Source Vision-Language-Action Model,'' CoRL 2024, arXiv:2406.09246.
 \bibitem{smolvla} Shukor, M. et al., ``SmolVLA: A Vision-Language-Action Model for Affordable and Efficient Robotics,'' arXiv:2506.01844, 2025.
 \bibitem{lerobot} Cadene, R. et al., ``LeRobot: State-of-the-art Machine Learning for Real-World Robotics in PyTorch,'' 2024, \url{https://github.com/huggingface/lerobot}.
