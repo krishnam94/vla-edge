@@ -25,7 +25,7 @@ Running VQ-BeT, Diffusion Policy, and ACT on identical evaluation protocols ($n{
 (2)~jerk monitoring is predictive only for discrete-token architectures, following a discrete-to-continuous gradient (0.88, 0.69, 0.41);
 (3)~velocity violations alone are non-predictive everywhere (AUROC 0.41--0.69), yet velocity checking is the most common safety mechanism in VLA deployment code;
 and (4)~for continuous-family VLAs, velocity monitoring provides effectively zero predictive signal (AUROC${=}$0.52 on ACT, 0.41 on Diffusion), proving that architecture-matched monitor selection is essential.
-These results establish a two-family pattern: VLA architectures partition into discrete and continuous families with distinct failure signatures.
+These results quantify a monitoring consequence of the well-known discrete/continuous VLA distinction: the two families produce qualitatively different failure signatures that require different monitors.
 No single monitor works universally; architecture-matched selection is required.
 This finding was enabled by \texttt{SafeContract}, a training-free, black-box action monitoring toolkit with conformal calibration.\footnote{Code: \url{https://github.com/krishnam94/vla-edge}}
 \end{abstract}
@@ -98,7 +98,7 @@ All require dynamics models, architecture access, or retraining.
 SAFE~\cite{safe2025} trains a failure detector on VLA internal features; FIPER~\cite{fiper2025} trains an RND network; Sentinel~\cite{sentinel} monitors temporal consistency.
 These require training auxiliary models.
 Kim et al.~\cite{kim2026guardrails} argue that modular guardrails are necessary for foundation-model robots.
-To our knowledge, no prior work has systematically characterized architecture-specific failure signatures from action outputs alone.
+While the discrete/continuous VLA distinction is well-known~\cite{rt2,diffusionpolicy}, no prior work has empirically compared monitor effectiveness across these families on the same task, or shown which monitors predict failure for which architectures.
 
 \textbf{Conformal prediction for safety.}
 Recent work validates conformal prediction for robot safety~\cite{safe2025,feldman2025}.
