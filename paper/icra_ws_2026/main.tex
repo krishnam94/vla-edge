@@ -22,11 +22,11 @@ kayjee1994@gmail.com}}
 We discover that VLA architectures fail in fundamentally different, predictable ways at the motor-command level.
 Running VQ-BeT, Diffusion Policy, and ACT on identical evaluation protocols ($n{=}450$ episodes across PushT and ALOHA 14-DOF bimanual manipulation), we find:
 (1)~direction reversal rate is a universal failure predictor across all three architectures (AUROC${=}$0.93, 0.79, 0.91; $p < 0.001$);
-(2)~jerk monitoring is predictive only for discrete-token architectures, following a discrete-to-continuous gradient (0.88, 0.41, 0.69);
-(3)~velocity violations alone are non-predictive everywhere (0.41--0.69);
-and (4)~ACT produces \emph{zero} velocity violations without enforcement, yet still fails 38\% of the time, proving that bounds and velocity monitoring are insufficient for continuous-family VLAs.
-These results establish a two-family pattern: VLA architectures partition into discrete and continuous families with distinct, predictable failure signatures.
-No single monitor works universally.
+(2)~jerk monitoring is predictive only for discrete-token architectures, following a discrete-to-continuous gradient (0.88, 0.69, 0.41);
+(3)~velocity violations alone are non-predictive everywhere (AUROC 0.41--0.69), yet velocity checking is the most common safety mechanism in VLA deployment code;
+and (4)~for continuous-family VLAs, velocity monitoring provides effectively zero predictive signal (AUROC${=}$0.52 on ACT, 0.41 on Diffusion), proving that architecture-matched monitor selection is essential.
+These results establish a two-family pattern: VLA architectures partition into discrete and continuous families with distinct failure signatures.
+No single monitor works universally; architecture-matched selection is required.
 This finding was enabled by \texttt{SafeContract}, a training-free, black-box action monitoring toolkit with conformal calibration.\footnote{Code: \url{https://github.com/krishnam94/vla-edge}}
 \end{abstract}
 
@@ -49,9 +49,9 @@ Using black-box action monitoring across three architectures, two tasks, and 450
 
 \begin{enumerate}
     \item \textbf{Direction reversal rate is a universal failure predictor.} It achieves AUROC${=}$0.93 (VQ-BeT), 0.79 (Diffusion), and 0.91 (ACT on 14-DOF ALOHA), all with $p < 0.001$. No other monitor is this consistent.
-    \item \textbf{Jerk monitoring follows a discrete-to-continuous gradient.} Jerk predicts failure for discrete-token VQ-BeT (0.88), partially for chunk-based ACT (0.69), and not at all for continuous Diffusion (0.41). This is a property of the architecture, not the task.
+    \item \textbf{Jerk monitoring follows a discrete-to-continuous gradient.} Jerk AUROC decreases from 0.88 (discrete-token VQ-BeT) to 0.69 (chunk-based ACT) to 0.41 (continuous Diffusion). This gradient reflects the action generation mechanism, not the task.
     \item \textbf{Velocity monitoring is non-predictive everywhere.} AUROC ranges from 0.41 to 0.69 across all architectures, yet velocity checking is the most common safety mechanism in VLA deployment code.
-    \item \textbf{Continuous-family VLAs can fail without any velocity violation.} ACT on ALOHA produces exactly zero velocity violations across 50 unmonitored episodes, yet fails 38\% of the time. Bounds and velocity monitoring, the standard approach, is blind to this entire failure mode.
+    \item \textbf{Velocity monitoring is blind to continuous-family failures.} For ACT on ALOHA, velocity violation AUROC is 0.52 (random chance); for Diffusion, 0.41 (below chance). Despite being the most common safety mechanism, velocity checking provides no useful failure signal for these architectures.
 \end{enumerate}
 
 These findings establish a \emph{two-family pattern}: VLA architectures partition into a discrete family (autoregressive, VQ-VAE) where jerk and reversal rate are the strongest predictors, and a continuous family (diffusion, flow matching, action chunking) where momentum coherence and reversal rate matter more.
@@ -148,13 +148,11 @@ With SafeContract: 56\% (28/50, CI$_{95}$: [0.42, 0.69]).
 Fisher's $p = 0.68$.
 SafeContract caught 4{,}758 velocity violations with no significant degradation.
 
-\textbf{The zero-violation finding.}
-Without any safety contract, ACT produces \emph{exactly zero} velocity violations and \emph{zero} bounds violations across all 50 unmonitored episodes.
-Every action is within bounds. Every velocity is within limits.
-Yet 19 of those 50 episodes fail (38\% failure rate).
-This proves that bounds and velocity monitoring - the standard approach in VLA deployment code - is completely blind to ACT's failure mode.
-The failures are not caused by unsafe actions; they are caused by \emph{wrong} actions that happen to be physically valid.
-This is a strong negative result: for continuous-family VLAs, the most common safety infrastructure provides zero predictive signal.
+\textbf{Velocity monitoring is blind to ACT's failures.}
+Despite producing velocity violations when monitored (mean 37 per episode against conformal bounds), these violations carry \emph{no predictive signal}: velocity AUROC is 0.52 (random chance).
+ACT fails 38\% of the time (19/50 episodes), but the failures are not caused by unsafe actions - they are caused by \emph{wrong} actions that happen to look physically valid.
+The standard approach to VLA safety (bounds and velocity checking) cannot distinguish ACT's successes from its failures.
+Detecting these failures requires monitors that capture action \emph{quality} (reversal rate: AUROC${=}$0.91), not just action magnitude.
 
 \subsection{Failure Prediction: Which Monitors Work?}
 \label{sec:failure_prediction}
@@ -213,7 +211,6 @@ Params & 262M & 37.5M & 51.6M \\
 Success (no / with contract) & 58\% / 57\% & 56.5\% / 54.5\% & 62\% / 56\% \\
 Fisher's $p$ & 0.92 & 0.76 & 0.68 \\
 Total violations & 772 & \textbf{1{,}847} & 4{,}758 \\
-Violations w/o contract & 0 & 0 & \textbf{0} \\
 Mean jerk RMS & 8.0 & \textbf{21.6} & 0.054 \\
 Total stall steps & 117 & \textbf{1} & -- \\
 \midrule
@@ -254,12 +251,12 @@ Reversal rate remains predictive (0.79--0.91), but jerk drops to chance (0.41 fo
 ACT on ALOHA sits between the families: as a continuous model with chunk boundary effects, its jerk AUROC (0.69) is intermediate.
 The gradient VQ-BeT (0.88) $\rightarrow$ ACT (0.69) $\rightarrow$ Diffusion (0.41) tracks the discrete-to-continuous spectrum of action generation.
 
-\textbf{The zero-violation problem.}
+\textbf{The velocity monitoring blind spot.}
 The ACT result is perhaps the most practically significant.
-Without any safety contract, ACT produces zero velocity violations across 50 episodes, yet fails 38\% of the time.
-This means the standard approach to VLA safety - bounds checking and velocity limiting - provides \emph{no signal whatsoever} for continuous-family failures.
-The failures are behavioral, not physical: the robot executes smooth, bounded, low-velocity actions that simply do not accomplish the task.
-Detecting these failures requires monitors that capture action \emph{quality} (reversal rate, momentum coherence), not just action \emph{magnitude}.
+Despite producing velocity violations against conformal bounds, these violations carry no predictive signal (AUROC${=}$0.52, random chance).
+ACT fails 38\% of the time, but the failures are behavioral, not physical: the robot executes actions that simply do not accomplish the task.
+Detecting these failures requires monitors that capture action \emph{quality} (reversal rate: 0.91, momentum coherence: 0.71), not just action \emph{magnitude} (velocity: 0.52).
+This is a strong negative result about the most common VLA safety mechanism.
 
 \textbf{Practical recommendations.}
 Given these findings, we propose architecture-matched monitoring:
