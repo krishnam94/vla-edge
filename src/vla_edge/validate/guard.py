@@ -27,12 +27,13 @@ from __future__ import annotations
 
 import functools
 import logging
-from typing import Any, Callable
+from collections.abc import Callable
+from typing import Any
 
 import numpy as np
 
 from vla_edge.validate.conformal import ConformalActionMonitor, CUSUMDetector
-from vla_edge.validate.violations import StallDetector, JerkMonitor
+from vla_edge.validate.violations import JerkMonitor, StallDetector
 
 logger = logging.getLogger(__name__)
 
@@ -93,7 +94,7 @@ class SafetyGuard:
         cal_split: float = 0.8,
         mode: str = "clip",
         **kwargs,
-    ) -> "SafetyGuard":
+    ) -> SafetyGuard:
         """Create a SafetyGuard calibrated from demonstration data.
 
         Computes conformal position bounds + data-driven velocity limits.

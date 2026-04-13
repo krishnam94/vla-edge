@@ -3,15 +3,14 @@
 import time
 
 import numpy as np
-import pytest
 
 from vla_edge.validate.signals import (
-    LinearPredictabilityMonitor,
-    CorrelationDivergenceMonitor,
-    SpectralEnergyMonitor,
-    MomentumCoherenceMonitor,
-    LatencyMonitor,
     ActionEnergyMonitor,
+    CorrelationDivergenceMonitor,
+    LatencyMonitor,
+    LinearPredictabilityMonitor,
+    MomentumCoherenceMonitor,
+    SpectralEnergyMonitor,
 )
 
 

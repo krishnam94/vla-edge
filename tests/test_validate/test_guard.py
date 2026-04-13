@@ -1,7 +1,6 @@
 """Tests for SafetyGuard - integrated enforcement + monitoring."""
 
 import numpy as np
-import pytest
 
 from vla_edge.validate.guard import SafetyGuard
 

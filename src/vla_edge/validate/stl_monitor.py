@@ -15,15 +15,17 @@ from dataclasses import dataclass
 import numpy as np
 
 try:
-    import rtamt
-    RTAMT_AVAILABLE = True
-except ImportError:
+    import importlib.util
+
+    RTAMT_AVAILABLE = importlib.util.find_spec("rtamt") is not None
+except (ImportError, ModuleNotFoundError):
     RTAMT_AVAILABLE = False
 
 
 @dataclass
 class STLReport:
     """STL monitoring report for a single timestep."""
+
     # Robustness scores per spec (positive = satisfied, negative = violated)
     robustness: dict[str, float]
     # Overall minimum robustness (worst spec)
@@ -128,7 +130,7 @@ class STLActionMonitor:
         # Check: if there was a violation in the last k steps,
         # is the most recent step clean?
         if len(self._violated_history) >= self.recovery_window:
-            window = self._violated_history[-self.recovery_window:]
+            window = self._violated_history[-self.recovery_window :]
             if any(v > 0.5 for v in window[:-1]):
                 # There was a violation in the window
                 # Robustness = whether we recovered (last step clean)
@@ -146,7 +148,7 @@ class STLActionMonitor:
 
         # Spec 4: No sustained violations - violation rate in window below 50%
         if len(self._violated_history) >= self.sustained_window:
-            window = self._violated_history[-self.sustained_window:]
+            window = self._violated_history[-self.sustained_window :]
             violation_rate = sum(window) / len(window)
             # Robustness = 0.5 - violation_rate (positive if rate < 50%)
             robustness["sustained_health"] = 0.5 - violation_rate
@@ -198,9 +200,7 @@ class STLActionMonitor:
         summary["overall_min_robustness"] = round(
             float(min(min(r.values()) for r in self._robustness_history)), 4
         )
-        summary["n_any_spec_violated"] = sum(
-            1 for r in self._robustness_history if min(r.values()) < 0
-        )
+        summary["n_any_spec_violated"] = sum(1 for r in self._robustness_history if min(r.values()) < 0)
 
         return summary
 

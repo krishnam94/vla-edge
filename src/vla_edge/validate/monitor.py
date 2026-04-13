@@ -10,7 +10,7 @@ These three techniques transform SafeContract from "did it violate?" to
 
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 
 import numpy as np
 

@@ -1,12 +1,11 @@
 """Tests for conformal anomaly detection, CUSUM, ACAM, and MultiScaleCUSUM."""
 
 import numpy as np
-import pytest
 
 from vla_edge.validate.conformal import (
+    AdaptiveConformalMonitor,
     ConformalActionMonitor,
     CUSUMDetector,
-    AdaptiveConformalMonitor,
     MultiScaleCUSUM,
 )
 
@@ -221,7 +220,7 @@ class TestMultiScaleCUSUM:
         # Mild shift: only step-level should fire first
         step_alarms = 0
         chunk_alarms = 0
-        for i in range(100):
+        for _i in range(100):
             report = ms.update(0.03)  # slightly below alpha
             if "step" in report["alarm_scales"]:
                 step_alarms += 1

@@ -1,10 +1,8 @@
 """Tests for property-based testing framework."""
 
 import numpy as np
-import pytest
 
 from vla_edge.validate.properties import (
-    PropertySuiteResult,
     check_acceleration_bound,
     check_action_bounds,
     check_gripper_stability,

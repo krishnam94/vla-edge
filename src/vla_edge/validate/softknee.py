@@ -23,7 +23,7 @@ def _cubic_hermite(t: float, p0: float, m0: float, p1: float, m1: float) -> floa
     """Cubic Hermite interpolation. t in [0,1]."""
     t2 = t * t
     t3 = t2 * t
-    return (2*t3 - 3*t2 + 1)*p0 + (t3 - 2*t2 + t)*m0 + (-2*t3 + 3*t2)*p1 + (t3 - t2)*m1
+    return (2 * t3 - 3 * t2 + 1) * p0 + (t3 - 2 * t2 + t) * m0 + (-2 * t3 + 3 * t2) * p1 + (t3 - t2) * m1
 
 
 def softknee_clip_1d(x: float, lo: float, hi: float, knee_width: float) -> float:
@@ -45,22 +45,22 @@ def softknee_clip_1d(x: float, lo: float, hi: float, knee_width: float) -> float
     Returns:
         Clipped value in [lo, hi]
     """
-    W = knee_width
-    if W <= 0 or W > (hi - lo) / 2:
+    w = knee_width
+    if w <= 0 or (hi - lo) / 2 < w:
         return float(np.clip(x, lo, hi))
 
     if x <= lo:
         return lo
-    elif x < lo + W:
-        t = (x - lo) / W
-        # Hermite: p0=lo, m0=0 (slope 0), p1=lo+W, m1=W (slope 1 * interval W)
-        return _cubic_hermite(t, lo, 0.0, lo + W, W)
-    elif x <= hi - W:
+    elif x < lo + w:
+        t = (x - lo) / w
+        # Hermite: p0=lo, m0=0 (slope 0), p1=lo+w, m1=w (slope 1 * interval w)
+        return _cubic_hermite(t, lo, 0.0, lo + w, w)
+    elif x <= hi - w:
         return x
     elif x < hi:
-        t = (x - (hi - W)) / W
-        # Hermite: p0=hi-W, m0=W (slope 1 * interval W), p1=hi, m1=0 (slope 0)
-        return _cubic_hermite(t, hi - W, W, hi, 0.0)
+        t = (x - (hi - w)) / w
+        # Hermite: p0=hi-w, m0=w (slope 1 * interval w), p1=hi, m1=0 (slope 0)
+        return _cubic_hermite(t, hi - w, w, hi, 0.0)
     else:
         return hi
 
@@ -88,7 +88,7 @@ def softknee_clip(
     """
     lo = np.broadcast_to(np.asarray(lo, dtype=np.float32), actions.shape)
     hi = np.broadcast_to(np.asarray(hi, dtype=np.float32), actions.shape)
-    W = np.broadcast_to(np.asarray(knee_width, dtype=np.float32), actions.shape)
+    w = np.broadcast_to(np.asarray(knee_width, dtype=np.float32), actions.shape)
 
     result = actions.copy().astype(np.float32)
 
@@ -96,28 +96,28 @@ def softknee_clip(
     mask_floor = actions <= lo
     result[mask_floor] = lo[mask_floor]
 
-    # Lower knee: cubic Hermite from (lo, slope=0) to (lo+W, slope=1)
-    mask_lower = (actions > lo) & (actions < lo + W)
-    t = (actions[mask_lower] - lo[mask_lower]) / W[mask_lower]
+    # Lower knee: cubic Hermite from (lo, slope=0) to (lo+w, slope=1)
+    mask_lower = (actions > lo) & (actions < lo + w)
+    t = (actions[mask_lower] - lo[mask_lower]) / w[mask_lower]
     t2 = t * t
     t3 = t2 * t
     p0 = lo[mask_lower]
-    p1 = lo[mask_lower] + W[mask_lower]
-    m1 = W[mask_lower]  # slope 1 * interval width
-    result[mask_lower] = (2*t3 - 3*t2 + 1)*p0 + (-2*t3 + 3*t2)*p1 + (t3 - t2)*m1
+    p1 = lo[mask_lower] + w[mask_lower]
+    m1 = w[mask_lower]  # slope 1 * interval width
+    result[mask_lower] = (2 * t3 - 3 * t2 + 1) * p0 + (-2 * t3 + 3 * t2) * p1 + (t3 - t2) * m1
 
     # Passthrough: identity (no distortion)
     # Already correct in result
 
-    # Upper knee: cubic Hermite from (hi-W, slope=1) to (hi, slope=0)
-    mask_upper = (actions > hi - W) & (actions < hi)
-    t = (actions[mask_upper] - (hi[mask_upper] - W[mask_upper])) / W[mask_upper]
+    # Upper knee: cubic Hermite from (hi-w, slope=1) to (hi, slope=0)
+    mask_upper = (actions > hi - w) & (actions < hi)
+    t = (actions[mask_upper] - (hi[mask_upper] - w[mask_upper])) / w[mask_upper]
     t2 = t * t
     t3 = t2 * t
-    p0 = hi[mask_upper] - W[mask_upper]
+    p0 = hi[mask_upper] - w[mask_upper]
     p1 = hi[mask_upper]
-    m0 = W[mask_upper]  # slope 1 * interval width
-    result[mask_upper] = (2*t3 - 3*t2 + 1)*p0 + (t3 - 2*t2 + t)*m0 + (-2*t3 + 3*t2)*p1
+    m0 = w[mask_upper]  # slope 1 * interval width
+    result[mask_upper] = (2 * t3 - 3 * t2 + 1) * p0 + (t3 - 2 * t2 + t) * m0 + (-2 * t3 + 3 * t2) * p1
 
     # Hard ceiling
     mask_ceil = actions >= hi
@@ -148,13 +148,9 @@ def softknee_clip_actions(
     hi = bounds[:action_dim, 1]
 
     if actions.ndim == 1:
-        result[:action_dim] = softknee_clip(
-            actions[:action_dim], lo, hi, knee_width
-        )
+        result[:action_dim] = softknee_clip(actions[:action_dim], lo, hi, knee_width)
     else:
-        result[:, :action_dim] = softknee_clip(
-            actions[:, :action_dim], lo, hi, knee_width
-        )
+        result[:, :action_dim] = softknee_clip(actions[:, :action_dim], lo, hi, knee_width)
 
     return result
 
@@ -184,15 +180,13 @@ def lookahead_softknee(
     lo_arr = np.broadcast_to(np.asarray(lo, dtype=np.float32), action_chunk.shape)
     hi_arr = np.broadcast_to(np.asarray(hi, dtype=np.float32), action_chunk.shape)
 
-    T = action_chunk.shape[0]
+    n_steps = action_chunk.shape[0]
 
     # Step 1: Compute per-step overshoot magnitude
-    overshoot = np.maximum(0, action_chunk - hi_arr) + np.maximum(
-        0, lo_arr - action_chunk
-    )
+    overshoot = np.maximum(0, action_chunk - hi_arr) + np.maximum(0, lo_arr - action_chunk)
 
     # Step 2: Propagate future violations backward with exponential decay
-    for t in range(T - 2, -1, -1):
+    for t in range(n_steps - 2, -1, -1):
         overshoot[t] = np.maximum(overshoot[t], decay * overshoot[t + 1])
 
     # Step 3: Blend actions toward center proportional to anticipated overshoot

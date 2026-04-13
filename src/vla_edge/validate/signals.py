@@ -48,17 +48,17 @@ class LinearPredictabilityMonitor:
 
     def calibrate(self, actions: np.ndarray):
         """Fit per-joint AR(1) from consecutive calibration actions."""
-        n, d = actions.shape
+        _n, d = actions.shape
         self._coeffs = np.zeros((d, 2), dtype=np.float32)
 
         for j in range(d):
             x = actions[:-1, j]  # a_{t-1}
-            y = actions[1:, j]   # a_t
+            y = actions[1:, j]  # a_t
             # Ridge regression: [alpha, beta] = (X^T X + lambda I)^{-1} X^T y
-            X = np.column_stack([x, np.ones(len(x))])
-            XtX = X.T @ X + self.ridge_alpha * np.eye(2)
-            Xty = X.T @ y
-            self._coeffs[j] = np.linalg.solve(XtX, Xty)
+            x_mat = np.column_stack([x, np.ones(len(x))])
+            xtx = x_mat.T @ x_mat + self.ridge_alpha * np.eye(2)
+            xty = x_mat.T @ y
+            self._coeffs[j] = np.linalg.solve(xtx, xty)
 
     def update(self, action: np.ndarray) -> dict:
         self._n_steps += 1
@@ -400,9 +400,7 @@ class ActionEnergyMonitor:
         self._energies.append(energy)
 
         # EWMA tracking
-        self._ewma_energy = (
-            self.ewma_alpha * energy + (1 - self.ewma_alpha) * self._ewma_energy
-        )
+        self._ewma_energy = self.ewma_alpha * energy + (1 - self.ewma_alpha) * self._ewma_energy
 
         # Z-score relative to calibration
         z_score = (energy - self._cal_mean_energy) / self._cal_std_energy

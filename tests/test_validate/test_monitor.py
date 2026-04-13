@@ -3,7 +3,7 @@
 import numpy as np
 import pytest
 
-from vla_edge.validate.monitor import ActionHealthMonitor, ActionHealthReport
+from vla_edge.validate.monitor import ActionHealthMonitor
 
 
 class TestActionHealthMonitor:
@@ -49,7 +49,7 @@ class TestActionHealthMonitor:
         monitor = ActionHealthMonitor(action_dim=2, window_size=10)
 
         # Mostly zero with one spike
-        for i in range(9):
+        for _i in range(9):
             action = np.zeros(2, dtype=np.float32)
             monitor.update(action, action)
 

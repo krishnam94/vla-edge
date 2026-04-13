@@ -1,12 +1,11 @@
 """Tests for extended violation types: stall, jerk, gripper oscillation."""
 
 import numpy as np
-import pytest
 
 from vla_edge.validate.violations import (
-    StallDetector,
-    JerkMonitor,
     GripperOscillationDetector,
+    JerkMonitor,
+    StallDetector,
 )
 
 
@@ -67,9 +66,9 @@ class TestJerkMonitor:
     def test_chunk_boundary_detection(self):
         monitor = JerkMonitor(jerk_limit=100.0, chunk_size=5)
         rng = np.random.RandomState(42)
-        for i in range(25):
+        for _i in range(25):
             action = rng.randn(7).astype(np.float32) * 0.1
-            report = monitor.update(action)
+            monitor.update(action)
         s = monitor.get_summary()
         # Should have detected some chunk boundaries
         assert "chunk_boundary_mean_jerk" in s

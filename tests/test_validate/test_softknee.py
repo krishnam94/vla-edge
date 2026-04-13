@@ -45,20 +45,20 @@ class TestSoftkneeClip1D:
 
     def test_c1_continuity_at_knee_passthrough_boundary(self):
         """Derivative matches at knee-to-passthrough boundaries."""
-        W = 0.3
+        w = 0.3
         lo, hi = -1.0, 1.0
         eps = 1e-4
 
-        # At upper knee-to-passthrough boundary (hi - W = 0.7)
-        x = hi - W
-        dy_left = (softknee_clip_1d(x, lo, hi, W) - softknee_clip_1d(x - eps, lo, hi, W)) / eps
-        dy_right = (softknee_clip_1d(x + eps, lo, hi, W) - softknee_clip_1d(x, lo, hi, W)) / eps
+        # At upper knee-to-passthrough boundary (hi - w = 0.7)
+        x = hi - w
+        dy_left = (softknee_clip_1d(x, lo, hi, w) - softknee_clip_1d(x - eps, lo, hi, w)) / eps
+        dy_right = (softknee_clip_1d(x + eps, lo, hi, w) - softknee_clip_1d(x, lo, hi, w)) / eps
         assert abs(dy_left - dy_right) < 0.01, f"C1 break at upper knee: {dy_left:.4f} vs {dy_right:.4f}"
 
-        # At lower knee-to-passthrough boundary (lo + W = -0.7)
-        x = lo + W
-        dy_left = (softknee_clip_1d(x, lo, hi, W) - softknee_clip_1d(x - eps, lo, hi, W)) / eps
-        dy_right = (softknee_clip_1d(x + eps, lo, hi, W) - softknee_clip_1d(x, lo, hi, W)) / eps
+        # At lower knee-to-passthrough boundary (lo + w = -0.7)
+        x = lo + w
+        dy_left = (softknee_clip_1d(x, lo, hi, w) - softknee_clip_1d(x - eps, lo, hi, w)) / eps
+        dy_right = (softknee_clip_1d(x + eps, lo, hi, w) - softknee_clip_1d(x, lo, hi, w)) / eps
         assert abs(dy_left - dy_right) < 0.01, f"C1 break at lower knee: {dy_left:.4f} vs {dy_right:.4f}"
 
 
@@ -75,8 +75,8 @@ class TestSoftkneeClipVectorized:
     def test_per_joint_knee_width(self):
         """Different knee widths produce different outputs."""
         actions = np.array([0.9, 0.9, 0.9], dtype=np.float32)
-        W = np.array([0.1, 0.3, 0.5], dtype=np.float32)
-        result = softknee_clip(actions, -1.0, 1.0, W)
+        w = np.array([0.1, 0.3, 0.5], dtype=np.float32)
+        result = softknee_clip(actions, -1.0, 1.0, w)
         # All within bounds
         assert np.all(result >= -1.0) and np.all(result <= 1.0)
         # Different knee widths produce different results

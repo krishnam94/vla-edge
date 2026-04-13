@@ -1,9 +1,8 @@
 """Tests for STL runtime monitoring."""
 
 import numpy as np
-import pytest
 
-from vla_edge.validate.stl_monitor import STLActionMonitor, STLReport
+from vla_edge.validate.stl_monitor import STLActionMonitor
 
 
 class TestSTLActionMonitor:
